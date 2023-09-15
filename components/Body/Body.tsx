@@ -1,6 +1,8 @@
 import React from "react";
 import { body } from "../../common/fonts";
 
+import "./Body.common.css";
+
 interface BodyProps {
   content: string;
   className?: string;

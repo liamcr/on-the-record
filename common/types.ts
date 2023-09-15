@@ -37,6 +37,10 @@ export interface Review {
    */
   id: number;
   /**
+   * Timestamp of when the review was submitted
+   */
+  timestamp: string;
+  /**
    * The user that wrote the review
    */
   author: UserCondensed;

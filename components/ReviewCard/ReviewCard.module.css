@@ -3,12 +3,19 @@
   border-radius: 16px;
   position: relative;
   padding: 7.5%;
-  padding-top: calc(7.5% + 32px);
+  padding-top: calc(7.5% + 3rem);
+  transition: background 0.5s;
+}
+
+.postProfileIconLink {
+  position: absolute;
+  top: -3rem;
 }
 
 .postProfileIconContainer {
-  position: absolute;
-  top: -50px;
+  position: relative;
+  width: 6rem;
+  aspect-ratio: 1;
 }
 
 .postProfileIcon {
@@ -20,10 +27,6 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.reviewInfo {
-  width: 65%;
 }
 
 .coverArtSection {
@@ -45,9 +48,31 @@
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
 }
 
+.reviewInfo {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
 .titlesContainer {
   display: flex;
   flex-direction: column;
+}
+
+.reviewTitle {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.reviewSubtitle {
+  color: var(--subtitle-rgb);
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .scoreContainer {
