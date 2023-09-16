@@ -3,6 +3,11 @@ import React from "react";
 
 import styles from "./BottomNav.module.css";
 
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+
 interface BottomNavProps {
   /**
    * The colour of the action button
@@ -14,9 +19,21 @@ const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
   return (
     <>
       <div className={styles.bottomNavBar}>
-        <Link href="/home">Home</Link>
-        <Link href="/profile">Profile</Link>
-        <div>Search</div>
+        <div className={styles.navButtons}>
+          <Link href="/home">
+            <div className={styles.navButton}>
+              <HomeOutlinedIcon className={styles.navIcon} />
+            </div>
+          </Link>
+          <Link href="/profile">
+            <div className={styles.navButton}>
+              <PersonOutlinedIcon className={styles.navIcon} />
+            </div>
+          </Link>
+          <div className={styles.navButton}>
+            <SearchOutlinedIcon className={styles.navIcon} />
+          </div>
+        </div>
       </div>
       <div className={styles.actionButtonContainer}>
         <div
@@ -25,7 +42,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
             backgroundColor: colour,
           }}
         >
-          +
+          <AddRoundedIcon />
         </div>
         {/* ..sliding buttons here */}
       </div>
