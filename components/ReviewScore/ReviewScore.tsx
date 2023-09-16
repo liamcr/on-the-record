@@ -31,7 +31,11 @@ const buildForegroundClipPath = (score: number) => {
   return `polygon(${firstPoint}, ${secondPoint}, 0% 100%)`;
 };
 
-const ReviewScore: React.FC<ReviewScoreProps> = ({ editable, score = 0 }) => {
+const ReviewScore: React.FC<ReviewScoreProps> = ({
+  editable,
+  score = 0,
+  onChange,
+}) => {
   const [selectedScore, setSelectedScore] = useState(score);
   const [displayedScore, setDisplayedScore] = useState(score);
   const reviewMeterRef = useRef<HTMLDivElement>(null);
@@ -56,6 +60,8 @@ const ReviewScore: React.FC<ReviewScoreProps> = ({ editable, score = 0 }) => {
 
   const onClick: React.MouseEventHandler<HTMLDivElement> = () => {
     setSelectedScore(displayedScore);
+
+    if (onChange) onChange(displayedScore);
   };
 
   const onMouseExit: React.MouseEventHandler<HTMLDivElement> = () => {

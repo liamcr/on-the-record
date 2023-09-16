@@ -74,6 +74,54 @@ export interface Review {
   review?: string;
 }
 
+/**
+ * Represents an element in a top 5 list
+ */
+interface ListElement {
+  /**
+   * Image src of the list element
+   */
+  src: string;
+  /**
+   * Name of the list element
+   */
+  name: string;
+}
+
+/**
+ * Represents a top-5 list
+ */
+export interface TopFiveList {
+  /**
+   * The ID of the list
+   */
+  id: number;
+  /**
+   * Timestamp of when the list was submitted
+   */
+  timestamp: string;
+  /**
+   * The user that wrote the list
+   */
+  author: UserCondensed;
+  /**
+   * The title of the list (not including "Top 5")
+   */
+  title: string;
+  /**
+   * The user-selected colour of the list
+   */
+  colour: string;
+  /**
+   * The type of review, i.e. track or album
+   */
+  type: EntityType;
+  /**
+   * The items of the list
+   */
+  list: ListElement[];
+}
+
 export enum EntityType {
   Track,
   Album,

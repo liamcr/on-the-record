@@ -1,0 +1,61 @@
+.listContainer {
+  border-radius: 16px;
+  position: relative;
+  padding: 7.5%;
+  padding-top: calc(7.5% + 1rem);
+  box-shadow: 0px 8px 10px 0px rgba(40, 40, 40, 0.2);
+}
+
+.postProfileIconLink {
+  position: absolute;
+  top: -3rem;
+}
+
+.postProfileIconContainer {
+  position: relative;
+  width: 6rem;
+  aspect-ratio: 1;
+}
+
+.postProfileIcon {
+  border-radius: 10%;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
+}
+
+.listTitle {
+  color: #000;
+  margin-bottom: 1.5rem;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.listElement {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.listElementIndex {
+  color: #000;
+}
+
+.listElementImageContainer {
+  height: 4rem;
+  aspect-ratio: 1;
+  position: relative;
+  margin-inline: 1rem;
+}
+
+.listElementImage {
+  border-radius: 10%;
+}
+
+.listElementName {
+  color: #000;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
