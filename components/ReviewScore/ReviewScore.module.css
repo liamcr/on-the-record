@@ -31,3 +31,9 @@
   left: 0;
   transition: clip-path 0.2s;
 }
+
+.scoreContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
