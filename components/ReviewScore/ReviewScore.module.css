@@ -1,5 +1,7 @@
 .reviewScoreContainer {
-  width: 30vw;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .reviewMeterContainer {
@@ -8,25 +10,27 @@
   aspect-ratio: 6;
 }
 
-.colouredBackground {
+.neutralBackground {
   height: 100%;
   width: 100%;
+  border-radius: 8px;
   clip-path: polygon(0% 100%, 100% 100%, 100% 0%);
+  /* background-color: rgb(var(--review-score-background-rgba)); */
+  background-color: rgba(170, 170, 170, 0.3);
+  position: absolute;
+  left: 0;
+}
+
+.colouredForeground {
+  height: 100%;
+  width: 100%;
   background: linear-gradient(
     -0.25turn,
     rgba(49, 171, 38, 1),
     rgba(238, 208, 102, 1),
     rgba(210, 47, 47, 1)
   );
-  position: absolute;
-  left: 0;
-}
-
-.neutralForeground {
-  height: 100%;
-  width: 100%;
-  /* background-color: rgb(var(--review-score-background-rgba)); */
-  background-color: rgb(170, 170, 170);
+  border-radius: 8px;
   position: absolute;
   left: 0;
   transition: clip-path 0.2s;
@@ -36,4 +40,9 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
+}
+
+.outOfTen {
+  color: var(--subtitle-rgb);
+  margin-left: 5%;
 }

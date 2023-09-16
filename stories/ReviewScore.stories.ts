@@ -29,6 +29,5 @@ export const NonEditable: Story = {
 export const Editable: Story = {
   args: {
     editable: true,
-    score: 0,
   },
 };

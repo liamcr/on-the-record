@@ -1,10 +1,11 @@
 .reviewCard {
+  --card-background-rgba: 222, 222, 222, 0.8;
   width: 50vw;
   border-radius: 16px;
   position: relative;
   padding: 7.5%;
   padding-top: calc(7.5% + 3rem);
-  transition: background 0.5s;
+  box-shadow: 0px 8px 10px 0px rgba(40, 40, 40, 0.2);
 }
 
 .postProfileIconLink {
@@ -68,7 +69,7 @@
 
 .reviewSubtitle {
   color: var(--subtitle-rgb);
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin-top: 0.5rem;
   text-overflow: ellipsis;
   overflow-x: hidden;
@@ -79,4 +80,36 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
+}
+
+.reviewTextHeader {
+  margin-top: 5%;
+  margin-bottom: 2%;
+}
+
+.reviewBody {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  overflow: hidden;
+  transition: height 0.5s;
+  white-space: pre-line;
+}
+
+.reviewBodyCollapsed {
+  -webkit-line-clamp: 5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.showButtonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+.showButton {
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--subtitle-rgb);
 }

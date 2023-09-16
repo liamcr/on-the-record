@@ -4,18 +4,31 @@ import styles from "./ReviewScore.module.css";
 import Heading from "../Heading/Heading";
 import Body from "../Body/Body";
 
-// TODO: Add an 'onchange' function prop so parents can do something with
-// value
 interface ReviewScoreProps {
+  /**
+   * True if the user is able to edit the value of the score, false otherwise
+   */
   editable: boolean;
+  /**
+   * The (initial) score (out of 10) related to this review
+   */
   score?: number;
+  /**
+   * A function that defines what the parent component should do
+   * when the value of the review changes (only relevant if editable
+   * is `true`)
+   *
+   * @param newValue The new score value (out of 10)
+   * @returns
+   */
+  onChange?: (newValue: number) => any;
 }
 
 const buildForegroundClipPath = (score: number) => {
   let firstPoint = `${score * 10}% 100%`;
   let secondPoint = `${score * 10}% ${(10 - score) * 10}%`;
 
-  return `polygon(${firstPoint}, ${secondPoint}, 100% 0%, 100% 100%)`;
+  return `polygon(${firstPoint}, ${secondPoint}, 0% 100%)`;
 };
 
 const ReviewScore: React.FC<ReviewScoreProps> = ({ editable, score = 0 }) => {
@@ -66,15 +79,20 @@ const ReviewScore: React.FC<ReviewScoreProps> = ({ editable, score = 0 }) => {
         onMouseLeave={editable ? onMouseExit : () => {}}
         onMouseDown={editable ? onClick : () => {}}
       >
-        <div className={styles.colouredBackground} />
+        <div className={styles.neutralBackground} />
         <div
-          className={styles.neutralForeground}
+          className={styles.colouredForeground}
           style={{
             clipPath: buildForegroundClipPath(displayedScore),
           }}
         />
       </div>
-      <div className={styles.scoreContainer}>
+      <div
+        className={styles.scoreContainer}
+        style={{
+          marginLeft: editable ? "0" : "5%",
+        }}
+      >
         <Heading
           component="h3"
           content={`${displayedScore ? displayedScore : "?"}`}

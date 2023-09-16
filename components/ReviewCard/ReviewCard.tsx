@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Review } from "../../common/types";
 import Image from "next/image";
 import Heading from "../Heading/Heading";
@@ -6,8 +6,10 @@ import Body from "../Body/Body";
 import Link from "next/link";
 
 import styles from "./ReviewCard.module.css";
-import useImageData from "./useImageData";
+import useImageData from "../../common/hooks/useImageData";
 import { generatePalette } from "../../common/functions";
+import ReviewScore from "../ReviewScore/ReviewScore";
+import { body } from "../../common/fonts";
 
 // TODO: Make this CSS variable that works for light/dark modes?
 const cardDefaultColour = "rgba(128, 128, 128, 0.10)";
@@ -22,6 +24,7 @@ const ReviewCard: React.FC<Review> = ({
   colour,
   review,
 }) => {
+  const [expanded, setExpanded] = useState(false);
   const imageData = useImageData(src);
 
   const dominantColor = useMemo(() => {
@@ -33,11 +36,15 @@ const ReviewCard: React.FC<Review> = ({
     return `rgba(${palette[1].r}, ${palette[1].g}, ${palette[1].b}, 0.8)`;
   }, [imageData]);
 
+  const onShowClick = () => {
+    setExpanded((oldVal) => !oldVal);
+  };
+
   return (
     <div
       className={styles.reviewCard}
       style={{
-        background: `linear-gradient(180deg, ${dominantColor} 0%, ${cardDefaultColour} 100%)`,
+        background: `linear-gradient(180deg, ${dominantColor} 0%, rgba(var(--card-background-rgba)) 100%)`,
       }}
     >
       <Link
@@ -74,13 +81,30 @@ const ReviewCard: React.FC<Review> = ({
             />
             <Body content={subtitle} className={styles.reviewSubtitle} />
           </div>
-          {/* <ReviewScore editable={false} score={score} /> */}
+          <ReviewScore editable={false} score={score} />
         </div>
       </div>
       {review && (
         <>
-          <Heading component="h4" content="Review" />
-          <Body className={styles.reviewBody} content={review} />
+          <Heading
+            component="h4"
+            content="Review"
+            className={styles.reviewTextHeader}
+          />
+          <Body
+            className={`${styles.reviewBody} ${
+              expanded ? "" : styles.reviewBodyCollapsed
+            }`}
+            content={review}
+          />
+          <div className={styles.showButtonContainer}>
+            <p
+              className={`${body.className} ${styles.showButton}`}
+              onClick={onShowClick}
+            >
+              {expanded ? "Show less" : "Show more"}
+            </p>
+          </div>
         </>
       )}
     </div>

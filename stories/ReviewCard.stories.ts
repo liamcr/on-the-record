@@ -86,3 +86,22 @@ export const TheLifeOfPablo: Story = {
     type: EntityType.Album,
   },
 };
+
+export const KidsSeeGhosts: Story = {
+  args: {
+    author: {
+      id: 101,
+      name: "Liam Crocket",
+      profilePictureSrc: TestProfilePic.src,
+    },
+    timestamp: "Sep. 15th, 2023",
+    id: 102,
+    score: 9,
+    src: "https://i.scdn.co/image/ab67616d0000b273013c00ee367dd85396f79c82",
+    subtitle: "KIDS SEE GHOSTS, Kanye West, Kid Cudi",
+    title: "KIDS SEE GHOSTS",
+    type: EntityType.Album,
+    review:
+      '"Kids See Ghosts" is a collaborative album by two of the most innovative and influential figures in modern hip-hop, Kanye West and Kid Cudi. Released in 2018 as part of Kanye West\'s Wyoming Sessions, this seven-track project is a mesmerizing journey into the minds of these two artists as they explore themes of mental health, self-discovery, and spirituality.\n\nThe album opens with the haunting and atmospheric "Feel the Love," setting the tone for an ethereal and introspective experience. Kanye and Kid Cudi\'s chemistry is palpable throughout the project, with their distinct voices and styles complementing each other seamlessly. Tracks like "Fire" and "4th Dimension" showcase their lyrical prowess and creativity, while "Reborn" and "Cudi Montage" delve into deeply personal and emotional territory.\n\nWhat makes "Kids See Ghosts" stand out is its willingness to experiment with sound. The production, handled primarily by Kanye West, is a fusion of hip-hop, rock, and psychedelic elements, creating a sonic landscape that\'s both refreshing and boundary-pushing. The use of samples, from Kurt Cobain\'s vocals on "Cudi Montage" to Louis Prima\'s on "4th Dimension," adds an extra layer of depth to the album.\n\nLyrically, the album addresses issues of mental health and self-acceptance, with both artists candidly sharing their struggles and triumphs. It\'s a testament to the power of music as a therapeutic medium and a reminder that vulnerability can be a strength.\n\n"Kids See Ghosts" is not just an album; it\'s a sonic adventure that invites listeners to explore the complexities of the human psyche. It\'s a testament to the creative genius of Kanye West and Kid Cudi, both individually and as a duo. This project pushed the boundaries of hip-hop and showcased the transformative potential of collaboration in the genre. If you\'re looking for an album that challenges conventions and dives deep into the human experience, "Kids See Ghosts" is a must-listen.',
+  },
+};
