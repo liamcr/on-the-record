@@ -1,28 +1,34 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import PostProfileIcon from "../components/PostProfileIcon/PostProfileIcon";
 import TestProfilePic from "./assets/TestProfilePic.jpg";
+import ReviewScore from "../components/ReviewScore/ReviewScore";
+import { EntityType } from "../common/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
-  title: "Components/PostProfileIcon",
-  component: PostProfileIcon,
+  title: "Components/ReviewScore",
+  component: ReviewScore,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
-} satisfies Meta<typeof PostProfileIcon>;
+} satisfies Meta<typeof ReviewScore>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const WithImage: Story = {
+export const NonEditable: Story = {
   args: {
-    id: 101,
-    name: "Liam Crocket",
-    profilePictureSrc: TestProfilePic.src,
-    width: 250,
+    editable: false,
+    score: 5,
+  },
+};
+
+export const Editable: Story = {
+  args: {
+    editable: true,
+    score: 5,
   },
 };

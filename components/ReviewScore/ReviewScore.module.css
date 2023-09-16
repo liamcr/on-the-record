@@ -1,0 +1,33 @@
+.reviewScoreContainer {
+  width: 30vw;
+}
+
+.reviewMeterContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 6;
+}
+
+.colouredBackground {
+  height: 100%;
+  width: 100%;
+  clip-path: polygon(0% 100%, 100% 100%, 100% 0%);
+  background: linear-gradient(
+    -0.25turn,
+    rgba(49, 171, 38, 1),
+    rgba(238, 208, 102, 1),
+    rgba(210, 47, 47, 1)
+  );
+  position: absolute;
+  left: 0;
+}
+
+.neutralForeground {
+  height: 100%;
+  width: 100%;
+  /* background-color: rgb(var(--review-score-background-rgba)); */
+  background-color: rgb(170, 170, 170);
+  position: absolute;
+  left: 0;
+  transition: clip-path 0.2s;
+}
