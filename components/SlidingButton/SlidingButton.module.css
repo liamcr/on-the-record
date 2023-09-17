@@ -1,0 +1,6 @@
+.slidingButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba(var(--navbar-background-rgba));
+}

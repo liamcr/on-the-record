@@ -6,11 +6,15 @@ import "./Body.common.css";
 interface BodyProps {
   content: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-const Body: React.FC<BodyProps> = ({ content, className }) => {
+const Body: React.FC<BodyProps> = ({ content, className, style }) => {
   return (
-    <p className={`${body.className} ${className ? className : ""}`}>
+    <p
+      className={`${body.className} ${className ? className : ""}`}
+      style={style}
+    >
       {content}
     </p>
   );
