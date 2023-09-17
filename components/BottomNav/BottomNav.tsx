@@ -42,7 +42,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
             backgroundColor: colour,
           }}
         >
-          <AddRoundedIcon />
+          <AddRoundedIcon className={styles.actionButtonIcon} />
         </div>
         {/* ..sliding buttons here */}
       </div>

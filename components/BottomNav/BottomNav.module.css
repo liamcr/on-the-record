@@ -40,3 +40,30 @@
   color: rgb(var(--foreground-rgb));
   font-size: 1.5rem;
 }
+
+.actionButton {
+  cursor: pointer;
+  position: fixed;
+  width: 20vw;
+  height: 20vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: calc(10vw);
+  bottom: calc(5vw);
+  border-radius: 8px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
+  color: #fff;
+}
+
+.actionButton:hover {
+  opacity: 0.95;
+}
+
+.actionButton:active {
+  opacity: 0.98;
+}
+
+.actionButtonIcon {
+  font-size: 2.5rem;
+}
