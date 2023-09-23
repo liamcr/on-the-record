@@ -4,7 +4,7 @@ import { header } from "../../common/fonts";
 import "./Heading.common.css";
 
 interface HeadingProps {
-  component: "h1" | "h2" | "h3" | "h4";
+  component: "h1" | "h2" | "h3" | "h4" | "h5";
   content: string;
   className?: string;
 }

@@ -95,9 +95,9 @@
 }
 
 .slidingButtonContainerEnabled {
-  transform: translateY(-20vw);
+  transform: translateY(clamp(-128px, -20vw, -64px));
   opacity: 1;
-  height: 30vw;
+  height: clamp(64px, 30vw, 128px);
 }
 
 .slidingButton {
