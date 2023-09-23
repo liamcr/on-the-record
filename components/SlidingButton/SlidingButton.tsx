@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import styles from "./SlidingButton.module.css";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -20,10 +20,6 @@ interface SlidingButtonProps {
    */
   text: string;
   /**
-   * Font size of the text
-   */
-  textSize: string;
-  /**
    * Function to run when the button is clicked
    *
    * @returns
@@ -33,15 +29,19 @@ interface SlidingButtonProps {
    * Is the button going to slide in/out on hover?
    */
   animated?: boolean;
+  /**
+   * Name of the HTML class of the parent div
+   */
+  className?: string;
 }
 
 const SlidingButton: React.FC<SlidingButtonProps> = ({
   icon,
   iconSize,
   text,
-  textSize,
   onClick,
   animated: interactive = true,
+  className,
 }) => {
   const Icon = icon;
   const [isHovering, setIsHovering] = useState(false);
@@ -57,7 +57,7 @@ const SlidingButton: React.FC<SlidingButtonProps> = ({
 
   return (
     <div
-      className={styles.slidingButton}
+      className={`${styles.slidingButton} ${className}`}
       style={{
         width:
           isHovering || !interactive
@@ -68,12 +68,8 @@ const SlidingButton: React.FC<SlidingButtonProps> = ({
       onMouseLeave={interactive ? onMouseExit : () => {}}
       onClick={onClick}
     >
-      <Icon style={{ fontSize: iconSize }} />
-      <p
-        style={{ fontSize: textSize }}
-        ref={textRef}
-        className={`${body.className} ${styles.text}`}
-      >
+      <Icon className={styles.icon} style={{ fontSize: iconSize }} />
+      <p ref={textRef} className={`${body.className} ${styles.text}`}>
         {text}
       </p>
     </div>

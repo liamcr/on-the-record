@@ -12,6 +12,8 @@
   --navbar-background-rgba: 218, 218, 218, 0.95;
 
   --card-background-rgba: 222, 222, 222, 0.8;
+
+  --nav-overlay-rbga: 255, 255, 255, 0.25;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +28,8 @@
     --navbar-background-rgba: 39, 39, 39, 0.95;
 
     --card-background-rgba: 40, 40, 40, 0.8;
+
+    --nav-overlay-rbga: 0, 0, 0, 0.25;
   }
 }
 

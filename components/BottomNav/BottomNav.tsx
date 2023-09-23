@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 import styles from "./BottomNav.module.css";
 
@@ -7,6 +7,10 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
+import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
+import SlidingButton from "../SlidingButton/SlidingButton";
+import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 
 interface BottomNavProps {
   /**
@@ -16,6 +20,15 @@ interface BottomNavProps {
 }
 
 const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
+  const [moreActionsEnabled, setMoreActionsEnabled] = useState(false);
+  const onActionButtonClick = () => {
+    setMoreActionsEnabled((prevState) => !prevState);
+  };
+
+  const onOverlayClick = () => {
+    setMoreActionsEnabled(false);
+  };
+
   return (
     <>
       <div className={styles.bottomNavBar}>
@@ -41,11 +54,40 @@ const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
           style={{
             backgroundColor: colour,
           }}
+          onClick={onActionButtonClick}
         >
           <AddRoundedIcon className={styles.actionButtonIcon} />
         </div>
-        {/* ..sliding buttons here */}
       </div>
+      <div
+        className={`${styles.slidingButtonContainerBase} ${
+          moreActionsEnabled
+            ? styles.slidingButtonContainerEnabled
+            : styles.slidingButtonContainerDisabled
+        }`}
+      >
+        <SlidingButton
+          icon={RateReviewOutlined}
+          iconSize="1.5rem"
+          text="Review"
+          onClick={() => {
+            console.log("Hi");
+          }}
+          className={styles.slidingButton}
+        />
+        <SlidingButton
+          icon={ListOutlinedIcon}
+          iconSize="1.5rem"
+          text="List"
+          onClick={() => {
+            console.log("Hi");
+          }}
+          className={styles.slidingButton}
+        />
+      </div>
+      {moreActionsEnabled && (
+        <div onClick={onOverlayClick} className={styles.overlay} />
+      )}
     </>
   );
 };

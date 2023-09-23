@@ -24,9 +24,8 @@ type Story = StoryObj<typeof meta>;
 export const List: Story = {
   args: {
     icon: ListOutlinedIcon,
-    iconSize: "4rem",
+    iconSize: "1rem",
     text: "List",
-    textSize: "3rem",
     onClick: () => {
       console.log("Clicked");
     },
@@ -36,9 +35,8 @@ export const List: Story = {
 export const Review: Story = {
   args: {
     icon: RateReviewOutlinedIcon,
-    iconSize: "4rem",
+    iconSize: "1rem",
     text: "Review",
-    textSize: "3rem",
     onClick: () => {
       console.log("Clicked");
     },
@@ -48,9 +46,8 @@ export const Review: Story = {
 export const NotInteractive: Story = {
   args: {
     icon: RateReviewOutlinedIcon,
-    iconSize: "4rem",
+    iconSize: "1rem",
     text: "Review",
-    textSize: "3rem",
     animated: false,
     onClick: () => {
       console.log("Clicked");

@@ -6,6 +6,7 @@
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 100;
 }
 
 .navButtons {
@@ -41,16 +42,20 @@
   font-size: 1.5rem;
 }
 
+.actionButtonContainer {
+  position: fixed;
+  right: 10vw;
+  bottom: 5vw;
+  z-index: 101;
+}
+
 .actionButton {
   cursor: pointer;
-  position: fixed;
-  width: 20vw;
-  height: 20vw;
+  width: clamp(64px, 20vw, 128px);
+  height: clamp(64px, 20vw, 128px);
   display: flex;
   justify-content: center;
   align-items: center;
-  right: calc(10vw);
-  bottom: calc(5vw);
   border-radius: 8px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
   color: #fff;
@@ -65,5 +70,58 @@
 }
 
 .actionButtonIcon {
-  font-size: 2.5rem;
+  /* I have to use !important here because MaterialUI adds a font-size
+  of 1.5rem to their icons by default, which takes precedence over any
+  font size I would typically set here */
+  font-size: 3rem !important;
+}
+
+.slidingButtonContainerBase {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-evenly;
+  position: fixed;
+  right: 10vw;
+  bottom: 5vw;
+  width: 20vw;
+  transition: all 0.2s;
+  z-index: 99;
+}
+
+.slidingButtonContainerDisabled {
+  opacity: 0;
+  height: 20vw;
+}
+
+.slidingButtonContainerEnabled {
+  transform: translateY(-20vw);
+  opacity: 1;
+  height: 30vw;
+}
+
+.slidingButton {
+  transform: translateX(-1vw);
+}
+
+.overlay {
+  /* TODO: DELETE */
+  --nav-overlay-rbga: 255, 255, 255, 0.25;
+  height: 100dvh;
+  width: 100dvw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 98;
+  background-color: rgba(var(--nav-overlay-rbga));
+}
+
+/* Small Mobile */
+@media (max-width: 360px) {
+  .actionButtonIcon {
+    /* I have to use !important here because MaterialUI adds a font-size
+    of 1.5rem to their icons by default, which takes precedence over any
+    font size I would typically set here */
+    font-size: 2.5rem !important;
+  }
 }

@@ -8,8 +8,8 @@
   overflow: hidden;
   transition: width 0.4s;
   cursor: pointer;
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 0.25rem;
+  border-radius: 4px;
   box-shadow: 0px 8px 10px 0px rgba(40, 40, 40, 0.2);
   -webkit-user-select: none;
   -ms-user-select: none;
@@ -20,6 +20,11 @@
   opacity: 0.9;
 }
 
+.icon {
+  font-size: 1rem;
+}
+
 .text {
-  padding-left: 1rem;
+  padding-left: 0.5rem;
+  font-size: 1rem;
 }
