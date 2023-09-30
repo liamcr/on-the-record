@@ -7,6 +7,8 @@ import Image from "next/image";
 import Spotify from "../public/spotify.svg";
 import AppleMusic from "../public/appleMusic.svg";
 import AmazonMusic from "../public/amazonMusic.svg";
+import Link from "next/link";
+import { buildAuthenticationUri } from "../common/streamingServiceFns";
 
 export default function Home() {
   return (
@@ -20,48 +22,39 @@ export default function Home() {
           <div className={styles.horizontalSpacer} />
         </div>
         <div className={styles.buttons}>
-          <ButtonBase
-            style={{
-              backgroundColor: "#1DB954",
-              width: "100%",
-              marginBlock: "1.5rem",
-            }}
+          <Link
+            href={buildAuthenticationUri(
+              "spotify",
+              process.env.SPOTIFY_CLIENT_ID || "",
+              process.env.REDIRECT_URI || "",
+              ["user-read-email"]
+            )}
+            className={`${styles.button} ${styles.spotifyButton}`}
           >
             <div className={styles.logoContainer}>
               <Image src={Spotify} alt="Spotify Logo" fill />
             </div>
             <Body className={styles.spotifyText} content="Spotify" />
-          </ButtonBase>
-          <ButtonBase
-            style={{
-              backgroundColor: "#fb435b",
-              width: "100%",
-              marginBlock: "1.5rem",
-            }}
+          </Link>
+          <Link
+            href={buildAuthenticationUri("appleMusic", "", "", [])}
+            className={`${styles.button} ${styles.appleMusicButton}`}
           >
             <div className={styles.logoContainer}>
               <Image src={AppleMusic} alt="Apple Music Logo" fill />
             </div>
             <Body className={styles.appleMusicText} content="Apple Music" />
-          </ButtonBase>
-          <ButtonBase
-            style={{
-              backgroundColor: "#1b9ba1",
-              width: "100%",
-              marginBlock: "1.5rem",
-            }}
+          </Link>
+          <Link
+            href={buildAuthenticationUri("amazonMusic", "", "", [])}
+            className={`${styles.button} ${styles.amazonMusicButton}`}
           >
             <div className={styles.logoContainer}>
               <Image src={AmazonMusic} alt="Amazon Music Logo" fill />
             </div>
             <Body className={styles.amazonMusicText} content="Amazon Music" />
-          </ButtonBase>
+          </Link>
         </div>
-        {/* Logo
-    Login With...
-    Spotify
-    Apple
-    Amazon */}
       </div>
     </>
   );

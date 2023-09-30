@@ -72,6 +72,37 @@
   width: clamp(0px, 70vw, 256px);
 }
 
+.button {
+  width: 100%;
+  margin-block: 1.5rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button:active {
+  opacity: 0.95;
+}
+
+.spotifyButton {
+  background-color: #1db954;
+}
+
+.appleMusicButton {
+  background-color: #fb435b;
+}
+
+.amazonMusicButton {
+  background-color: #1b9ba1;
+}
+
 .logoContainer {
   position: relative;
   height: 2rem;
