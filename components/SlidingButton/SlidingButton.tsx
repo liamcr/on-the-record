@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import styles from "./SlidingButton.module.css";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
-import Body from "../Body/Body";
 import { body } from "../..//common/fonts";
 
 interface SlidingButtonProps {

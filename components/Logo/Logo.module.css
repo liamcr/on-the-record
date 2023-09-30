@@ -1,0 +1,38 @@
+.logoContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.svg {
+  width: 7rem;
+  height: 7rem;
+}
+
+.logoText {
+  font-size: 5rem;
+}
+
+/* Small Mobile */
+@media (max-width: 520px) {
+  .svg {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .logoText {
+    font-size: 3rem;
+  }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 320px) {
+  .svg {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .logoText {
+    font-size: 2.5rem;
+  }
+}

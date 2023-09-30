@@ -1,4 +1,4 @@
-import { Open_Sans, Roboto } from "next/font/google";
+import { Caveat, Open_Sans, Roboto } from "next/font/google";
 
 export const header = Open_Sans({
   weight: ["400", "700"],
@@ -6,6 +6,11 @@ export const header = Open_Sans({
 });
 
 export const body = Roboto({
+  weight: ["400"],
+  subsets: ["latin"],
+});
+
+export const logo = Caveat({
   weight: ["400"],
   subsets: ["latin"],
 });
