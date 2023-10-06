@@ -25,7 +25,33 @@ export interface User extends UserCondensed {
    * The user's chosen primary colour.
    */
   colour: string;
-  // TODO: Music Opinions- but different name
+  /**
+   * The date the user was created on
+   */
+  createdOn: Date;
+  /**
+   * The music notes associated with the user
+   */
+  musicNotes: MusicNote[];
+}
+
+export interface MusicNote {
+  /**
+   * Prompt for the music note, e.g. "Favourite Song"
+   */
+  prompt: string;
+  /**
+   * src for the image corresponding to the title and subtitle
+   */
+  imageSrc: string;
+  /**
+   * Title for the music opinion. Either the song name, album name, or artist name
+   */
+  title: string;
+  /**
+   * Subtitle of the music opinion. Always the artist name
+   */
+  subtitle?: string;
 }
 
 /**

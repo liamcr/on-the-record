@@ -8,7 +8,7 @@ import Spotify from "../public/spotify.svg";
 import AppleMusic from "../public/appleMusic.svg";
 import AmazonMusic from "../public/amazonMusic.svg";
 import Link from "next/link";
-import { buildAuthenticationUri } from "../common/streamingServiceFns";
+import { StreamingServiceController } from "../common/streamingServiceFns";
 
 export default function Home() {
   return (
@@ -23,11 +23,11 @@ export default function Home() {
         </div>
         <div className={styles.buttons}>
           <Link
-            href={buildAuthenticationUri(
+            href={StreamingServiceController.buildAuthenticationUri(
               "spotify",
               process.env.SPOTIFY_CLIENT_ID || "",
               process.env.REDIRECT_URI || "",
-              ["user-read-email"]
+              ["user-read-private", "user-read-email"]
             )}
             className={`${styles.button} ${styles.spotifyButton}`}
           >
@@ -37,7 +37,12 @@ export default function Home() {
             <Body className={styles.spotifyText} content="Spotify" />
           </Link>
           <Link
-            href={buildAuthenticationUri("appleMusic", "", "", [])}
+            href={StreamingServiceController.buildAuthenticationUri(
+              "appleMusic",
+              "",
+              "",
+              []
+            )}
             className={`${styles.button} ${styles.appleMusicButton}`}
           >
             <div className={styles.logoContainer}>
@@ -46,7 +51,12 @@ export default function Home() {
             <Body className={styles.appleMusicText} content="Apple Music" />
           </Link>
           <Link
-            href={buildAuthenticationUri("amazonMusic", "", "", [])}
+            href={StreamingServiceController.buildAuthenticationUri(
+              "amazonMusic",
+              "",
+              "",
+              []
+            )}
             className={`${styles.button} ${styles.amazonMusicButton}`}
           >
             <div className={styles.logoContainer}>
