@@ -1,0 +1,35 @@
+.recordStrokes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
+
+.needle {
+  transform-box: fill-box;
+  transform-origin: top right;
+  animation: wobble 3s linear infinite;
+}
+
+@keyframes wobble {
+  0% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: -2deg;
+  }
+  75% {
+    rotate: 2deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
