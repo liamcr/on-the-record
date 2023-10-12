@@ -1,7 +1,5 @@
 import axios from "axios";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { redirect } from "next/navigation";
-import { NextRouter } from "next/router";
 
 export type StreamingService = "spotify" | "appleMusic" | "amazonMusic";
 
@@ -61,7 +59,7 @@ class StreamingServiceController {
 
   static isTokenExpired() {
     let currentTimeStamp = Math.floor(Date.now() / 1000);
-    let authExpiry = sessionStorage.getItem("otrSpotifyTokenExpiration");
+    let authExpiry = sessionStorage.getItem("otrTokenExpiration");
 
     if (authExpiry !== null) {
       if (currentTimeStamp < parseInt(authExpiry)) {
