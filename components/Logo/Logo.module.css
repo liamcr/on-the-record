@@ -13,6 +13,10 @@
   font-size: 5rem;
 }
 
+.recordFill {
+  transition: fill 0.5s;
+}
+
 /* Small Mobile */
 @media (max-width: 520px) {
   .svg {

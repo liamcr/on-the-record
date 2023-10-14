@@ -1,0 +1,12 @@
+.loadingIconOuterContainer {
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingIconInnerContainer {
+  width: clamp(50px, 50vw, 256px);
+  aspect-ratio: 1;
+}

@@ -1,7 +1,6 @@
 import styles from "./page.module.css";
 import Logo from "../components/Logo/Logo";
 import Body from "../components/Body/Body";
-import ButtonBase from "../components/ButtonBase/ButtonBase";
 import Image from "next/image";
 
 import Spotify from "../public/spotify.svg";

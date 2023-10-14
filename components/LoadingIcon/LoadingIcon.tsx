@@ -51,7 +51,13 @@ const LoadingIcon: React.FC<LogoProps> = ({ colour = "gray" }) => {
           d="M90.8649 227.15L125.489 213.548L157.022 238.898L120.543 354.518L84.0637 340.297L42.6383 304.436L15.4336 256.21L90.8649 227.15Z"
           fill="white"
         />
-        <circle cx="170.006" cy="194.999" r="49.4631" fill={colour} />
+        <circle
+          cx="170.006"
+          cy="194.999"
+          r="49.4631"
+          fill={colour}
+          className={styles.recordFill}
+        />
         <circle
           cx="170.006"
           cy="194.999"

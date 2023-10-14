@@ -43,7 +43,13 @@ const Logo: React.FC<LogoProps> = ({ colour = "gray" }) => {
           d="M52.7552 117.788L72.9888 109.839L91.4158 124.653L70.0983 192.218L48.7808 183.908L24.5727 162.952L8.67493 134.77L52.7552 117.788Z"
           fill="white"
         />
-        <circle cx="99.0037" cy="98.9996" r="28.9051" fill={colour} />
+        <circle
+          cx="99.0037"
+          cy="98.9996"
+          r="28.9051"
+          fill={colour}
+          className={styles.recordFill}
+        />
         <circle
           cx="99.0037"
           cy="98.9996"
