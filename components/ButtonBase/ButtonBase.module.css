@@ -1,16 +1,23 @@
 .base {
-  padding: 0.75rem;
-  border-radius: 8px;
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
+  border-radius: 4px;
   border: none;
   display: flex;
   flex-direction: row;
   align-items: center;
+  cursor: pointer;
 }
 
-.base:hover {
+.base:hover:enabled {
   opacity: 0.9;
 }
 
-.base:active {
+.base:active:enabled {
   opacity: 0.95;
+}
+
+.base:disabled {
+  background-color: gray !important;
+  color: darkgray;
 }

@@ -2,18 +2,14 @@ import React from "react";
 
 import styles from "./ButtonBase.module.css";
 
-interface ButtonBaseProps {
-  style?: React.CSSProperties;
-  onClick?: () => any;
-}
-
-const ButtonBase: React.FC<React.PropsWithChildren<ButtonBaseProps>> = ({
-  style,
-  onClick,
-  children,
-}) => {
+const ButtonBase: React.FC<
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >
+> = ({ className, children, ...props }) => {
   return (
-    <button className={styles.base} style={style} onClick={onClick}>
+    <button className={`${styles.base} ${className}`} {...props}>
       {children}
     </button>
   );

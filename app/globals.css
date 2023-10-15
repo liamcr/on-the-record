@@ -17,6 +17,8 @@
 
   --music-note-background-rgb: 195, 195, 195;
   --music-note-line-rgb: 101, 101, 101;
+
+  --text-field-background-rgba: 0, 0, 0, 0.06;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +38,8 @@
 
     --music-note-background-rgb: 56, 56, 56;
     --music-note-line-rgb: 168, 168, 168;
+
+    --text-field-background-rgba: 255, 255, 255, 0.06;
   }
 }
 
