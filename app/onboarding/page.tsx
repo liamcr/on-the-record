@@ -5,8 +5,7 @@ import React, { useState } from "react";
 import styles from "./page.module.css";
 import Heading from "../../components/Heading/Heading";
 import ButtonBase from "../../components/ButtonBase/ButtonBase";
-import { User } from "../../common/types";
-import Body from "../../components/Body/Body";
+import Body from "@/components/Body/Body";
 import TextField from "@/components/TextField/TextField";
 
 export default function Onboarding() {
@@ -16,8 +15,13 @@ export default function Onboarding() {
 
   return (
     <>
-      <div className={styles.pageContainer}>
-        {page === 0 && (
+      <div>
+        <div
+          className={styles.pageContainer}
+          style={{
+            left: page === 0 ? "0" : "-100%",
+          }}
+        >
           <div className={styles.onboardingContainer}>
             <Heading
               component="h1"
@@ -47,10 +51,87 @@ export default function Onboarding() {
               inputProps={{ maxLength: 30, name: "otrName" }}
             />
           </div>
-        )}
+        </div>
+        <div
+          className={styles.pageContainer}
+          style={{
+            left: page === 1 ? "0" : page < 1 ? "100%" : "-100%",
+          }}
+        >
+          <div className={styles.onboardingContainer}>
+            <Heading
+              component="h1"
+              content="Upload a Profile Pic"
+              className={styles.titleBase}
+            />
+            <Heading
+              component="h2"
+              content="This is optional and can be changed at any time."
+              className={styles.subtitleBase}
+            />
+          </div>
+        </div>
+        <div
+          className={styles.pageContainer}
+          style={{
+            left: page === 2 ? "0" : page < 2 ? "100%" : "-100%",
+          }}
+        >
+          <div className={styles.onboardingContainer}>
+            <Heading
+              component="h1"
+              content="A Couple More Things"
+              className={styles.titleBase}
+            />
+            <Heading
+              component="h2"
+              content="What's your favourite colour?"
+              className={styles.subtitleBase}
+            />
+          </div>
+        </div>
+        <div
+          className={styles.pageContainer}
+          style={{
+            left: page === 3 ? "0" : page < 3 ? "100%" : "-100%",
+          }}
+        >
+          <div className={styles.onboardingContainer}>
+            <Heading
+              component="h1"
+              content="Almost Done"
+              className={styles.titleBase}
+            />
+            <Heading
+              component="h2"
+              content="The people want to know your music opinions! Add two of them here."
+              className={styles.subtitleBase}
+            />
+          </div>
+        </div>
       </div>
       <footer className={styles.footer}>
         <div className={styles.footerContainer}>
+          {page > 0 && (
+            <ButtonBase
+              disabled={page === 0 && name === ""}
+              className={styles.footerBackButton}
+              style={{
+                backgroundColor: "rgb(var(--foreground-rgb))",
+                color: "rgb(var(--background-rgb))",
+              }}
+              onClick={() => {
+                if (page <= 0) {
+                  // Shouldn't be visible
+                  return;
+                }
+
+                setPage((currentPage) => currentPage - 1);
+              }}
+            >
+              <Body content="Back" />
+            </ButtonBase>
+          )}
           <div>
             {[0, 1, 2, 3].map((val) => (
               <button
@@ -58,6 +139,7 @@ export default function Onboarding() {
                 onClick={() => {
                   setPage(val);
                 }}
+                disabled={page <= val}
                 key={val}
                 style={{
                   backgroundColor:
@@ -67,7 +149,7 @@ export default function Onboarding() {
             ))}
           </div>
           <ButtonBase
-            disabled={name === ""}
+            disabled={page === 0 && name === ""}
             className={styles.footerButton}
             style={{
               backgroundColor:

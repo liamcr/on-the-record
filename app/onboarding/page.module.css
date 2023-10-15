@@ -1,11 +1,14 @@
 .pageContainer {
-  padding: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
+  width: 100vw;
+  position: absolute;
+  transition: left 0.5s;
 }
 
 .onboardingContainer {
+  padding-top: 2rem;
   width: clamp(10px, 90vw, 600px);
 }
 
@@ -47,8 +50,18 @@
   cursor: pointer;
 }
 
+.footerDot:disabled {
+  cursor: default;
+}
+
 .footerButton {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+
+.footerBackButton {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }

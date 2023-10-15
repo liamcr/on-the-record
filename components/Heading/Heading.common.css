@@ -26,10 +26,21 @@ h5 {
   font-size: 1.2rem;
 }
 
-/* Small Mobile */
+/* Mobile */
 @media (max-width: 520px) {
   h1 {
     font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 350px) {
+  h1 {
+    font-size: 2.5rem;
   }
 
   h2 {
