@@ -74,3 +74,13 @@ h3 {
     color-scheme: dark;
   }
 }
+
+/* Disable horizontal scroll on mobile */
+html,
+body {
+  overflow-x: hidden;
+}
+body {
+  position: relative;
+  min-height: 100dvh;
+}
