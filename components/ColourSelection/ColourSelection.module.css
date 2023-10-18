@@ -1,0 +1,22 @@
+.colourSelectionContainer {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 2rem;
+}
+
+.colourSelection {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: border 0.2s;
+}
+
+.innerColourSelection {
+  aspect-ratio: 1;
+  width: 95%;
+  border-radius: 4px;
+  cursor: pointer;
+}

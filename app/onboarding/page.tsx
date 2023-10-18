@@ -7,6 +7,7 @@ import Heading from "../../components/Heading/Heading";
 import ButtonBase from "../../components/ButtonBase/ButtonBase";
 import Body from "@/components/Body/Body";
 import TextField from "@/components/TextField/TextField";
+import ColourSelection from "@/components/ColourSelection/ColourSelection";
 
 export default function Onboarding() {
   const [page, setPage] = useState(0);
@@ -87,6 +88,17 @@ export default function Onboarding() {
               component="h2"
               content="What's your favourite colour?"
               className={styles.subtitleBase}
+            />
+            <ColourSelection
+              colours={[
+                "#1A2EE3",
+                "#148D19",
+                "#F6A120",
+                "#CC1BE9",
+                "#E23A3A",
+                "#E2CF23",
+              ]}
+              onChange={setColour}
             />
           </div>
         </div>

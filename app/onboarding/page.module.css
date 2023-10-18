@@ -58,6 +58,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
+  transition: background-color 0.5s;
 }
 
 .footerBackButton {
