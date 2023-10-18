@@ -3,8 +3,16 @@
   flex-direction: row;
   justify-content: center;
   width: 100vw;
+  max-height: 100dvh;
+  overflow-y: scroll;
   position: absolute;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   transition: left 0.5s;
+}
+
+.pageContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .onboardingContainer {
@@ -29,6 +37,7 @@
   justify-content: center;
   align-items: center;
   width: 100vw;
+  background-color: rgb(var(--background-rgb));
 }
 
 .footerContainer {

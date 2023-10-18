@@ -100,6 +100,7 @@ export default function Onboarding() {
               ]}
               onChange={setColour}
             />
+            <div style={{ height: "10vh" }} />
           </div>
         </div>
         <div

@@ -22,7 +22,9 @@ const ColourSelection: React.FC<ColourSelectionProps> = ({
           }`}
           key={i}
           style={{
-            border: `${selected === i ? colour : "transparent"} 2px solid`,
+            border: `${
+              selected === i ? colour : "rgb(var(--music-note-background-rgb))"
+            } 2px solid`,
           }}
         >
           <div
