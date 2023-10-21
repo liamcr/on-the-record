@@ -8,11 +8,14 @@ import ButtonBase from "../../components/ButtonBase/ButtonBase";
 import Body from "@/components/Body/Body";
 import TextField from "@/components/TextField/TextField";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
+import Search from "@/components/Search/Search";
+import { EntityType } from "@/common/types";
 
 export default function Onboarding() {
   const [page, setPage] = useState(0);
   const [name, setName] = useState("");
   const [colour, setColour] = useState("");
+  const [searchEnabled, setSearchEnabled] = useState(false);
 
   return (
     <>
@@ -120,9 +123,18 @@ export default function Onboarding() {
               content="The people want to know your music opinions! Add two of them here."
               className={styles.subtitleBase}
             />
+            <ButtonBase onClick={() => setSearchEnabled(true)}>
+              Click for search
+            </ButtonBase>
           </div>
         </div>
       </div>
+      <Search
+        enabled={searchEnabled}
+        type={EntityType.Album}
+        onSelect={() => {}}
+        onClose={() => setSearchEnabled(false)}
+      />
       <footer className={styles.footer}>
         <div className={styles.footerContainer}>
           {page > 0 && (
@@ -162,7 +174,9 @@ export default function Onboarding() {
             ))}
           </div>
           <ButtonBase
-            disabled={page === 0 && name === ""}
+            disabled={
+              (page === 0 && name === "") || (page === 2 && colour === "")
+            }
             className={styles.footerButton}
             style={{
               backgroundColor:

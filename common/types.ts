@@ -35,11 +35,14 @@ export interface User extends UserCondensed {
   musicNotes: MusicNote[];
 }
 
-export interface MusicNote {
+export interface MusicNote extends Entity {
   /**
    * Prompt for the music note, e.g. "Favourite Song"
    */
   prompt: string;
+}
+
+export interface Entity {
   /**
    * src for the image corresponding to the title and subtitle
    */

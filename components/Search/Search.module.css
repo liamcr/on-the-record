@@ -1,0 +1,31 @@
+.searchOverlay {
+  position: absolute;
+  width: 100vw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(var(--nav-overlay-rbga));
+  z-index: 150;
+}
+
+.searchBar {
+  --input-font-size: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  background-color: rgba(var(--search-background-rgba));
+  border-radius: 4px;
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
+  align-items: center;
+  width: clamp(1px, 90%, 450px);
+}
+
+/* Small Mobile */
+@media (max-width: 520px) {
+  .searchBar {
+    --input-font-size: 1rem;
+  }
+}

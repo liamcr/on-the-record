@@ -20,4 +20,5 @@
 .base:disabled {
   background-color: gray !important;
   color: darkgray;
+  cursor: default;
 }
