@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import SearchIcon from "@mui/icons-material/Search";
 
 import styles from "./Search.module.css";
 import { Entity, EntityType } from "@/common/types";
+import { debounce } from "@/common/functions";
+import {
+  StreamingService,
+  StreamingServiceController,
+} from "@/common/streamingServiceFns";
 
 interface SearchProps {
   enabled: boolean;
@@ -21,6 +26,19 @@ const Search: React.FC<SearchProps> = ({
   onSelect,
   onClose,
 }) => {
+  const [results, setResults] = useState<Entity[]>([]);
+
+  const onSearchChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    let log = StreamingServiceController.search(
+      sessionStorage.getItem("otrStreamingService") as StreamingService,
+      sessionStorage.getItem("otrAccessToken") || "",
+      event.target.value
+    );
+    console.log(log);
+  };
+
   return (
     enabled && (
       <div
@@ -46,6 +64,7 @@ const Search: React.FC<SearchProps> = ({
             inputProps={{
               "aria-label": `search ${EntityTypeNames[type].toLowerCase()}s`,
             }}
+            onChange={debounce(onSearchChange, 300)}
           />
         </div>
       </div>

@@ -96,3 +96,21 @@ export const generatePalette = (imageData: Uint8ClampedArray): RGB[] => {
 
   return quantization(imageRGBData, 0);
 };
+
+export function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let timer: NodeJS.Timeout | null;
+
+  return function (...args: Parameters<T>) {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+      func(...args);
+      timer = null;
+    }, delay);
+  };
+}

@@ -132,6 +132,14 @@ class StreamingServiceController {
       streamingService: "spotify",
     };
   };
+
+  static search = async (
+    streamingService: StreamingService,
+    accessToken: string,
+    query: string
+  ) => {
+    return "Hi";
+  };
 }
 
 export { StreamingServiceController };
