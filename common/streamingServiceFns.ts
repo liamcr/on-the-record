@@ -1,5 +1,6 @@
 import axios from "axios";
 import { redirect } from "next/navigation";
+import { Entity } from "./types";
 
 export type StreamingService = "spotify" | "appleMusic" | "amazonMusic";
 
@@ -136,9 +137,63 @@ class StreamingServiceController {
   static search = async (
     streamingService: StreamingService,
     accessToken: string,
-    query: string
+    query: string,
+    type: string
   ) => {
-    return "Hi";
+    if (streamingService === "spotify") {
+      const resp = await this.apiRequest(
+        "GET",
+        `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+          query
+        )}&type=${type}&limit=5`,
+        accessToken,
+        {}
+      );
+
+      if (resp.status !== 200) {
+        // Token is expired, redirect to login screen
+        // TODO: Handle errors in this function better
+        console.log(resp);
+        return [];
+      }
+
+      let results = resp.data[`${type}s`]?.items;
+
+      let entities: Entity[] = results.map((item: any) => {
+        let subtitle = "";
+        if (item.artists !== undefined && item.artists.length > 0) {
+          subtitle += item.artists[0].name;
+          for (let artist of item.artists.slice(1)) {
+            subtitle += `, ${artist.name}`;
+          }
+        }
+
+        let image = "#";
+        if (type === "track") {
+          if (
+            item?.album?.images &&
+            item.album.images.length > 0 &&
+            item.album.images[0].url
+          ) {
+            image = item.album.images[0].url;
+          }
+        } else {
+          if (item.images && item.images.length > 0 && item.images[0].url) {
+            image = item.images[0].url;
+          }
+        }
+
+        return {
+          title: item.name,
+          subtitle,
+          imageSrc: image,
+        };
+      });
+
+      return entities;
+    }
+
+    return [];
   };
 }
 

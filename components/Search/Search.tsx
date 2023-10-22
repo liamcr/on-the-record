@@ -10,6 +10,7 @@ import {
   StreamingService,
   StreamingServiceController,
 } from "@/common/streamingServiceFns";
+import Body from "../Body/Body";
 
 interface SearchProps {
   enabled: boolean;
@@ -18,7 +19,7 @@ interface SearchProps {
   onClose?: () => void;
 }
 
-const EntityTypeNames = ["Track", "Album", "Artist"];
+const entityTypeNames = ["Track", "Album", "Artist"];
 
 const Search: React.FC<SearchProps> = ({
   enabled,
@@ -31,12 +32,18 @@ const Search: React.FC<SearchProps> = ({
   const onSearchChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    let log = StreamingServiceController.search(
+    if (event.target.value === "") {
+      setResults([]);
+      return;
+    }
+    StreamingServiceController.search(
       sessionStorage.getItem("otrStreamingService") as StreamingService,
       sessionStorage.getItem("otrAccessToken") || "",
-      event.target.value
-    );
-    console.log(log);
+      event.target.value,
+      entityTypeNames[type].toLowerCase()
+    ).then((resp) => {
+      setResults(resp);
+    });
   };
 
   return (
@@ -60,12 +67,19 @@ const Search: React.FC<SearchProps> = ({
               color: "rgb(var(--foreground-rgb))",
               fontSize: "var(--input-font-size)",
             }}
-            placeholder={`Search ${EntityTypeNames[type]}s...`}
+            placeholder={`Search ${entityTypeNames[type]}s...`}
             inputProps={{
-              "aria-label": `search ${EntityTypeNames[type].toLowerCase()}s`,
+              "aria-label": `search ${entityTypeNames[type].toLowerCase()}s`,
             }}
             onChange={debounce(onSearchChange, 300)}
           />
+        </div>
+        <div className={styles.resultsContainer}>
+          {results.map((entity, i) => (
+            <div key={i} className={styles.result}>
+              <Body content={entity.title} />
+            </div>
+          ))}
         </div>
       </div>
     )
