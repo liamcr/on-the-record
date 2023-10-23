@@ -11,9 +11,6 @@ import { generatePalette } from "../../common/functions";
 import ReviewScore from "../ReviewScore/ReviewScore";
 import { body } from "../../common/fonts";
 
-// TODO: Make this CSS variable that works for light/dark modes?
-const cardDefaultColour = "rgba(128, 128, 128, 0.10)";
-
 const ReviewCard: React.FC<Review> = ({
   author,
   score,

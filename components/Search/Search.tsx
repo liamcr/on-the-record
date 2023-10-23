@@ -11,6 +11,7 @@ import {
   StreamingServiceController,
 } from "@/common/streamingServiceFns";
 import Body from "../Body/Body";
+import Image from "next/image";
 
 interface SearchProps {
   enabled: boolean;
@@ -77,7 +78,20 @@ const Search: React.FC<SearchProps> = ({
         <div className={styles.resultsContainer}>
           {results.map((entity, i) => (
             <div key={i} className={styles.result}>
-              <Body content={entity.title} />
+              <div className={styles.imageContainer}>
+                <Image
+                  src={entity.imageSrc}
+                  fill
+                  alt={entity.title}
+                  className={styles.image}
+                />
+              </div>
+              <div className={styles.titlesContainer}>
+                <Body content={entity.title} className={styles.title} />
+                {entity.subtitle && entity.subtitle !== "" && (
+                  <Body content={entity.subtitle} className={styles.subtitle} />
+                )}
+              </div>
             </div>
           ))}
         </div>
