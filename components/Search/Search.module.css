@@ -51,7 +51,7 @@
   align-items: center;
   background-color: rgb(var(--search-background-rgb));
   padding-inline: 1rem;
-  padding-block: 0.5rem;
+  padding-block: 0.75rem;
 }
 
 .result:hover {

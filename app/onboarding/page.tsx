@@ -9,13 +9,50 @@ import Body from "@/components/Body/Body";
 import TextField from "@/components/TextField/TextField";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
 import Search from "@/components/Search/Search";
-import { EntityType } from "@/common/types";
+import { Entity, EntityType, MusicNote } from "@/common/types";
+import Select from "@/components/Select/Select";
+import MenuItem from "@mui/material/MenuItem";
+import EditableMusicNote from "@/components/EditableMusicNote/EditableMusicNote";
+
+const prompts = [
+  "My Favourite Artist",
+  "My Favourite Album",
+  "My Favourite Song",
+  "The Song I Last Cried To",
+  "The Best Song To Play During A Workout",
+];
+
+const promptTypeMap = [
+  EntityType.Artist,
+  EntityType.Album,
+  EntityType.Track,
+  EntityType.Track,
+  EntityType.Track,
+];
 
 export default function Onboarding() {
   const [page, setPage] = useState(0);
   const [name, setName] = useState("");
   const [colour, setColour] = useState("");
   const [searchEnabled, setSearchEnabled] = useState(false);
+
+  const [firstPromptIndex, setFirstPromptIndex] = useState<string | number>("");
+  const [firstMusicNote, setFirstMusicNote] = useState<Entity | undefined>();
+  const [firstOpen, setFirstOpen] = useState(false);
+
+  const [secondPromptIndex, setSecondPromptIndex] = useState<string | number>(
+    ""
+  );
+  const [secondMusicNote, setSecondMusicNote] = useState<Entity | undefined>();
+  const [selectedPrompt, setSelectedPrompt] = useState(0);
+  const [secondOpen, setSecondOpen] = useState(false);
+
+  const onFirstRemoved = () => {
+    setFirstPromptIndex(secondPromptIndex);
+    setFirstMusicNote(secondMusicNote);
+    setSecondPromptIndex("");
+    setSecondMusicNote(undefined);
+  };
 
   return (
     <>
@@ -123,16 +160,93 @@ export default function Onboarding() {
               content="The people want to know your music opinions! Add two of them here."
               className={styles.subtitleBase}
             />
-            <ButtonBase onClick={() => setSearchEnabled(true)}>
-              Click for search
-            </ButtonBase>
+            <div className={styles.musicNoteSelectContainer}>
+              <div>
+                <Select
+                  label="Select a prompt..."
+                  colour={colour}
+                  open={firstOpen}
+                  onOpen={() => setFirstOpen(true)}
+                  onClose={() => setFirstOpen(false)}
+                  onChange={(e) =>
+                    setFirstPromptIndex(e.target.value as number)
+                  }
+                  value={firstPromptIndex}
+                >
+                  {prompts.map((prompt, i) => (
+                    <MenuItem value={i} key={i}>
+                      {prompt}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {firstPromptIndex !== "" && (
+                  <EditableMusicNote
+                    entity={firstMusicNote}
+                    onSelect={() => {
+                      setSelectedPrompt(0);
+                      setSearchEnabled(true);
+                    }}
+                    onRemove={onFirstRemoved}
+                  />
+                )}
+              </div>
+              <div>
+                {firstMusicNote && (
+                  <Select
+                    label="Select another prompt..."
+                    colour={colour}
+                    open={secondOpen}
+                    onOpen={() => setSecondOpen(true)}
+                    onClose={() => setSecondOpen(false)}
+                    onChange={(e) =>
+                      setSecondPromptIndex(e.target.value as number)
+                    }
+                    value={secondPromptIndex}
+                  >
+                    {prompts.map((prompt, i) => (
+                      <MenuItem value={i} key={i}>
+                        {prompt}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+                {secondPromptIndex !== "" && (
+                  <EditableMusicNote
+                    entity={secondMusicNote}
+                    onSelect={() => {
+                      setSelectedPrompt(1);
+                      setSearchEnabled(true);
+                    }}
+                    onRemove={() => {
+                      setSecondMusicNote(undefined);
+                      setSecondPromptIndex("");
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+            <div style={{ height: "10vh" }} />
           </div>
         </div>
       </div>
       <Search
         enabled={searchEnabled}
-        type={EntityType.Album}
-        onSelect={() => {}}
+        type={
+          promptTypeMap[
+            selectedPrompt === 0
+              ? (firstPromptIndex as number)
+              : (secondPromptIndex as number)
+          ]
+        }
+        onSelect={(entity) => {
+          setSearchEnabled(false);
+          if (selectedPrompt === 0) {
+            setFirstMusicNote(entity);
+          } else if (selectedPrompt === 1) {
+            setSecondMusicNote(entity);
+          }
+          setSearchEnabled(false);
+        }}
         onClose={() => setSearchEnabled(false)}
       />
       <footer className={styles.footer}>

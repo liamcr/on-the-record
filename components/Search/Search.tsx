@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import InputBase from "@mui/material/InputBase";
-import Divider from "@mui/material/Divider";
 import SearchIcon from "@mui/icons-material/Search";
 
 import styles from "./Search.module.css";
@@ -56,7 +55,10 @@ const Search: React.FC<SearchProps> = ({
             return;
           }
 
-          onClose && onClose();
+          if (onClose) {
+            setResults([]);
+            onClose();
+          }
         }}
       >
         <div className={styles.searchBar}>
@@ -77,7 +79,14 @@ const Search: React.FC<SearchProps> = ({
         </div>
         <div className={styles.resultsContainer}>
           {results.map((entity, i) => (
-            <div key={i} className={styles.result}>
+            <div
+              key={i}
+              className={styles.result}
+              onClick={() => {
+                onSelect(entity);
+                setResults([]);
+              }}
+            >
               <div className={styles.imageContainer}>
                 <Image
                   src={entity.imageSrc}

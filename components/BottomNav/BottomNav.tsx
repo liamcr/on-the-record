@@ -8,7 +8,6 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
-import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import SlidingButton from "../SlidingButton/SlidingButton";
 import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 

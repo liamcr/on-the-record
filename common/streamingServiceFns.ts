@@ -168,7 +168,7 @@ class StreamingServiceController {
           }
         }
 
-        let image = "#";
+        let image = "/";
         if (type === "track") {
           if (
             item?.album?.images &&

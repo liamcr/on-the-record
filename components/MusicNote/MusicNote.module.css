@@ -1,10 +1,9 @@
 .musicNote {
   /* TODO: REMOVE */
-  --music-note-background-rgb: 195, 195, 195;
   --music-note-line-rgb: 101, 101, 101;
   background-color: transparent;
   aspect-ratio: 1;
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  perspective: 1000px;
 }
 
 .musicNoteInner {
