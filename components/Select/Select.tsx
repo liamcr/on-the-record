@@ -3,12 +3,17 @@ import MuiSelect, { SelectProps } from "@mui/material/Select";
 import {
   FormControl,
   InputLabel,
+  PaletteMode,
   ThemeProvider,
   createTheme,
+  useMediaQuery,
 } from "@mui/material";
 
-const customTheme = (colour: string) =>
+const customTheme = (colour: string, mode: PaletteMode) =>
   createTheme({
+    palette: {
+      mode: mode,
+    },
     components: {
       MuiFormControl: {
         styleOverrides: {
@@ -76,8 +81,15 @@ type CustomSelectProps = SelectProps & {
 };
 
 const Select = (props: React.PropsWithChildren<CustomSelectProps>) => {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
   return (
-    <ThemeProvider theme={customTheme(props.colour ?? "gray")}>
+    <ThemeProvider
+      theme={customTheme(
+        props.colour ?? "gray",
+        prefersDarkMode ? "dark" : "light"
+      )}
+    >
       <FormControl fullWidth variant="filled">
         <InputLabel>{props.label}</InputLabel>
         <MuiSelect {...props}>{props.children}</MuiSelect>

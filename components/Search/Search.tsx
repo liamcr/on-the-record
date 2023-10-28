@@ -27,6 +27,7 @@ const Search: React.FC<SearchProps> = ({
   onSelect,
   onClose,
 }) => {
+  const [noResults, setNoResults] = useState(false);
   const [results, setResults] = useState<Entity[]>([]);
 
   const onSearchChange = (
@@ -43,6 +44,12 @@ const Search: React.FC<SearchProps> = ({
       entityTypeNames[type].toLowerCase()
     ).then((resp) => {
       setResults(resp);
+
+      if (resp.length === 0 && event.target.value.length !== 0) {
+        setNoResults(true);
+      } else {
+        setNoResults(false);
+      }
     });
   };
 
@@ -57,6 +64,7 @@ const Search: React.FC<SearchProps> = ({
 
           if (onClose) {
             setResults([]);
+            setNoResults(false);
             onClose();
           }
         }}
@@ -70,6 +78,7 @@ const Search: React.FC<SearchProps> = ({
               color: "rgb(var(--foreground-rgb))",
               fontSize: "var(--input-font-size)",
             }}
+            autoFocus
             placeholder={`Search ${entityTypeNames[type]}s...`}
             inputProps={{
               "aria-label": `search ${entityTypeNames[type].toLowerCase()}s`,
@@ -78,31 +87,44 @@ const Search: React.FC<SearchProps> = ({
           />
         </div>
         <div className={styles.resultsContainer}>
-          {results.map((entity, i) => (
-            <div
-              key={i}
-              className={styles.result}
-              onClick={() => {
-                onSelect(entity);
-                setResults([]);
-              }}
-            >
-              <div className={styles.imageContainer}>
-                <Image
-                  src={entity.imageSrc}
-                  fill
-                  alt={entity.title}
-                  className={styles.image}
-                />
-              </div>
-              <div className={styles.titlesContainer}>
-                <Body content={entity.title} className={styles.title} />
-                {entity.subtitle && entity.subtitle !== "" && (
-                  <Body content={entity.subtitle} className={styles.subtitle} />
-                )}
-              </div>
+          {noResults ? (
+            <div className={styles.noResults}>
+              <Body className={styles.crickets} content="🦗 🦗 🦗" />
+              <Body
+                className={styles.noResultsText}
+                content="There's nothing here..."
+              />
             </div>
-          ))}
+          ) : (
+            results.map((entity, i) => (
+              <div
+                key={i}
+                className={styles.result}
+                onClick={() => {
+                  onSelect(entity);
+                  setResults([]);
+                }}
+              >
+                <div className={styles.imageContainer}>
+                  <Image
+                    src={entity.imageSrc}
+                    fill
+                    alt={entity.title}
+                    className={styles.image}
+                  />
+                </div>
+                <div className={styles.titlesContainer}>
+                  <Body content={entity.title} className={styles.title} />
+                  {entity.subtitle && entity.subtitle !== "" && (
+                    <Body
+                      content={entity.subtitle}
+                      className={styles.subtitle}
+                    />
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     )

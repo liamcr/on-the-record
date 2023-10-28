@@ -157,7 +157,7 @@ export default function Onboarding() {
             />
             <Heading
               component="h2"
-              content="The people want to know your music opinions! Add two of them here."
+              content="The people want to know your music opinions! Add some here."
               className={styles.subtitleBase}
             />
             <div className={styles.musicNoteSelectContainer}>
