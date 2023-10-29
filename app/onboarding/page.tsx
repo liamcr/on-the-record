@@ -9,10 +9,11 @@ import Body from "@/components/Body/Body";
 import TextField from "@/components/TextField/TextField";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
 import Search from "@/components/Search/Search";
-import { Entity, EntityType, MusicNote } from "@/common/types";
+import { Entity, EntityType } from "@/common/types";
 import Select from "@/components/Select/Select";
 import MenuItem from "@mui/material/MenuItem";
 import EditableMusicNote from "@/components/EditableMusicNote/EditableMusicNote";
+import ImageUpload from "@/components/ImageUpload/ImageUpload";
 
 const prompts = [
   "My Favourite Artist",
@@ -110,6 +111,12 @@ export default function Onboarding() {
               content="This is optional and can be changed at any time."
               className={styles.subtitleBase}
             />
+            <ImageUpload
+              onChange={(url) => {
+                console.log(url);
+              }}
+            />
+            <div style={{ height: "10vh" }} />
           </div>
         </div>
         <div
