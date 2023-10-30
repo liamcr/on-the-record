@@ -5,6 +5,9 @@ const nextConfig = {
       {
         hostname: "i.scdn.co",
       },
+      {
+        hostname: "on-the-record-images.s3.amazonaws.com",
+      },
     ],
   },
 };

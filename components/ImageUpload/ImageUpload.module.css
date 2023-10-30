@@ -4,6 +4,7 @@
   border-radius: 32px;
   cursor: pointer;
   background-size: cover;
+  background-position: center;
 }
 
 .fileUploadContainer {
@@ -22,4 +23,8 @@
 
 .fileUploadIcon {
   font-size: 10rem;
+}
+
+.loadingIconContainer {
+  width: 40%;
 }
