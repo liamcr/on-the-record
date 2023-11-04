@@ -8,6 +8,9 @@ const nextConfig = {
       {
         hostname: "on-the-record-images.s3.amazonaws.com",
       },
+      {
+        hostname: "on-the-record-images.s3.us-east-2.amazonaws.com",
+      },
     ],
   },
 };

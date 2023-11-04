@@ -8,7 +8,7 @@
   flex-direction: column;
   align-items: center;
   background-color: rgba(var(--nav-overlay-rbga));
-  z-index: 150;
+  z-index: 400;
 }
 
 .searchBar {

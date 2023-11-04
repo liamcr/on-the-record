@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 import DefaultProfile from "../../public/defaultProfile.png";
 
 import styles from "./ImageUpload.module.css";
 import axios from "axios";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
+import Image from "next/image";
 
 interface ImageUploadProps {
   /**
@@ -28,6 +31,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [url, setUrl] = useState(DefaultProfile.src);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const onDrop = async (acceptedFiles: File[]) => {
     if (acceptedFiles.length !== 1) {
@@ -45,15 +49,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       })
       .then((res) => {
         if (res.status !== 200 || !res.data?.url) {
-          // TODO: Handle errors
+          setIsError(true);
+
           return;
         }
 
         setUrl(res.data.url);
         onChange(res.data.url);
       })
-      .catch((err) => {
-        // TODO: Handle errors
+      .catch(() => {
+        setIsError(true);
       })
       .finally(() => {
         setIsLoading(false);
@@ -66,16 +71,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     },
     onDrop,
     disabled: isLoading,
+    maxFiles: 1,
+    maxSize: 10485760, // 10 MiB
   });
 
   return (
-    <div
-      {...getRootProps()}
-      className={styles.dropzoneContainer}
-      style={{
-        backgroundImage: `url(${url})`,
-      }}
-    >
+    <div {...getRootProps()} className={styles.dropzoneContainer}>
       <input {...getInputProps()} />
       <div
         className={styles.fileUploadContainer}
@@ -92,6 +93,24 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <FileUploadRoundedIcon className={styles.fileUploadIcon} />
         )}
       </div>
+      <div className={styles.profilePicContainer}>
+        <Image
+          className={styles.profilePic}
+          alt="Profile picture"
+          src={url}
+          fill
+        />
+      </div>
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={() => setIsError(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setIsError(false)} severity="error">
+          Something went wrong uploading your image
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

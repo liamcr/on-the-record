@@ -3,8 +3,7 @@
   aspect-ratio: 1;
   border-radius: 32px;
   cursor: pointer;
-  background-size: cover;
-  background-position: center;
+  position: relative;
 }
 
 .fileUploadContainer {
@@ -27,4 +26,18 @@
 
 .loadingIconContainer {
   width: 40%;
+}
+
+.profilePicContainer {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 32px;
+  z-index: -1;
+}
+
+.profilePic {
+  border-radius: 32px;
+  object-fit: cover;
 }

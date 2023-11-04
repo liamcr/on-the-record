@@ -6,14 +6,15 @@ import styles from "./page.module.css";
 import Heading from "../../components/Heading/Heading";
 import ButtonBase from "../../components/ButtonBase/ButtonBase";
 import Body from "@/components/Body/Body";
-import TextField from "@/components/TextField/TextField";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
 import Search from "@/components/Search/Search";
 import { Entity, EntityType } from "@/common/types";
 import Select from "@/components/Select/Select";
 import MenuItem from "@mui/material/MenuItem";
 import EditableMusicNote from "@/components/EditableMusicNote/EditableMusicNote";
-import ImageUpload from "@/components/ImageUpload/ImageUpload";
+import Name from "./name";
+import ImageSection from "./image";
+import Colour from "./colour";
 
 const prompts = [
   "My Favourite Artist",
@@ -34,6 +35,7 @@ const promptTypeMap = [
 export default function Onboarding() {
   const [page, setPage] = useState(0);
   const [name, setName] = useState("");
+  const [profilePicUrl, setProfilePicUrl] = useState("");
   const [colour, setColour] = useState("");
   const [searchEnabled, setSearchEnabled] = useState(false);
 
@@ -55,6 +57,18 @@ export default function Onboarding() {
     setSecondMusicNote(undefined);
   };
 
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const onImageChange = (url: string) => {
+    setProfilePicUrl(url);
+  };
+
+  const onColourChange = (colour: string) => {
+    setColour(colour);
+  };
+
   return (
     <>
       <div>
@@ -64,35 +78,7 @@ export default function Onboarding() {
             left: page === 0 ? "0" : "-100%",
           }}
         >
-          <div className={styles.onboardingContainer}>
-            <Heading
-              component="h1"
-              content="Welcome"
-              className={styles.titleBase}
-            />
-            <Heading
-              component="h2"
-              content="Welcome to On The Record! Let's get you set up."
-              className={styles.subtitleBase}
-            />
-            <Heading
-              component="h2"
-              content="What's your name?"
-              className={styles.subtitleBase}
-            />
-            <TextField
-              colour={colour === "" ? "rgb(var(--foreground-rgb))" : colour}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setName(event.target.value);
-              }}
-              variant="filled"
-              fullWidth
-              label="Name"
-              value={name}
-              size="large"
-              inputProps={{ maxLength: 30, name: "otrName" }}
-            />
-          </div>
+          <Name name={name} onChange={onNameChange} colour={colour || ""} />
         </div>
         <div
           className={styles.pageContainer}
@@ -100,24 +86,10 @@ export default function Onboarding() {
             left: page === 1 ? "0" : page < 1 ? "100%" : "-100%",
           }}
         >
-          <div className={styles.onboardingContainer}>
-            <Heading
-              component="h1"
-              content="Upload a Profile Pic"
-              className={styles.titleBase}
-            />
-            <Heading
-              component="h2"
-              content="This is optional and can be changed at any time."
-              className={styles.subtitleBase}
-            />
-            <ImageUpload
-              onChange={(url) => {
-                console.log(url);
-              }}
-            />
-            <div style={{ height: "10vh" }} />
-          </div>
+          <ImageSection
+            onChange={onImageChange}
+            colour={colour !== "" ? colour : "gray"}
+          />
         </div>
         <div
           className={styles.pageContainer}
@@ -125,30 +97,7 @@ export default function Onboarding() {
             left: page === 2 ? "0" : page < 2 ? "100%" : "-100%",
           }}
         >
-          <div className={styles.onboardingContainer}>
-            <Heading
-              component="h1"
-              content="A Couple More Things"
-              className={styles.titleBase}
-            />
-            <Heading
-              component="h2"
-              content="What's your favourite colour?"
-              className={styles.subtitleBase}
-            />
-            <ColourSelection
-              colours={[
-                "#1A2EE3",
-                "#148D19",
-                "#F6A120",
-                "#CC1BE9",
-                "#E23A3A",
-                "#E2CF23",
-              ]}
-              onChange={setColour}
-            />
-            <div style={{ height: "10vh" }} />
-          </div>
+          <Colour onChange={onColourChange} />
         </div>
         <div
           className={styles.pageContainer}

@@ -152,8 +152,7 @@ class StreamingServiceController {
 
       if (resp.status !== 200) {
         // Token is expired, redirect to login screen
-        // TODO: Handle errors in this function better
-        console.log(resp);
+        window.location.href = "/";
         return [];
       }
 

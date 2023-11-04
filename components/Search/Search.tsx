@@ -12,6 +12,8 @@ import {
 import Body from "../Body/Body";
 import Image from "next/image";
 
+import DefaultProfile from "../../public/defaultProfile.png";
+
 interface SearchProps {
   enabled: boolean;
   type: EntityType;
@@ -107,7 +109,11 @@ const Search: React.FC<SearchProps> = ({
               >
                 <div className={styles.imageContainer}>
                   <Image
-                    src={entity.imageSrc}
+                    src={
+                      entity.imageSrc !== "/"
+                        ? entity.imageSrc
+                        : DefaultProfile.src
+                    }
                     fill
                     alt={entity.title}
                     className={styles.image}

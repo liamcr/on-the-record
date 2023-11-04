@@ -69,7 +69,7 @@ const customTheme = (colour: string) =>
 const TextField = ({ colour = "gray", ...rest }) => {
   return (
     <ThemeProvider theme={customTheme(colour)}>
-      <MuiTextField {...rest} />
+      <MuiTextField {...rest} inputProps={{ "aria-autocomplete": "none" }} />
     </ThemeProvider>
   );
 };
