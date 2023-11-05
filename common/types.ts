@@ -1,12 +1,18 @@
+import { StreamingService } from "./streamingServiceFns";
+
 /**
  * UserCondensed is a representation of a user with only
  * the fields relevant to a given post.
  */
 export interface UserCondensed {
   /**
-   * The ID of the user.
+   * The provider that the user uses (i.e. the streaming service).
    */
-  id: number;
+  provider: StreamingService;
+  /**
+   * The ID of the user, as assigned by the streaming service.
+   */
+  providerId: number;
   /**
    * The user's display name.
    */

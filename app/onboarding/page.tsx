@@ -1,20 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
-
-import styles from "./page.module.css";
 import Heading from "../../components/Heading/Heading";
 import ButtonBase from "../../components/ButtonBase/ButtonBase";
 import Body from "@/components/Body/Body";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
 import Search from "@/components/Search/Search";
-import { Entity, EntityType } from "@/common/types";
+import { Entity, EntityType, MusicNote } from "@/common/types";
 import Select from "@/components/Select/Select";
 import MenuItem from "@mui/material/MenuItem";
 import EditableMusicNote from "@/components/EditableMusicNote/EditableMusicNote";
 import Name from "./name";
 import ImageSection from "./image";
 import Colour from "./colour";
+
+import styles from "./page.module.css";
+import { APIWrapper } from "@/common/apiWrapper";
+import { StreamingService } from "@/common/streamingServiceFns";
+import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 
 const prompts = [
   "My Favourite Artist",
@@ -50,6 +53,9 @@ export default function Onboarding() {
   const [selectedPrompt, setSelectedPrompt] = useState(0);
   const [secondOpen, setSecondOpen] = useState(false);
 
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const onFirstRemoved = () => {
     setFirstPromptIndex(secondPromptIndex);
     setFirstMusicNote(secondMusicNote);
@@ -67,6 +73,69 @@ export default function Onboarding() {
 
   const onColourChange = (colour: string) => {
     setColour(colour);
+  };
+
+  const buildMusicNotes: () => MusicNote[] = () => {
+    if (!firstMusicNote) {
+      return [];
+    }
+
+    let musicNotes = [
+      {
+        prompt: prompts[firstPromptIndex as number],
+        title: firstMusicNote.title,
+        imageSrc: firstMusicNote.imageSrc,
+        subtitle: firstMusicNote.subtitle,
+      },
+    ];
+
+    if (secondMusicNote) {
+      musicNotes.push({
+        prompt: prompts[secondPromptIndex as number],
+        title: secondMusicNote.title,
+        imageSrc: secondMusicNote.imageSrc,
+        subtitle: secondMusicNote.subtitle,
+      });
+    }
+
+    return musicNotes;
+  };
+
+  const onSubmit = () => {
+    if (
+      !sessionStorage.getItem("otrStreamingService") ||
+      !sessionStorage.getItem("otrStreamingServiceId")
+    ) {
+      setIsError(true);
+      return;
+    }
+
+    setIsLoading(true);
+
+    APIWrapper.createUser(
+      sessionStorage.getItem("otrStreamingService") as StreamingService,
+      sessionStorage.getItem("otrStreamingServiceId") || "",
+      name,
+      colour,
+      profilePicUrl,
+      buildMusicNotes()
+    )
+      .then((resp) => {
+        if (!resp.error) {
+          // Success!
+          window.location.href = "/home";
+          return;
+        }
+
+        console.error(resp.error);
+        setIsError(true);
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -205,6 +274,13 @@ export default function Onboarding() {
         }}
         onClose={() => setSearchEnabled(false)}
       />
+      {isLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingIconContainer}>
+            <LoadingIcon colour={colour || "gray"} />
+          </div>
+        </div>
+      )}
       <footer className={styles.footer}>
         <div className={styles.footerContainer}>
           {page > 0 && (
@@ -255,11 +331,10 @@ export default function Onboarding() {
             }}
             onClick={() => {
               if (page >= 3) {
-                // Add user
-                return;
+                onSubmit();
+              } else {
+                setPage((currentPage) => currentPage + 1);
               }
-
-              setPage((currentPage) => currentPage + 1);
             }}
           >
             {page >= 3 ? <Body content="Finish" /> : <Body content="Next" />}

@@ -33,6 +33,7 @@ export default function Home() {
       .then((user) => {
         APIWrapper.getUser(user.streamingService, user.id).then((otrUser) => {
           if (otrUser.error && otrUser.error.code === 404) {
+            sessionStorage.setItem("otrStreamingServiceId", user.id);
             // User does not exist in our system, redirect to onboarding
             router.push("/onboarding");
           } else if (otrUser.error) {

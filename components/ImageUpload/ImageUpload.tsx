@@ -99,6 +99,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           alt="Profile picture"
           src={url}
           fill
+          onLoad={() => {
+            setIsLoading(false);
+          }}
+          onError={() => {
+            setIsLoading(false);
+            setIsError(true);
+          }}
         />
       </div>
       <Snackbar
