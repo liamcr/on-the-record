@@ -60,8 +60,8 @@ const SlidingButton: React.FC<SlidingButtonProps> = ({
       style={{
         width:
           isHovering || !interactive
-            ? `calc(${iconSize} + ${textRef.current?.offsetWidth}px)`
-            : iconSize,
+            ? `calc(${iconSize} + ${textRef.current?.offsetWidth}px + 0.5rem)`
+            : `calc(${iconSize} + 0.5rem)`,
       }}
       onMouseEnter={interactive ? onMouseEnter : () => {}}
       onMouseLeave={interactive ? onMouseExit : () => {}}

@@ -10,3 +10,54 @@
   width: clamp(50px, 50vw, 256px);
   aspect-ratio: 1;
 }
+
+.main {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  min-height: 90vh;
+}
+
+.noResultsContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+
+.lowerNoResults {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.noResultsText {
+  color: rgb(171, 171, 171);
+  font-size: 1.5rem;
+}
+
+.lowerNoResults > .noResultsText {
+  margin-bottom: 1rem;
+}
+
+.slidingButton {
+  margin-bottom: 1rem;
+}
+
+.orContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: clamp(48px, 90vw, 312px);
+  margin-bottom: 1rem;
+}
+
+.horizontalSpacer {
+  height: 2px;
+  border-radius: 1px;
+  background-color: rgb(171, 171, 171);
+  width: 33%;
+}
