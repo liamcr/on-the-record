@@ -122,7 +122,7 @@ export default function Onboarding() {
     )
       .then((resp) => {
         if (!resp.error) {
-          sessionStorage.setItem("otrColour", colour);
+          localStorage.setItem("otrColour", colour);
           // Success!
           window.location.href = "/home";
           return;

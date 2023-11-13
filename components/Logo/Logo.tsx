@@ -5,9 +5,10 @@ import { logo } from "../../common/fonts";
 
 interface LogoProps {
   colour?: string;
+  shortened?: boolean;
 }
 
-const Logo: React.FC<LogoProps> = ({ colour = "gray" }) => {
+const Logo: React.FC<LogoProps> = ({ colour = "gray", shortened = false }) => {
   return (
     <div className={styles.logoContainer}>
       <svg
@@ -73,7 +74,9 @@ const Logo: React.FC<LogoProps> = ({ colour = "gray" }) => {
           </linearGradient>
         </defs>
       </svg>
-      <p className={`${styles.logoText} ${logo.className}`}>n The Record</p>
+      <p className={`${styles.logoText} ${logo.className}`}>
+        {shortened ? "TR" : "n The Record"}
+      </p>
     </div>
   );
 };

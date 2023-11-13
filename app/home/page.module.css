@@ -1,3 +1,82 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sideNav {
+  position: fixed;
+  left: 0;
+  width: clamp(250px, 15vw, 600px);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logoContainer {
+  width: 90%;
+  margin-bottom: 2rem;
+}
+
+.navButtonsContainer {
+  width: 100%;
+}
+
+.sideNavButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background-color: rgba(var(--review-score-background-rgba));
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.sideNavButton:hover {
+  opacity: 0.98;
+}
+
+.sideNavButtonText {
+  margin-left: 0.75rem;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.largeButton {
+  cursor: pointer;
+  display: flex;
+  width: 47%;
+  aspect-ratio: 1;
+  justify-content: center;
+  background-color: rgba(var(--review-score-background-rgba));
+  align-items: center;
+  border-radius: 8px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
+  color: #fff;
+  transition: background-color 0.2s;
+}
+
+.largeButton:hover {
+  opacity: 0.95;
+}
+
+.largeButton:active {
+  opacity: 0.98;
+}
+
+.largeButtonIcon {
+  /* I have to use !important here because MaterialUI adds a font-size
+  of 1.5rem to their icons by default, which takes precedence over any
+  font size I would typically set here */
+  font-size: 3rem !important;
+}
+
 .loadingIconOuterContainer {
   width: 100vw;
   height: 100dvh;
@@ -16,6 +95,7 @@
   flex-direction: column;
   padding: 2rem;
   min-height: 90vh;
+  width: clamp(1px, 50vw, 1000px);
 }
 
 .noResultsContainer {
@@ -60,4 +140,11 @@
   border-radius: 1px;
   background-color: rgb(171, 171, 171);
   width: 33%;
+}
+
+/* Tablet/Mobile */
+@media (max-width: 768px) {
+  .main {
+    width: 90vw;
+  }
 }
