@@ -61,6 +61,10 @@ export interface Entity {
    * Subtitle of the music opinion. Always the artist name
    */
   subtitle?: string;
+  /**
+   * Link to send the user to when they see this entity. Optional, and typically used for users.
+   */
+  href?: string;
 }
 
 /**
@@ -161,4 +165,5 @@ export enum EntityType {
   Track,
   Album,
   Artist,
+  User,
 }

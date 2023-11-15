@@ -10,22 +10,44 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import SlidingButton from "../SlidingButton/SlidingButton";
 import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
+import { Entity, EntityType } from "@/common/types";
+import Search from "../Search/Search";
 
 interface BottomNavProps {
   /**
    * The colour of the action button
    */
   colour: string;
+  /**
+   * The user's streaming service provider (spotify, apple music, etc.)
+   */
+  userProvider: string;
+  /**
+   * The ID corresponding to the user, as set by their straming service provider
+   */
+  userProviderId: number;
 }
 
-const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
+const BottomNav: React.FC<BottomNavProps> = ({
+  colour,
+  userProvider,
+  userProviderId,
+}) => {
   const [moreActionsEnabled, setMoreActionsEnabled] = useState(false);
+  const [searchEnabled, setSearchEnabled] = useState(false);
+
   const onActionButtonClick = () => {
     setMoreActionsEnabled((prevState) => !prevState);
   };
 
   const onOverlayClick = () => {
     setMoreActionsEnabled(false);
+  };
+
+  const onUserSelect = (user: Entity) => {
+    if (!user.href) return;
+
+    window.location.href = user.href;
   };
 
   return (
@@ -37,12 +59,17 @@ const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
               <HomeOutlinedIcon className={styles.navIcon} />
             </div>
           </Link>
-          <Link href="/profile">
+          <Link href={`/user/${userProvider}/${userProviderId}`}>
             <div className={styles.navButton}>
               <PersonOutlinedIcon className={styles.navIcon} />
             </div>
           </Link>
-          <div className={styles.navButton}>
+          <div
+            className={styles.navButton}
+            onClick={() => {
+              setSearchEnabled(true);
+            }}
+          >
             <SearchOutlinedIcon className={styles.navIcon} />
           </div>
         </div>
@@ -87,6 +114,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ colour }) => {
       {moreActionsEnabled && (
         <div onClick={onOverlayClick} className={styles.overlay} />
       )}
+      <Search
+        type={EntityType.User}
+        enabled={searchEnabled}
+        onClose={() => setSearchEnabled(false)}
+        onSelect={onUserSelect}
+      />
     </>
   );
 };

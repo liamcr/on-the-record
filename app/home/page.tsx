@@ -17,19 +17,16 @@ import Body from "@/components/Body/Body";
 import SlidingButton from "@/components/SlidingButton/SlidingButton";
 import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
-import Logo from "@/components/Logo/Logo";
-import Link from "next/link";
+import SideNav from "@/components/SideNav/SideNav";
+import Search from "@/components/Search/Search";
+import { Entity, EntityType } from "@/common/types";
 
 export default function Home() {
   const router = useRouter();
 
   const isMobile = useMediaQuery("(max-width: 770px)");
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [isError, setIsError] = useState(false);
   const [userColour, setUserColour] = useState("#888");
 
@@ -38,6 +35,14 @@ export default function Home() {
 
   // TODO: Change string to `Post`
   const [results, setResults] = useState<string[]>([]);
+
+  const [searchEnabled, setSearchEnabled] = useState(false);
+
+  const onUserSelect = (user: Entity) => {
+    if (!user.href) return;
+
+    window.location.href = user.href;
+  };
 
   useEffect(() => {
     const colour = localStorage.getItem("otrColour");
@@ -50,137 +55,114 @@ export default function Home() {
     StreamingServiceController.getCurrentUser(
       sessionStorage.getItem("otrStreamingService") as StreamingService,
       sessionStorage.getItem("otrAccessToken") || ""
-    )
-      .then((user) => {
-        APIWrapper.getUser(user.streamingService, user.id).then((otrUser) => {
-          setUserProvider(otrUser.data?.provider || "");
-          setUserProviderId(otrUser.data?.providerId || -1);
+    ).then((user) => {
+      sessionStorage.setItem("otrStreamingServiceId", user.id);
 
-          if (otrUser.error && otrUser.error.code === 404) {
-            // User does not exist in our system, redirect to onboarding
-            router.push("/onboarding");
-          } else if (otrUser.error) {
-            // TODO: Come up with designs for error case
-            setIsError(true);
-          }
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
+      APIWrapper.getUser(user.streamingService, user.id).then((otrUser) => {
+        setUserProvider(otrUser.data?.provider || "");
+        setUserProviderId(otrUser.data?.providerId || -1);
+
+        if (otrUser.error && otrUser.error.code === 404) {
+          // User does not exist in our system, redirect to onboarding
+          router.push("/onboarding");
+          return;
+        } else if (otrUser.error) {
+          // TODO: Come up with designs for error case
+          setIsError(true);
+          return;
+        }
+
+        setIsLoadingUser(false);
       });
+    });
   }, []);
 
   return (
     <div className={styles.pageContainer}>
-      {!isMobile && (
-        <nav className={styles.sideNav}>
-          <div className={styles.logoContainer}>
-            <Logo colour={userColour} shortened={true} />
+      {isLoadingUser ? (
+        <div className={styles.loadingIconOuterContainer}>
+          <div className={styles.loadingIconInnerContainer}>
+            <LoadingIcon colour={userColour} />
           </div>
-          <div className={styles.navButtonsContainer}>
-            <Link className={styles.sideNavButton} href={"/"}>
-              <HomeOutlinedIcon />
-              <Body className={styles.sideNavButtonText} content="Home" />
-            </Link>
-            <Link
-              className={styles.sideNavButton}
-              href={`/profile/${userProvider}/${userProviderId}`}
-            >
-              <PersonOutlinedIcon />
-              <Body className={styles.sideNavButtonText} content="Profile" />
-            </Link>
-            <Link
-              className={styles.sideNavButton}
-              href={`/profile/${userProvider}/${userProviderId}`}
-            >
-              <SearchOutlinedIcon />
-              <Body className={styles.sideNavButtonText} content="Search" />
-            </Link>
-            <div className={styles.actionButtons}>
-              <Link
-                className={styles.largeButton}
-                href={"/new/review"}
-                style={{
-                  backgroundColor: `${userColour}40`,
-                }}
-              >
-                <RateReviewOutlined className={styles.largeButtonIcon} />
-              </Link>
-              <Link
-                className={styles.largeButton}
-                href={"/new/list"}
-                style={{
-                  backgroundColor: `${userColour}40`,
-                }}
-              >
-                <ListOutlinedIcon className={styles.largeButtonIcon} />
-              </Link>
-            </div>
-          </div>
-        </nav>
-      )}
-      <main className={styles.main}>
-        <Heading component="h1" content="What's New?" />
-        {isLoading && (
-          <div className={styles.loadingIconOuterContainer}>
-            <div className={styles.loadingIconInnerContainer}>
-              <LoadingIcon colour={userColour} />
-            </div>
-          </div>
-        )}
-        {results.length === 0 ? (
-          <div className={styles.noResultsContainer}>
-            <div className={styles.upperNoResults}>
-              <Body className={styles.noResultsText} content="🦗🦗🦗" />
-              <Body
-                className={styles.noResultsText}
-                content="There's nothing here..."
-              />
-            </div>
-            <div className={styles.lowerNoResults}>
-              <Body
-                className={styles.noResultsText}
-                content="Write a review for yourself"
-              />
-              <SlidingButton
-                icon={RateReviewOutlined}
-                iconSize="1.5rem"
-                text="New Review"
-                onClick={() => {
-                  console.log("Hi");
-                }}
-                animated={false}
-                className={styles.slidingButton}
-              />
-              <div className={styles.orContainer}>
-                <div className={styles.horizontalSpacer} />
-                <Body
-                  className={`${styles.noResultsText} ${styles.or}`}
-                  content="or"
-                />
-                <div className={styles.horizontalSpacer} />
+        </div>
+      ) : (
+        <>
+          {!isMobile && (
+            <SideNav
+              colour={userColour}
+              userProvider={userProvider}
+              userProviderId={userProviderId}
+            />
+          )}
+          <main className={styles.main}>
+            <Heading component="h1" content="What's New?" />
+            {results.length === 0 ? (
+              <div className={styles.noResultsContainer}>
+                <div className={styles.upperNoResults}>
+                  <Body className={styles.noResultsText} content="🦗🦗🦗" />
+                  <Body
+                    className={styles.noResultsText}
+                    content="There's nothing here..."
+                  />
+                </div>
+                <div className={styles.lowerNoResults}>
+                  <Body
+                    className={styles.noResultsText}
+                    content="Write a review for yourself"
+                  />
+                  <SlidingButton
+                    icon={RateReviewOutlined}
+                    iconSize="1.5rem"
+                    text="New Review"
+                    onClick={() => {
+                      window.location.href = "/new/review";
+                    }}
+                    animated={false}
+                    className={styles.slidingButton}
+                  />
+                  <div className={styles.orContainer}>
+                    <div className={styles.horizontalSpacer} />
+                    <Body
+                      className={`${styles.noResultsText} ${styles.or}`}
+                      content="or"
+                    />
+                    <div className={styles.horizontalSpacer} />
+                  </div>
+                  <Body
+                    className={styles.noResultsText}
+                    content="follow your friends"
+                  />
+                  <SlidingButton
+                    icon={SearchOutlinedIcon}
+                    iconSize="1.5rem"
+                    text="Search Users"
+                    onClick={() => {
+                      setSearchEnabled(true);
+                    }}
+                    animated={false}
+                    className={styles.slidingButton}
+                  />
+                </div>
               </div>
-              <Body
-                className={styles.noResultsText}
-                content="follow your friends"
-              />
-              <SlidingButton
-                icon={SearchOutlinedIcon}
-                iconSize="1.5rem"
-                text="Search Users"
-                onClick={() => {
-                  console.log("Hi");
-                }}
-                animated={false}
-                className={styles.slidingButton}
-              />
-            </div>
-          </div>
-        ) : (
-          <div></div>
-        )}
-      </main>
-      {isMobile && <BottomNav colour={userColour} />}
+            ) : (
+              <div></div>
+            )}
+          </main>
+          {isMobile && (
+            <BottomNav
+              colour={userColour}
+              userProvider={userProvider}
+              userProviderId={userProviderId}
+            />
+          )}
+          <Search
+            type={EntityType.User}
+            enabled={searchEnabled}
+            onClose={() => setSearchEnabled(false)}
+            onSelect={onUserSelect}
+          />
+        </>
+      )}
     </div>
   );
 }

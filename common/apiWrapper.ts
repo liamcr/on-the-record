@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { StreamingService } from "./streamingServiceFns";
-import { MusicNote, User } from "./types";
+import { Entity, MusicNote, User } from "./types";
 
 interface APIResponse<T> {
   data?: T;
@@ -33,6 +33,45 @@ class APIWrapper {
           createdOn: resp.data.createdOn,
           musicNotes: resp.data.musicNotes,
         },
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  static searchUsers = async (
+    query: string
+  ): Promise<APIResponse<Entity[]>> => {
+    try {
+      const resp = await axios({
+        method: "GET",
+        url: `http://localhost:8080/user/search?query=${query}`,
+        data: {},
+      });
+
+      // 200 Response
+      return {
+        data: resp.data.map((user: any) => ({
+          imageSrc: user.imageSrc,
+          title: user.name,
+          href: `user/${user.provider}/${user.providerId}`,
+        })),
       };
     } catch (e) {
       const axiosError = e as AxiosError;

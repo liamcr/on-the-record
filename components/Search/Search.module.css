@@ -91,6 +91,7 @@
 
 .image {
   border-radius: 4px;
+  object-fit: cover;
 }
 
 .titlesContainer {

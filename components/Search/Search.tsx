@@ -13,6 +13,7 @@ import Body from "../Body/Body";
 import Image from "next/image";
 
 import DefaultProfile from "../../public/defaultProfile.png";
+import { APIWrapper } from "@/common/apiWrapper";
 
 interface SearchProps {
   enabled: boolean;
@@ -21,7 +22,7 @@ interface SearchProps {
   onClose?: () => void;
 }
 
-const entityTypeNames = ["Track", "Album", "Artist"];
+const entityTypeNames = ["Track", "Album", "Artist", "User"];
 
 const Search: React.FC<SearchProps> = ({
   enabled,
@@ -39,20 +40,36 @@ const Search: React.FC<SearchProps> = ({
       setResults([]);
       return;
     }
-    StreamingServiceController.search(
-      sessionStorage.getItem("otrStreamingService") as StreamingService,
-      sessionStorage.getItem("otrAccessToken") || "",
-      event.target.value,
-      entityTypeNames[type].toLowerCase()
-    ).then((resp) => {
-      setResults(resp);
+    if (type === EntityType.User) {
+      APIWrapper.searchUsers(event.target.value).then((resp) => {
+        if (!resp.data) {
+          // TODO, handle error
+          return;
+        }
+        setResults(resp.data);
 
-      if (resp.length === 0 && event.target.value.length !== 0) {
-        setNoResults(true);
-      } else {
-        setNoResults(false);
-      }
-    });
+        if (resp.data.length === 0 && event.target.value.length !== 0) {
+          setNoResults(true);
+        } else {
+          setNoResults(false);
+        }
+      });
+    } else {
+      StreamingServiceController.search(
+        sessionStorage.getItem("otrStreamingService") as StreamingService,
+        sessionStorage.getItem("otrAccessToken") || "",
+        event.target.value,
+        entityTypeNames[type].toLowerCase()
+      ).then((resp) => {
+        setResults(resp);
+
+        if (resp.length === 0 && event.target.value.length !== 0) {
+          setNoResults(true);
+        } else {
+          setNoResults(false);
+        }
+      });
+    }
   };
 
   return (
