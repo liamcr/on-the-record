@@ -1,0 +1,13 @@
+.optionsContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.option {
+  background-color: rgba(var(--review-score-background-rgba));
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-inline-end: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
