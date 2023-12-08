@@ -161,6 +161,13 @@ export interface TopFiveList {
   list: ListElement[];
 }
 
+export interface TimelineResponse {
+  author: UserCondensed;
+  timestamp: string;
+  type: number;
+  data: any;
+}
+
 export enum EntityType {
   Track,
   Album,

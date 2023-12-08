@@ -19,7 +19,8 @@ import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SideNav from "@/components/SideNav/SideNav";
 import Search from "@/components/Search/Search";
-import { Entity, EntityType } from "@/common/types";
+import { Entity, EntityType, TimelineResponse } from "@/common/types";
+import ReviewCard from "@/components/ReviewCard/ReviewCard";
 
 export default function Home() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function Home() {
   const isMobile = useMediaQuery("(max-width: 770px)");
 
   const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [isLoadingTimeline, setIsLoadingTimeline] = useState(true);
   const [isError, setIsError] = useState(false);
   const [userColour, setUserColour] = useState("#888");
 
@@ -34,7 +36,7 @@ export default function Home() {
   const [userProviderId, setUserProviderId] = useState(-1);
 
   // TODO: Change string to `Post`
-  const [results, setResults] = useState<string[]>([]);
+  const [results, setResults] = useState<TimelineResponse[]>([]);
 
   const [searchEnabled, setSearchEnabled] = useState(false);
 
@@ -73,6 +75,19 @@ export default function Home() {
         }
 
         setIsLoadingUser(false);
+
+        APIWrapper.getTimeline(user.streamingService, user.id).then(
+          (timelineResp) => {
+            if (timelineResp.error) {
+              // TODO: Come up with designs for error case
+              setIsError(true);
+              return;
+            }
+
+            setIsLoadingTimeline(false);
+            setResults(timelineResp.data || []);
+          }
+        );
       });
     });
   }, []);
@@ -96,7 +111,14 @@ export default function Home() {
           )}
           <main className={styles.main}>
             <Heading component="h1" content="What's New?" />
-            {results.length === 0 ? (
+            {isLoadingTimeline && (
+              <div className={styles.loadingIconOuterContainer}>
+                <div className={styles.loadingIconInnerContainer}>
+                  <LoadingIcon colour={userColour} />
+                </div>
+              </div>
+            )}
+            {results.length === 0 && !isLoadingTimeline ? (
               <div className={styles.noResultsContainer}>
                 <div className={styles.upperNoResults}>
                   <Body className={styles.noResultsText} content="🦗🦗🦗" />
@@ -145,7 +167,23 @@ export default function Home() {
                 </div>
               </div>
             ) : (
-              <div></div>
+              <div className={styles.timelineContainer}>
+                {results.map((result) => (
+                  <ReviewCard
+                    key={result.data.id}
+                    author={result.author}
+                    id={result.data.id}
+                    score={result.data.score}
+                    src={result.data.imageSrc}
+                    subtitle={result.data.subtitle}
+                    timestamp={result.timestamp}
+                    title={result.data.title}
+                    type={result.data.type}
+                    colour={result.data.colour}
+                    review={result.data.body}
+                  />
+                ))}
+              </div>
             )}
           </main>
           {isMobile && (

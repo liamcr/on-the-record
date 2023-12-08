@@ -1,11 +1,11 @@
 .reviewCard {
-  --card-background-rgba: 222, 222, 222, 0.8;
-  width: 50vw;
+  width: 100%;
   border-radius: 16px;
   position: relative;
   padding: 7.5%;
   padding-top: calc(7.5% + 3rem);
   box-shadow: 0px 8px 10px 0px rgba(40, 40, 40, 0.2);
+  margin-top: 6rem;
 }
 
 .postProfileIconLink {
@@ -22,6 +22,7 @@
 .postProfileIcon {
   border-radius: 10%;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
+  object-fit: cover;
 }
 
 .reviewHeader {
@@ -39,7 +40,6 @@
 
 .imageContainer {
   width: 100%;
-  height: auto;
   aspect-ratio: 1;
   position: relative;
 }

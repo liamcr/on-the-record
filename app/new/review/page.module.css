@@ -6,6 +6,44 @@
 }
 
 .pageContainer {
-  padding-top: 2rem;
+  padding-block: 2rem;
   width: clamp(10px, 90vw, 600px);
+}
+
+.subheading {
+  margin-block: 2rem;
+}
+
+.submitContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  padding-top: 2rem;
+}
+
+.submitButton {
+  padding-inline: 0.75rem;
+  padding-block: 0.25rem;
+}
+
+.submitText {
+  font-size: 1.25rem;
+}
+
+.loadingOverlay {
+  position: fixed;
+  width: 100vw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(var(--nav-overlay-rbga));
+  z-index: 400;
+}
+
+.loadingIconContainer {
+  width: clamp(1px, 60vw, 200px);
 }

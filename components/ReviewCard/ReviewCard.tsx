@@ -6,8 +6,6 @@ import Body from "../Body/Body";
 import Link from "next/link";
 
 import styles from "./ReviewCard.module.css";
-import useImageData from "../../common/hooks/useImageData";
-import { generatePalette } from "../../common/functions";
 import ReviewScore from "../ReviewScore/ReviewScore";
 import { body } from "../../common/fonts";
 
@@ -22,16 +20,6 @@ const ReviewCard: React.FC<Review> = ({
   review,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const imageData = useImageData(src);
-
-  const dominantColor = useMemo(() => {
-    if (imageData.length === 0) return "rgba(128, 128, 128, 0.10)";
-
-    let palette = generatePalette(imageData);
-    if (palette.length !== 2) return "rgba(128, 128, 128, 0.10)";
-
-    return `rgba(${palette[1].r}, ${palette[1].g}, ${palette[1].b}, 0.8)`;
-  }, [imageData]);
 
   const onShowClick = () => {
     setExpanded((oldVal) => !oldVal);
@@ -41,11 +29,11 @@ const ReviewCard: React.FC<Review> = ({
     <div
       className={styles.reviewCard}
       style={{
-        background: `linear-gradient(180deg, ${dominantColor} 0%, rgba(var(--card-background-rgba)) 100%)`,
+        background: `linear-gradient(180deg, ${colour} 0%, rgba(var(--card-background-rgba)) 100%)`,
       }}
     >
       <Link
-        href={`/profile/${author.id}`}
+        href={`/profile/${author.provider}/${author.providerId}`}
         className={styles.postProfileIconLink}
       >
         <div className={styles.postProfileIconContainer}>

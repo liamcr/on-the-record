@@ -1,5 +1,5 @@
 .searchOverlay {
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: 100dvh;
   top: 0;
