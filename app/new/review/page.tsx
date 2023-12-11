@@ -15,8 +15,6 @@ import Body from "@/components/Body/Body";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { APIWrapper } from "@/common/apiWrapper";
 import { StreamingService } from "@/common/streamingServiceFns";
-import useImageData from "@/common/hooks/useImageData";
-import { generatePalette } from "@/common/functions";
 
 const nameToEntityType = {
   Track: EntityType.Track,

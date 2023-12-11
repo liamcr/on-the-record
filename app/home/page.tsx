@@ -112,8 +112,8 @@ export default function Home() {
           <main className={styles.main}>
             <Heading component="h1" content="What's New?" />
             {isLoadingTimeline && (
-              <div className={styles.loadingIconOuterContainer}>
-                <div className={styles.loadingIconInnerContainer}>
+              <div className={styles.loadingIconTimelineOuterContainer}>
+                <div className={styles.loadingIconTimelineInnerContainer}>
                   <LoadingIcon colour={userColour} />
                 </div>
               </div>

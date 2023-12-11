@@ -97,7 +97,7 @@ const BottomNav: React.FC<BottomNavProps> = ({
           iconSize="1.5rem"
           text="Review"
           onClick={() => {
-            console.log("Hi");
+            window.location.href = "/new/review";
           }}
           className={styles.slidingButton}
         />
@@ -106,7 +106,7 @@ const BottomNav: React.FC<BottomNavProps> = ({
           iconSize="1.5rem"
           text="List"
           onClick={() => {
-            console.log("Hi");
+            window.location.href = "/new/list";
           }}
           className={styles.slidingButton}
         />
