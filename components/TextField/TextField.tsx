@@ -2,15 +2,18 @@ import React from "react";
 import MuiTextField from "@mui/material/TextField";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { ThemeProvider, createTheme } from "@mui/material";
+import { header } from "@/common/fonts";
 
-const customTheme = (colour: string) =>
+const customTheme = (colour: string, isTopFive: boolean) =>
   createTheme({
     components: {
       MuiTextField: {
         styleOverrides: {
           root: {
-            "--TextField-brandBorderColor": "#888888",
-            "--TextField-brandBorderHoverColor": "#B2BAC2",
+            "--TextField-brandBorderColor": isTopFive ? "#333333" : "#888888",
+            "--TextField-brandBorderHoverColor": isTopFive
+              ? "#555555"
+              : "#B2BAC2",
             "--TextField-brandBorderFocusedColor": colour,
             "& label.Mui-focused": {
               color: "var(--TextField-brandBorderFocusedColor)",
@@ -19,7 +22,9 @@ const customTheme = (colour: string) =>
               color: "var(--TextField-brandBorderColor)",
             },
             "& .MuiInputBase-root": {
-              color: "rgb(var(--foreground-rgb))",
+              color: isTopFive ? "#000" : "rgb(var(--foreground-rgb))",
+              fontWeight: isTopFive ? "bold" : "normal",
+              fontSize: isTopFive ? "2rem" : "inherit",
             },
           },
         },
@@ -47,6 +52,21 @@ const customTheme = (colour: string) =>
           },
         },
       },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            border: 0,
+            lineHeight: 1,
+            "& fieldset": {
+              border: 0,
+            },
+            "& input": {
+              paddingLeft: isTopFive ? "0.5rem" : "",
+            },
+            ...header.style,
+          },
+        },
+      },
       MuiInput: {
         styleOverrides: {
           root: {
@@ -66,10 +86,10 @@ const customTheme = (colour: string) =>
     },
   });
 
-const TextField = ({ colour = "gray", ...rest }) => {
+const TextField = ({ colour = "gray", isTopFive = false, ...rest }) => {
   return (
-    <ThemeProvider theme={customTheme(colour)}>
-      <MuiTextField {...rest} inputProps={{ "aria-autocomplete": "none" }} />
+    <ThemeProvider theme={customTheme(colour, isTopFive)}>
+      <MuiTextField {...rest} />
     </ThemeProvider>
   );
 };

@@ -15,6 +15,7 @@ import Body from "@/components/Body/Body";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { APIWrapper } from "@/common/apiWrapper";
 import { StreamingService } from "@/common/streamingServiceFns";
+import EditableTopFive from "@/components/EditableTopFive/EditableTopFive";
 
 const nameToEntityType = {
   Track: EntityType.Track,
@@ -25,7 +26,6 @@ const nameToEntityType = {
 const EntityTypeToName = ["Track", "Album", "Artist"];
 
 export default function NewReview() {
-  const [searchEnabled, setSearchEnabled] = useState(false);
   const [selectedType, setSelectedType] = useState<EntityType | undefined>();
   const [userColour, setUserColour] = useState("#888");
   const [isLoading, setIsLoading] = useState(false);
@@ -83,15 +83,13 @@ export default function NewReview() {
               : EntityTypeToName[selectedType]
           }
         />
-        {selectedType !== undefined && <div>List input goes here</div>}
-        <Search
-          enabled={searchEnabled}
-          onSelect={(selectedEntity) => {
-            setSearchEnabled(false);
-          }}
-          type={selectedType !== undefined ? selectedType : EntityType.Album}
-          onClose={() => setSearchEnabled(false)}
-        />
+        {selectedType !== undefined && (
+          <EditableTopFive
+            colour="#ff0000"
+            type={selectedType}
+            onChange={() => {}}
+          />
+        )}
       </div>
       {isLoading && (
         <div className={styles.loadingOverlay}>

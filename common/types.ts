@@ -116,7 +116,7 @@ export interface Review {
 /**
  * Represents an element in a top 5 list
  */
-interface ListElement {
+export interface ListElement {
   /**
    * Image src of the list element
    */
