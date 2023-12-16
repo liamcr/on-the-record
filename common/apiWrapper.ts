@@ -3,9 +3,11 @@ import { StreamingService } from "./streamingServiceFns";
 import {
   Entity,
   EntityType,
+  ListElement,
   MusicNote,
   Review,
   TimelineResponse,
+  TopFiveList,
   User,
   UserCondensed,
 } from "./types";
@@ -202,6 +204,66 @@ class APIWrapper {
           subtitle: resp.data.subtitle,
           type: resp.data.type,
           review: resp.data.review,
+        },
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  static createList = async (
+    streamingService: StreamingService,
+    userId: string,
+    type: EntityType,
+    title: string,
+    colour: string,
+    listElements: ListElement[]
+  ): Promise<APIResponse<TopFiveList>> => {
+    try {
+      const resp = await axios({
+        method: "POST",
+        url: `http://localhost:8080/list`,
+        data: {
+          provider: streamingService,
+          providerId: userId,
+          title: title,
+          type: type,
+          colour: colour,
+          listElements: listElements,
+        },
+      });
+
+      // 200 Response
+      return {
+        data: {
+          title: resp.data.title,
+          colour: resp.data.colour,
+          timestamp: resp.data.createdOn,
+          author: {
+            name: "",
+            profilePictureSrc: "",
+            provider: streamingService,
+            providerId: parseInt(userId),
+          },
+          id: resp.data.id,
+          type: resp.data.type,
+          list: resp.data.listElements,
         },
       };
     } catch (e) {

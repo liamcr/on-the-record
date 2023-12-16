@@ -4,19 +4,15 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 
 import styles from "./page.module.css";
 import Heading from "@/components/Heading/Heading";
-import EditableMusicNote from "@/components/EditableMusicNote/EditableMusicNote";
-import { Entity, EntityType } from "@/common/types";
-import Search from "@/components/Search/Search";
-import ReviewScore from "@/components/ReviewScore/ReviewScore";
-import TextField from "@/components/TextField/TextField";
+import { EntityType } from "@/common/types";
 import ChipSelect from "@/components/ChipSelect/ChipSelect";
 import ButtonBase from "@/components/ButtonBase/ButtonBase";
 import Body from "@/components/Body/Body";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
-import { APIWrapper } from "@/common/apiWrapper";
-import { StreamingService } from "@/common/streamingServiceFns";
 import EditableTopFive from "@/components/EditableTopFive/EditableTopFive";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
+import { APIWrapper } from "@/common/apiWrapper";
+import { StreamingService } from "@/common/streamingServiceFns";
 
 const nameToEntityType = {
   Track: EntityType.Track,
@@ -77,6 +73,31 @@ export default function NewList() {
 
   const onSubmit = () => {
     setIsLoading(true);
+    APIWrapper.createList(
+      sessionStorage.getItem("otrStreamingService") as StreamingService,
+      sessionStorage.getItem("otrStreamingServiceId") || "",
+      selectedType || EntityType.Track,
+      listTitle,
+      listColour,
+      list
+    )
+      .then((resp) => {
+        if (!resp.error) {
+          // Success!
+          window.location.href = "/home";
+          return;
+        }
+
+        console.error(resp.error);
+        setIsError(true);
+      })
+      .catch((e) => {
+        console.error(e);
+        setIsError(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
