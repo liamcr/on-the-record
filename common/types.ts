@@ -134,7 +134,7 @@ export interface TopFiveList {
   /**
    * The ID of the list
    */
-  id: number;
+  id: string;
   /**
    * Timestamp of when the list was submitted
    */

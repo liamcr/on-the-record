@@ -4,6 +4,7 @@
   padding: 7.5%;
   padding-top: calc(7.5% + 1rem);
   box-shadow: 0px 8px 10px 0px rgba(40, 40, 40, 0.2);
+  margin-top: 6rem;
 }
 
 .postProfileIconLink {
@@ -20,6 +21,7 @@
 .postProfileIcon {
   border-radius: 10%;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
+  object-fit: cover;
 }
 
 .listTitle {

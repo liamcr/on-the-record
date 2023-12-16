@@ -10,7 +10,7 @@ const TopFive: React.FC<TopFiveList> = ({ author, title, list, colour }) => {
   return (
     <div className={styles.listContainer} style={{ backgroundColor: colour }}>
       <Link
-        href={`/profile/${author.id}`}
+        href={`/profile/${author.provider}/${author.providerId}`}
         className={styles.postProfileIconLink}
       >
         <div className={styles.postProfileIconContainer}>

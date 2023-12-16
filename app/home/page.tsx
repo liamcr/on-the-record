@@ -21,6 +21,7 @@ import SideNav from "@/components/SideNav/SideNav";
 import Search from "@/components/Search/Search";
 import { Entity, EntityType, TimelineResponse } from "@/common/types";
 import ReviewCard from "@/components/ReviewCard/ReviewCard";
+import TopFive from "@/components/TopFive/TopFive";
 
 export default function Home() {
   const router = useRouter();
@@ -168,21 +169,34 @@ export default function Home() {
               </div>
             ) : (
               <div className={styles.timelineContainer}>
-                {results.map((result) => (
-                  <ReviewCard
-                    key={result.data.id}
-                    author={result.author}
-                    id={result.data.id}
-                    score={result.data.score}
-                    src={result.data.imageSrc}
-                    subtitle={result.data.subtitle}
-                    timestamp={result.timestamp}
-                    title={result.data.title}
-                    type={result.data.type}
-                    colour={result.data.colour}
-                    review={result.data.body}
-                  />
-                ))}
+                {results.map((result) =>
+                  result.type === 0 ? (
+                    <ReviewCard
+                      key={result.data.id}
+                      author={result.author}
+                      id={result.data.id}
+                      score={result.data.score}
+                      src={result.data.imageSrc}
+                      subtitle={result.data.subtitle}
+                      timestamp={result.timestamp}
+                      title={result.data.title}
+                      type={result.data.type}
+                      colour={result.data.colour}
+                      review={result.data.body}
+                    />
+                  ) : (
+                    <TopFive
+                      key={result.data.id}
+                      author={result.author}
+                      id={result.data.id}
+                      colour={result.data.colour}
+                      timestamp={result.timestamp}
+                      title={result.data.title}
+                      type={result.data.type}
+                      list={result.data.listElements}
+                    />
+                  )
+                )}
               </div>
             )}
           </main>
