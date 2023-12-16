@@ -16,6 +16,7 @@ import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { APIWrapper } from "@/common/apiWrapper";
 import { StreamingService } from "@/common/streamingServiceFns";
 import EditableTopFive from "@/components/EditableTopFive/EditableTopFive";
+import ColourSelection from "@/components/ColourSelection/ColourSelection";
 
 const nameToEntityType = {
   Track: EntityType.Track,
@@ -25,13 +26,26 @@ const nameToEntityType = {
 
 const EntityTypeToName = ["Track", "Album", "Artist"];
 
-export default function NewReview() {
+export default function NewList() {
   const [selectedType, setSelectedType] = useState<EntityType | undefined>();
   const [userColour, setUserColour] = useState("#888");
+  const [listColour, setListColour] = useState("#6471E5");
   const [isLoading, setIsLoading] = useState(false);
+  const [list, setList] = useState<any[]>([
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+  ]);
+  const [listTitle, setListTitle] = useState("");
   const [isError, setIsError] = useState(false);
 
   const pageRef = useRef<HTMLDivElement>(null);
+
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setListTitle(e.target.value);
+  };
 
   useEffect(() => {
     const colour = localStorage.getItem("otrColour");
@@ -58,6 +72,7 @@ export default function NewReview() {
       inline: "end",
     });
     setSelectedType(nameToEntityType[newValue]);
+    setList([undefined, undefined, undefined, undefined, undefined]);
   };
 
   const onSubmit = () => {
@@ -84,11 +99,44 @@ export default function NewReview() {
           }
         />
         {selectedType !== undefined && (
-          <EditableTopFive
-            colour="#ff0000"
-            type={selectedType}
-            onChange={() => {}}
-          />
+          <>
+            <EditableTopFive
+              colour={listColour}
+              type={selectedType}
+              title={listTitle}
+              list={list}
+              onTitleChange={onTitleChange}
+              onListChange={(updatedList) => {
+                setList(updatedList);
+              }}
+            />
+            <ColourSelection
+              colours={[
+                "#6471E5",
+                "#52CB57",
+                "#DDA147",
+                "#DCD069",
+                "#C66FD4",
+                "#C67171",
+                "#94D1D4",
+                "#B1BF56",
+              ]}
+              onChange={(updatedColour) => {
+                setListColour(updatedColour);
+              }}
+              isListSelection
+            />
+            <footer className={styles.submitContainer}>
+              <ButtonBase
+                className={styles.submitButton}
+                style={{ backgroundColor: userColour }}
+                onClick={onSubmit}
+                disabled={!list.every((val) => val !== undefined)}
+              >
+                <Body className={styles.submitText} content="Submit" />
+              </ButtonBase>
+            </footer>
+          </>
         )}
       </div>
       {isLoading && (

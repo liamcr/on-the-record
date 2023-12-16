@@ -6,38 +6,32 @@ import Image from "next/image";
 import Heading from "../Heading/Heading";
 import TextField from "../TextField/TextField";
 import Search from "../Search/Search";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
 interface EditableTopFiveProps {
   type: EntityType;
   colour: string;
+  title: string;
+  list: any[];
+  onTitleChange: (arg0: React.ChangeEvent<HTMLInputElement>) => void;
   /**
    * Callback to run whenever there is a change to the list
-   * @param arg0 The title of the list
    * @param arg1 The list of elements
    * @returns
    */
-  onChange: (arg0: string, arg1: ListElement[]) => void;
+  onListChange: (arg0: any[]) => void;
 }
 
 const EditableTopFive: React.FC<EditableTopFiveProps> = ({
   type,
   colour,
-  onChange,
+  title,
+  list,
+  onTitleChange,
+  onListChange,
 }) => {
-  const [list, setList] = useState<any[]>([
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-  ]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [searchEnabled, setSearchEnabled] = useState(false);
-  const [title, setTitle] = useState("");
-
-  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
 
   return (
     <div className={styles.listContainer} style={{ backgroundColor: colour }}>
@@ -65,9 +59,13 @@ const EditableTopFive: React.FC<EditableTopFiveProps> = ({
             setSearchEnabled(true);
           }}
         >
-          {list[i] === undefined && <div>Undefined</div>}
+          {list[i] === undefined && (
+            <div className={styles.addContainer}>
+              <AddRoundedIcon className={styles.addIcon} />
+            </div>
+          )}
           {list[i] !== undefined && (
-            <div>
+            <div className={styles.populatedListElement}>
               <Heading
                 component="h4"
                 content={`${i + 1}.`}
@@ -93,14 +91,14 @@ const EditableTopFive: React.FC<EditableTopFiveProps> = ({
       <Search
         enabled={searchEnabled}
         onSelect={(selectedEntity) => {
-          setList((prevList) => {
-            prevList[selectedIndex] = {
-              name: selectedEntity.title,
-              src: selectedEntity.imageSrc,
-            };
+          const newList = [...list];
 
-            return prevList;
-          });
+          newList[selectedIndex] = {
+            name: selectedEntity.title,
+            src: selectedEntity.imageSrc,
+          };
+
+          onListChange(newList);
           setSearchEnabled(false);
         }}
         type={type !== undefined ? type : EntityType.Album}

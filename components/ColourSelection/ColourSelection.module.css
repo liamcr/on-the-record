@@ -1,7 +1,14 @@
 .colourSelectionContainer {
   display: grid;
-  grid-template-columns: auto auto auto;
   gap: 2rem;
+}
+
+.profileSelection {
+  grid-template-columns: auto auto auto;
+}
+
+.listSelection {
+  grid-template-columns: auto auto auto auto;
 }
 
 .colourSelection {
@@ -23,9 +30,7 @@
 
 /* Mobile */
 @media (max-width: 520px) {
-  .colourSelectionContainer {
-    display: grid;
+  .profileSelection {
     grid-template-columns: auto auto;
-    gap: 2rem;
   }
 }
