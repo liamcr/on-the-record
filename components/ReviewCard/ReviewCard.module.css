@@ -68,7 +68,7 @@
 }
 
 .reviewSubtitle {
-  color: var(--subtitle-rgb);
+  color: rgb(var(--subtitle-rgb));
   font-size: 1.8rem;
   margin-top: 0.5rem;
   text-overflow: ellipsis;
@@ -111,5 +111,5 @@
 .showButton {
   cursor: pointer;
   font-size: 1.2rem;
-  color: var(--subtitle-rgb);
+  color: rgb(var(--subtitle-rgb));
 }

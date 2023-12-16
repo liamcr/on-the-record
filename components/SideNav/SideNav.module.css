@@ -11,6 +11,7 @@
 .logoContainer {
   width: 90%;
   margin-bottom: 2rem;
+  cursor: pointer;
 }
 
 .navButtonsContainer {

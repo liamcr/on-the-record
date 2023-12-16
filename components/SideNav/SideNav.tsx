@@ -43,7 +43,12 @@ const SideNav: React.FC<SideNavProps> = ({
   return (
     <>
       <nav className={styles.sideNav}>
-        <div className={styles.logoContainer}>
+        <div
+          className={styles.logoContainer}
+          onClick={() => {
+            window.location.href = "/home";
+          }}
+        >
           <Logo colour={colour} shortened={true} />
         </div>
         <div className={styles.navButtonsContainer}>
