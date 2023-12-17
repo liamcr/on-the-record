@@ -73,6 +73,54 @@
   margin-top: 0.5rem;
 }
 
+.aboutUser {
+  width: clamp(250px, 18vw, 600px);
+  position: absolute;
+  right: 7vw;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.followStatsContainerExtended {
+  display: grid;
+  grid-template-columns: auto auto;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.followStatsContainer {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-evenly;
+  padding-block: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.followStats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.followStatsLabel {
+  font-size: 1rem;
+}
+
+.musicNotes {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
 .activityContainer {
   margin-top: 2rem;
 }
@@ -84,47 +132,19 @@
   justify-content: space-around;
   align-items: center;
   text-align: center;
-}
-
-.lowerNoResults {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-top: 2rem;
 }
 
 .noResultsText {
   color: rgb(171, 171, 171);
   font-size: 1.5rem;
-}
-
-.lowerNoResults > .noResultsText {
-  margin-bottom: 1rem;
-}
-
-.slidingButton {
-  margin-bottom: 1rem;
-}
-
-.orContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: clamp(48px, 90vw, 312px);
-  margin-bottom: 1rem;
-}
-
-.horizontalSpacer {
-  height: 2px;
-  border-radius: 1px;
-  background-color: rgb(171, 171, 171);
-  width: 33%;
+  line-height: 1.5;
 }
 
 /* Tablet/Mobile */
 @media (max-width: 768px) {
   .main {
-    width: 90vw;
+    width: 95vw;
   }
 
   .profileHeader {
@@ -138,5 +158,16 @@
   .profileData {
     max-width: 100%;
     width: 100%;
+  }
+
+  .musicNotes {
+    grid-template-columns: auto auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 450px) {
+  .followStatsLabel {
+    font-size: 0.8rem;
   }
 }

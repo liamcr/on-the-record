@@ -61,3 +61,11 @@
   overflow-x: hidden;
   white-space: nowrap;
 }
+
+/* Mobile */
+@media (max-width: 520px) {
+  .listElementImageContainer {
+    height: 3rem;
+    margin-inline: 0.75rem;
+  }
+}

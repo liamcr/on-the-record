@@ -14,10 +14,19 @@ import styles from "./page.module.css";
 import BottomNav from "@/components/BottomNav/BottomNav";
 import SideNav from "@/components/SideNav/SideNav";
 import Search from "@/components/Search/Search";
-import { Entity, EntityType, User } from "@/common/types";
+import {
+  Entity,
+  EntityType,
+  PostType,
+  TimelineResponse,
+  User,
+} from "@/common/types";
 import Image from "next/image";
 import Heading from "@/components/Heading/Heading";
 import Body from "@/components/Body/Body";
+import MusicNote from "@/components/MusicNote/MusicNote";
+import TopFive from "@/components/TopFive/TopFive";
+import ReviewCard from "@/components/ReviewCard/ReviewCard";
 
 export default function Profile({
   params,
@@ -39,6 +48,10 @@ export default function Profile({
   const [searchEnabled, setSearchEnabled] = useState(false);
 
   const [user, setUser] = useState<User | null>(null);
+
+  const [results, setResults] = useState<TimelineResponse[]>([]);
+  const [numReviews, setNumReviews] = useState(0);
+  const [numLists, setNumLists] = useState(0);
 
   const onUserSelect = (user: Entity) => {
     if (!user.href) return;
@@ -84,10 +97,36 @@ export default function Profile({
             return;
           }
 
-          console.log(specifiedUser);
-
           setUser(specifiedUser.data);
           setIsLoadingUser(false);
+
+          APIWrapper.getUserPosts(
+            params.provider as StreamingService,
+            params.providerId
+          ).then((timelineResp) => {
+            if (timelineResp.error) {
+              // TODO: Come up with designs for error case
+              setIsError(true);
+              return;
+            }
+
+            setIsLoadingTimeline(false);
+            const activityResults = timelineResp.data || [];
+
+            let reviewCount = 0;
+            let listCount = 0;
+            for (let post of activityResults) {
+              if (post.type === PostType.Review) {
+                reviewCount++;
+              } else if (post.type === PostType.List) {
+                listCount++;
+              }
+            }
+
+            setResults(timelineResp.data || []);
+            setNumReviews(reviewCount);
+            setNumLists(listCount);
+          });
         });
       });
     });
@@ -138,16 +177,143 @@ export default function Profile({
                 </div>
                 {isMobile && (
                   <>
-                    <div>followers/following</div>
-                    <div>Music notes</div>
+                    <div
+                      className={styles.followStatsContainer}
+                      style={{
+                        backgroundColor: `${userColour}40`,
+                      }}
+                    >
+                      <div className={styles.followStats}>
+                        <Heading component="h2" content={`${user.followers}`} />
+                        <Body
+                          className={styles.followStatsLabel}
+                          content="Followers"
+                        />
+                      </div>
+                      <div className={styles.followStats}>
+                        <Heading component="h2" content={`${user.following}`} />
+                        <Body
+                          className={styles.followStatsLabel}
+                          content="Following"
+                        />
+                      </div>
+                    </div>
+                    <div className={styles.musicNotes}>
+                      {user.musicNotes.map((musicNote, i) => (
+                        <MusicNote
+                          key={i}
+                          prompt={musicNote.prompt}
+                          src={musicNote.imageSrc}
+                          title={musicNote.title}
+                          subtitle={musicNote.subtitle}
+                        />
+                      ))}
+                    </div>
                   </>
                 )}
                 <div className={styles.activityContainer}>
                   <Heading component="h2" content="Activity" />
+                  {isLoadingTimeline && (
+                    <div className={styles.loadingIconTimelineOuterContainer}>
+                      <div className={styles.loadingIconTimelineInnerContainer}>
+                        <LoadingIcon colour={userColour} />
+                      </div>
+                    </div>
+                  )}
+                  {results.length === 0 && !isLoadingTimeline ? (
+                    <div className={styles.noResultsContainer}>
+                      <div className={styles.upperNoResults}>
+                        <Body
+                          className={styles.noResultsText}
+                          content="🦗🦗🦗"
+                        />
+                        <Body
+                          className={styles.noResultsText}
+                          content="There's nothing here..."
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={styles.timelineContainer}>
+                      {results.map((result) =>
+                        result.type === PostType.Review ? (
+                          <ReviewCard
+                            key={result.data.id}
+                            author={result.author}
+                            id={result.data.id}
+                            score={result.data.score}
+                            src={result.data.imageSrc}
+                            subtitle={result.data.subtitle}
+                            timestamp={result.timestamp}
+                            title={result.data.title}
+                            type={result.data.type}
+                            colour={result.data.colour}
+                            review={result.data.body}
+                          />
+                        ) : (
+                          <TopFive
+                            key={result.data.id}
+                            author={result.author}
+                            id={result.data.id}
+                            colour={result.data.colour}
+                            timestamp={result.timestamp}
+                            title={result.data.title}
+                            type={result.data.type}
+                            list={result.data.listElements}
+                          />
+                        )
+                      )}
+                    </div>
+                  )}
                 </div>
               </>
             )}
           </main>
+          {!isMobile && user !== null && (
+            <div className={styles.aboutUser}>
+              <div
+                className={styles.followStatsContainerExtended}
+                style={{
+                  backgroundColor: `${userColour}40`,
+                }}
+              >
+                <div className={styles.followStats}>
+                  <Heading component="h2" content={`${user.followers}`} />
+                  <Body
+                    className={styles.followStatsLabel}
+                    content="Followers"
+                  />
+                </div>
+                <div className={styles.followStats}>
+                  <Heading component="h2" content={`${user.following}`} />
+                  <Body
+                    className={styles.followStatsLabel}
+                    content="Following"
+                  />
+                </div>
+                <div className={styles.followStats}>
+                  <Heading component="h2" content={`${numReviews}`} />
+                  <Body className={styles.followStatsLabel} content="Reviews" />
+                </div>
+                <div className={styles.followStats}>
+                  <Heading component="h2" content={`${numLists}`} />
+                  <Body className={styles.followStatsLabel} content="Lists" />
+                </div>
+              </div>
+              <Heading component="h2" content="About Me" />
+              <div className={styles.musicNotes}>
+                {user.musicNotes.map((musicNote, i) => (
+                  <MusicNote
+                    key={i}
+                    prompt={musicNote.prompt}
+                    src={musicNote.imageSrc}
+                    title={musicNote.title}
+                    subtitle={musicNote.subtitle}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           {isMobile && (
             <BottomNav
               colour={userColour}

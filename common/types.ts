@@ -32,9 +32,17 @@ export interface User extends UserCondensed {
    */
   colour: string;
   /**
-   * The date the user was created on
+   * The date the user was created on.
    */
   createdOn: Date;
+  /**
+   * The number of followers a user has.
+   */
+  followers: number;
+  /**
+   * The number of users a user is following.
+   */
+  following: number;
   /**
    * The music notes associated with the user
    */
@@ -164,7 +172,7 @@ export interface TopFiveList {
 export interface TimelineResponse {
   author: UserCondensed;
   timestamp: string;
-  type: number;
+  type: PostType;
   data: any;
 }
 
@@ -173,4 +181,9 @@ export enum EntityType {
   Album,
   Artist,
   User,
+}
+
+export enum PostType {
+  Review,
+  List,
 }

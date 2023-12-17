@@ -70,6 +70,8 @@
   bottom: 0;
   right: 0;
   padding: 1rem;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .title {
@@ -81,6 +83,9 @@
   color: rgb(224, 224, 224);
   text-align: right;
   font-size: 0.8rem;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .musicNotePrompt {
@@ -94,4 +99,22 @@
   border-radius: 1px;
   width: 20%;
   background-color: rgb(var(--music-note-line-rgb));
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .subtitle {
+    font-size: 0.7rem;
+  }
+
+  .musicNotePrompt {
+    font-size: 0.8rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 380px) {
+  .musicNotePrompt {
+    font-size: 0.65rem;
+  }
 }

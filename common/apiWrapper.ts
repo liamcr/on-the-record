@@ -40,6 +40,8 @@ class APIWrapper {
           name: resp.data.name,
           colour: resp.data.colour,
           profilePictureSrc: resp.data.imageSrc,
+          followers: resp.data.followers,
+          following: resp.data.following,
           createdOn: resp.data.createdOn,
           musicNotes: resp.data.musicNotes,
         },
@@ -80,7 +82,7 @@ class APIWrapper {
         data: resp.data.map((user: any) => ({
           imageSrc: user.imageSrc,
           title: user.name,
-          href: `user/${user.provider}/${user.providerId}`,
+          href: `/profile/${user.provider}/${user.providerId}`,
         })),
       };
     } catch (e) {
@@ -135,6 +137,8 @@ class APIWrapper {
           name: resp.data.name,
           colour: resp.data.colour,
           profilePictureSrc: resp.data.imageSrc,
+          followers: 0,
+          following: 0,
           createdOn: resp.data.createdOn,
           musicNotes: resp.data.musicNotes,
         },
@@ -295,6 +299,50 @@ class APIWrapper {
       const resp = await axios({
         method: "GET",
         url: `http://localhost:8080/timeline?provider=${streamingService}&provider_id=${userId}`,
+        data: {},
+      });
+
+      // 200 Response
+      return {
+        data: resp.data.map((respElement: any) => ({
+          ...respElement,
+          author: {
+            provider: respElement.author.provider,
+            providerId: respElement.author.providerId,
+            profilePictureSrc: respElement.author.imageSrc,
+            name: respElement.author.name,
+          },
+        })),
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  static getUserPosts = async (
+    streamingService: StreamingService,
+    userId: string
+  ): Promise<APIResponse<TimelineResponse[]>> => {
+    try {
+      const resp = await axios({
+        method: "GET",
+        url: `http://localhost:8080/user/posts?provider=${streamingService}&provider_id=${userId}`,
         data: {},
       });
 

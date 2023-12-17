@@ -19,7 +19,7 @@ import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SideNav from "@/components/SideNav/SideNav";
 import Search from "@/components/Search/Search";
-import { Entity, EntityType, TimelineResponse } from "@/common/types";
+import { Entity, EntityType, PostType, TimelineResponse } from "@/common/types";
 import ReviewCard from "@/components/ReviewCard/ReviewCard";
 import TopFive from "@/components/TopFive/TopFive";
 
@@ -36,7 +36,6 @@ export default function Home() {
   const [userProvider, setUserProvider] = useState("");
   const [userProviderId, setUserProviderId] = useState(-1);
 
-  // TODO: Change string to `Post`
   const [results, setResults] = useState<TimelineResponse[]>([]);
 
   const [searchEnabled, setSearchEnabled] = useState(false);
@@ -170,7 +169,7 @@ export default function Home() {
             ) : (
               <div className={styles.timelineContainer}>
                 {results.map((result) =>
-                  result.type === 0 ? (
+                  result.type === PostType.Review ? (
                     <ReviewCard
                       key={result.data.id}
                       author={result.author}
