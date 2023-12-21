@@ -44,6 +44,10 @@ export interface User extends UserCondensed {
    */
   following: number;
   /**
+   * Is the currently logged-in user following this user?
+   */
+  isFollowing?: boolean;
+  /**
    * The music notes associated with the user
    */
   musicNotes: MusicNote[];

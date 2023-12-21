@@ -23,12 +23,18 @@ interface APIResponse<T> {
 class APIWrapper {
   static getUser = async (
     streamingService: StreamingService,
-    userId: string
+    userId: string,
+    requestingStreamingService?: StreamingService,
+    requestingUserId?: string
   ): Promise<APIResponse<User>> => {
     try {
       const resp = await axios({
         method: "GET",
-        url: `http://localhost:8080/user?provider=${streamingService}&provider_id=${userId}`,
+        url: `http://localhost:8080/user?provider=${streamingService}&provider_id=${userId}${
+          requestingStreamingService
+            ? `&requesting_provider=${requestingStreamingService}&requesting_provider_id=${requestingUserId}`
+            : ""
+        }`,
         data: {},
       });
 
@@ -42,6 +48,7 @@ class APIWrapper {
           profilePictureSrc: resp.data.imageSrc,
           followers: resp.data.followers,
           following: resp.data.following,
+          isFollowing: resp.data.isFollowing,
           createdOn: resp.data.createdOn,
           musicNotes: resp.data.musicNotes,
         },
@@ -142,6 +149,88 @@ class APIWrapper {
           createdOn: resp.data.createdOn,
           musicNotes: resp.data.musicNotes,
         },
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  static followUser = async (
+    streamingService: StreamingService,
+    userId: string,
+    toFollowProvider: StreamingService,
+    toFollowProviderId: string
+  ): Promise<APIResponse<null>> => {
+    try {
+      const resp = await axios({
+        method: "POST",
+        url: `http://localhost:8080/user/follow?provider=${streamingService}&provider_id=${userId}`,
+        data: {
+          provider: toFollowProvider,
+          providerId: toFollowProviderId,
+        },
+      });
+
+      // 200 Response
+      return {
+        data: null,
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  static unfollowUser = async (
+    streamingService: StreamingService,
+    userId: string,
+    toFollowProvider: StreamingService,
+    toFollowProviderId: string
+  ): Promise<APIResponse<null>> => {
+    try {
+      const resp = await axios({
+        method: "POST",
+        url: `http://localhost:8080/user/unfollow?provider=${streamingService}&provider_id=${userId}`,
+        data: {
+          provider: toFollowProvider,
+          providerId: toFollowProviderId,
+        },
+      });
+
+      // 200 Response
+      return {
+        data: null,
       };
     } catch (e) {
       const axiosError = e as AxiosError;

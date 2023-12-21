@@ -59,6 +59,10 @@
 
 .profileData {
   max-width: 65%;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .profileName {
@@ -71,6 +75,33 @@
   color: rgb(var(--subtitle-rgb));
   font-size: 1.8rem;
   margin-top: 0.5rem;
+}
+
+.followButton {
+  display: inline;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.followButton:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.followButton:active {
+  opacity: 0.9;
+}
+
+.followButton:disabled {
+  color: #88888880 !important;
+  cursor: default;
+}
+
+.followButtonIcon {
+  /* I have to use !important here because MaterialUI adds a font-size
+  of 1.5rem to their icons by default, which takes precedence over any
+  font size I would typically set here */
+  font-size: 5rem !important;
 }
 
 .aboutUser {
@@ -169,5 +200,12 @@
 @media (max-width: 450px) {
   .followStatsLabel {
     font-size: 0.8rem;
+  }
+
+  .followButtonIcon {
+    /* I have to use !important here because MaterialUI adds a font-size
+    of 1.5rem to their icons by default, which takes precedence over any
+    font size I would typically set here */
+    font-size: 2.5rem !important;
   }
 }

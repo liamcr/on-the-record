@@ -5,7 +5,7 @@ import {
   StreamingServiceController,
 } from "../../../../common/streamingServiceFns";
 import { APIWrapper } from "../../../../common/apiWrapper";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useMediaQuery } from "@mui/material";
@@ -27,6 +27,9 @@ import Body from "@/components/Body/Body";
 import MusicNote from "@/components/MusicNote/MusicNote";
 import TopFive from "@/components/TopFive/TopFive";
 import ReviewCard from "@/components/ReviewCard/ReviewCard";
+import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
+import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 export default function Profile({
   params,
@@ -48,10 +51,19 @@ export default function Profile({
   const [searchEnabled, setSearchEnabled] = useState(false);
 
   const [user, setUser] = useState<User | null>(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false);
 
   const [results, setResults] = useState<TimelineResponse[]>([]);
   const [numReviews, setNumReviews] = useState(0);
   const [numLists, setNumLists] = useState(0);
+
+  const isCurrentUser = useMemo(() => {
+    return (
+      params.provider === userProvider &&
+      params.providerId === userProviderId.toString()
+    );
+  }, [userProvider, userProviderId]);
 
   const onUserSelect = (user: Entity) => {
     if (!user.href) return;
@@ -89,7 +101,9 @@ export default function Profile({
 
         APIWrapper.getUser(
           params.provider as StreamingService,
-          params.providerId
+          params.providerId,
+          otrUser.data?.provider,
+          otrUser.data?.providerId.toString(10)
         ).then((specifiedUser) => {
           if (specifiedUser.error || specifiedUser.data === undefined) {
             // TODO: Come up with designs for error case
@@ -98,6 +112,9 @@ export default function Profile({
           }
 
           setUser(specifiedUser.data);
+          if (specifiedUser.data.isFollowing !== undefined) {
+            setIsFollowing(specifiedUser.data.isFollowing);
+          }
           setIsLoadingUser(false);
 
           APIWrapper.getUserPosts(
@@ -132,6 +149,43 @@ export default function Profile({
     });
   }, []);
 
+  const onFollowClick = () => {
+    setIsLoadingFollow(true);
+    if (!isFollowing) {
+      APIWrapper.followUser(
+        userProvider as StreamingService,
+        userProviderId.toString() || "",
+        params.provider as StreamingService,
+        params.providerId
+      )
+        .then(() => {
+          setIsFollowing(true);
+        })
+        .catch((err) => {
+          setIsError(true);
+        })
+        .finally(() => {
+          setIsLoadingFollow(false);
+        });
+    } else {
+      APIWrapper.unfollowUser(
+        userProvider as StreamingService,
+        userProviderId.toString() || "",
+        params.provider as StreamingService,
+        params.providerId
+      )
+        .then(() => {
+          setIsFollowing(false);
+        })
+        .catch((err) => {
+          setIsError(true);
+        })
+        .finally(() => {
+          setIsLoadingFollow(false);
+        });
+    }
+  };
+
   return (
     <div className={styles.pageContainer}>
       {isLoadingUser ? (
@@ -162,17 +216,45 @@ export default function Profile({
                     />
                   </div>
                   <div className={styles.profileData}>
-                    <Heading
-                      component="h1"
-                      content={user.name}
-                      className={styles.profileName}
-                    />
-                    <Body
-                      content={`Joined ${new Date(
-                        user.createdOn
-                      ).getFullYear()}`}
-                      className={styles.profileDate}
-                    />
+                    <div className={styles.profileDataText}>
+                      <Heading
+                        component="h1"
+                        content={user.name}
+                        className={styles.profileName}
+                      />
+                      <Body
+                        content={`Joined ${new Date(
+                          user.createdOn
+                        ).getFullYear()}`}
+                        className={styles.profileDate}
+                      />
+                    </div>
+                    <button
+                      className={styles.followButton}
+                      onClick={() => {
+                        if (!isCurrentUser) {
+                          onFollowClick();
+                        }
+                      }}
+                      disabled={isLoadingFollow}
+                      style={{
+                        color: `${userColour}80`,
+                      }}
+                    >
+                      {isCurrentUser && (
+                        <EditOutlinedIcon className={styles.followButtonIcon} />
+                      )}
+                      {!isCurrentUser && isFollowing && (
+                        <PersonRemoveOutlinedIcon
+                          className={styles.followButtonIcon}
+                        />
+                      )}
+                      {!isCurrentUser && !isFollowing && (
+                        <PersonAddOutlinedIcon
+                          className={styles.followButtonIcon}
+                        />
+                      )}
+                    </button>
                   </div>
                 </div>
                 {isMobile && (
