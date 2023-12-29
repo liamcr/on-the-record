@@ -23,13 +23,18 @@ interface ImageUploadProps {
    * The colour that will be displayed on the loading icon.
    */
   colour?: string;
+  /**
+   * Initial image URL to render when the component first mounts.
+   */
+  initialUrl?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onChange,
   colour = "gray",
+  initialUrl = DefaultProfile.src,
 }) => {
-  const [url, setUrl] = useState(DefaultProfile.src);
+  const [url, setUrl] = useState(initialUrl);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 

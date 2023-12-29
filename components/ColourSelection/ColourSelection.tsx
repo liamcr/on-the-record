@@ -6,12 +6,14 @@ interface ColourSelectionProps {
   colours: string[];
   onChange: (arg0: string) => void;
   isListSelection?: boolean;
+  style?: React.CSSProperties;
 }
 
 const ColourSelection: React.FC<ColourSelectionProps> = ({
   colours,
   onChange,
   isListSelection = false,
+  style,
 }) => {
   const [selected, setSelected] = useState(-1);
 
@@ -20,6 +22,7 @@ const ColourSelection: React.FC<ColourSelectionProps> = ({
       className={`${styles.colourSelectionContainer} ${
         isListSelection ? styles.listSelection : styles.profileSelection
       }`}
+      style={style}
     >
       {colours.map((colour, i) => (
         <div

@@ -8,6 +8,14 @@
   height: 100%;
 }
 
+.defaultStroke {
+  stroke: rgb(var(--foreground-rgb));
+}
+
+.defaultFill {
+  fill: rgb(var(--foreground-rgb));
+}
+
 .recordStrokes {
   transform-box: fill-box;
   transform-origin: center;

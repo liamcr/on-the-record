@@ -19,30 +19,36 @@ const Logo: React.FC<LogoProps> = ({ colour = "gray", shortened = false }) => {
       >
         <path
           d="M132.241 153.92C145.971 145.971 153.92 136.938 159.339 119.956"
-          stroke="white"
+          className={styles.defaultStroke}
           strokeWidth="4"
           strokeLinecap="round"
         />
         <path
           d="M103.697 51.6679C95.7482 49.8614 82.0183 53.4745 75.8759 59.2555"
-          stroke="white"
+          className={styles.defaultStroke}
           strokeWidth="4"
           strokeLinecap="round"
         />
         <path
           d="M61.0621 25.6533C47.3321 33.6022 33.2409 46.9708 23.8467 65.7592"
-          stroke="white"
+          className={styles.defaultStroke}
           strokeWidth="4"
           strokeLinecap="round"
         />
-        <circle cx="99" cy="99" r="97" stroke="white" strokeWidth="4" />
+        <circle
+          cx="99"
+          cy="99"
+          r="97"
+          strokeWidth="4"
+          className={styles.defaultStroke}
+        />
         <path
           d="M115.624 46.9701L107.314 74.0686L123.573 89.9665L189.332 63.5905L176.686 39.0212L150.671 15.5358L128.27 6.86426L115.624 46.9701Z"
-          fill="white"
+          className={styles.defaultFill}
         />
         <path
           d="M52.7552 117.788L72.9888 109.839L91.4158 124.653L70.0983 192.218L48.7808 183.908L24.5727 162.952L8.67493 134.77L52.7552 117.788Z"
-          fill="white"
+          className={styles.defaultFill}
         />
         <circle
           cx="99.0037"
@@ -58,7 +64,12 @@ const Logo: React.FC<LogoProps> = ({ colour = "gray", shortened = false }) => {
           fill="url(#paint0_linear_125_192)"
           fillOpacity="0.49"
         />
-        <circle cx="99.3649" cy="99.3608" r="4.69708" fill="white" />
+        <circle
+          cx="99.3649"
+          cy="99.3608"
+          r="4.69708"
+          className={styles.defaultFill}
+        />
         <defs>
           <linearGradient
             id="paint0_linear_125_192"

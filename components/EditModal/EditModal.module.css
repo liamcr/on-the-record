@@ -1,0 +1,81 @@
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(var(--nav-overlay-rbga));
+}
+
+.modal {
+  margin: 3rem;
+  width: 25vw;
+  background-color: rgb(var(--search-background-rgb));
+  padding: 2rem;
+  border-radius: 16px;
+}
+
+.header {
+  margin-bottom: 0.5rem;
+}
+
+.editableContent {
+  max-height: 70vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.editableContent::-webkit-scrollbar {
+  display: none;
+}
+
+.subheading {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.musicNoteSelectContainer {
+  display: grid;
+  grid-template-columns: 100%;
+  gap: 6%;
+}
+
+.modalFooter {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  padding-top: 1rem;
+}
+
+.submitButton {
+  padding-inline: 0.75rem;
+  padding-block: 0.25rem;
+  transition: all 0.5s;
+}
+
+.submitText {
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+.loadingOverlay {
+  position: fixed;
+  width: 100vw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(var(--nav-overlay-rbga));
+  z-index: 400;
+}
+
+.loadingIconContainer {
+  width: clamp(1px, 60vw, 200px);
+}

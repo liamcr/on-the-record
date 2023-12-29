@@ -1,9 +1,32 @@
 :root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 18, 18, 18;
+
+  --subtitle-rgb: 175, 175, 175;
+
+  --review-score-background-rgba: 50, 50, 50, 0.3;
+
+  --navbar-background-rgba: 39, 39, 39, 0.95;
+
+  --card-background-rgba: 40, 40, 40, 0.8;
+  --search-background-rgb: 40, 40, 40;
+  --search-background-hover-rgb: 60, 60, 60;
+
+  --nav-overlay-rbga: 0, 0, 0, 0.25;
+
+  --music-note-background-rgb: 56, 56, 56;
+  --music-note-line-rgb: 168, 168, 168;
+
+  --text-field-background-rgba: 255, 255, 255, 0.06;
+}
+
+/* TODO: Uncomment when I'm ready to implement light mode support */
+/* :root {
   --max-width: 1100px;
   --border-radius: 12px;
 
   --foreground-rgb: 0, 0, 0;
-  --background-rgb: 210, 210, 210;
+  --background-rgb: 241, 241, 241;
 
   --subtitle-rgb: 106, 106, 106;
 
@@ -45,7 +68,7 @@
 
     --text-field-background-rgba: 255, 255, 255, 0.06;
   }
-}
+} */
 
 * {
   box-sizing: border-box;

@@ -13,7 +13,6 @@ import { useMediaQuery } from "@mui/material";
 import styles from "./page.module.css";
 import BottomNav from "@/components/BottomNav/BottomNav";
 import SideNav from "@/components/SideNav/SideNav";
-import Search from "@/components/Search/Search";
 import {
   Entity,
   EntityType,
@@ -30,6 +29,7 @@ import ReviewCard from "@/components/ReviewCard/ReviewCard";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EditModal from "@/components/EditModal/EditModal";
 
 export default function Profile({
   params,
@@ -49,6 +49,7 @@ export default function Profile({
   const [userProviderId, setUserProviderId] = useState(-1);
 
   const [searchEnabled, setSearchEnabled] = useState(false);
+  const [editModalEnabled, setEditModalEnabled] = useState(false);
 
   const [user, setUser] = useState<User | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -187,7 +188,11 @@ export default function Profile({
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <div
+      className={`${styles.pageContainer} ${
+        editModalEnabled ? styles.modalOpen : ""
+      }`}
+    >
       {isLoadingUser ? (
         <div className={styles.loadingIconOuterContainer}>
           <div className={styles.loadingIconInnerContainer}>
@@ -234,6 +239,8 @@ export default function Profile({
                       onClick={() => {
                         if (!isCurrentUser) {
                           onFollowClick();
+                        } else {
+                          setEditModalEnabled(true);
                         }
                       }}
                       disabled={isLoadingFollow}
@@ -403,12 +410,15 @@ export default function Profile({
               userProviderId={userProviderId}
             />
           )}
-          <Search
-            type={EntityType.User}
-            enabled={searchEnabled}
-            onClose={() => setSearchEnabled(false)}
-            onSelect={onUserSelect}
-          />
+          {editModalEnabled && user !== null && (
+            <EditModal
+              onClose={() => {
+                setEditModalEnabled(false);
+              }}
+              colour={userColour}
+              user={user}
+            />
+          )}
         </>
       )}
     </div>

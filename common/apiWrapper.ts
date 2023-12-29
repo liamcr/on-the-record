@@ -132,7 +132,6 @@ class APIWrapper {
           imageSrc: profilePictureSrc,
           colour: colour,
           musicNotes: musicNotes,
-          createdOn: Date.now(),
         },
       });
 
@@ -152,6 +151,65 @@ class APIWrapper {
       };
     } catch (e) {
       const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  static updateUser = async (
+    streamingService: StreamingService,
+    userId: string,
+    name: string,
+    colour: string,
+    profilePictureSrc: string,
+    musicNotes: MusicNote[]
+  ): Promise<APIResponse<User>> => {
+    try {
+      const resp = await axios({
+        method: "PUT",
+        url: `http://localhost:8080/user`,
+        data: {
+          provider: streamingService,
+          providerId: userId,
+          name: name,
+          imageSrc: profilePictureSrc,
+          colour: colour,
+          musicNotes: musicNotes,
+        },
+      });
+
+      // 200 Response
+      return {
+        data: {
+          provider: resp.data.provider,
+          providerId: resp.data.providerId,
+          name: resp.data.name,
+          colour: resp.data.colour,
+          profilePictureSrc: resp.data.imageSrc,
+          followers: 0,
+          following: 0,
+          createdOn: resp.data.createdOn,
+          musicNotes: resp.data.musicNotes,
+        },
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      console.log(e);
 
       if (!axiosError.response) {
         return {

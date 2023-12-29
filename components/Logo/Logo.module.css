@@ -9,6 +9,14 @@
   height: 7rem;
 }
 
+.defaultStroke {
+  stroke: rgb(var(--foreground-rgb));
+}
+
+.defaultFill {
+  fill: rgb(var(--foreground-rgb));
+}
+
 .logoText {
   font-size: 5rem;
 }

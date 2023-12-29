@@ -28,12 +28,12 @@ const Colour: React.FC<ColourProps> = ({ onChange }) => {
       />
       <ColourSelection
         colours={[
-          "#1A2EE3",
+          "#192BC6",
           "#148D19",
-          "#F6A120",
-          "#CC1BE9",
-          "#E23A3A",
-          "#E2CF23",
+          "#AB6E11",
+          "#B6A401",
+          "#AE1AC5",
+          "#CF3939",
         ]}
         onChange={onChange}
       />

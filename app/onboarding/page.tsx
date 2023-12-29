@@ -18,22 +18,7 @@ import styles from "./page.module.css";
 import { APIWrapper } from "@/common/apiWrapper";
 import { StreamingService } from "@/common/streamingServiceFns";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
-
-const prompts = [
-  "My Favourite Artist",
-  "My Favourite Album",
-  "My Favourite Song",
-  "The Song I Last Cried To",
-  "The Best Song To Play During A Workout",
-];
-
-const promptTypeMap = [
-  EntityType.Artist,
-  EntityType.Album,
-  EntityType.Track,
-  EntityType.Track,
-  EntityType.Track,
-];
+import { promptTypeMap, prompts } from "@/common/consts";
 
 export default function Onboarding() {
   const [page, setPage] = useState(0);

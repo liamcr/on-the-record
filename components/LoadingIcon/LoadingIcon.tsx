@@ -19,19 +19,19 @@ const LoadingIcon: React.FC<LogoProps> = ({ colour = "gray" }) => {
         <g className={styles.recordStrokes}>
           <path
             d="M226.883 288.98C250.378 275.378 263.98 259.92 273.253 230.861"
-            stroke="white"
+            className={styles.defaultStroke}
             strokeWidth="4"
             strokeLinecap="round"
           />
           <path
             d="M178.038 114.004C164.435 110.913 140.94 117.096 130.43 126.988"
-            stroke="white"
+            className={styles.defaultStroke}
             strokeWidth="4"
             strokeLinecap="round"
           />
           <path
             d="M105.08 69.4873C81.5848 83.0897 57.4715 105.966 41.396 138.117"
-            stroke="white"
+            className={styles.defaultStroke}
             strokeWidth="4"
             strokeLinecap="round"
           />
@@ -39,17 +39,17 @@ const LoadingIcon: React.FC<LogoProps> = ({ colour = "gray" }) => {
             cx="170"
             cy="195"
             r="167.411"
-            stroke="white"
+            className={styles.defaultStroke}
             strokeWidth="4"
           />
         </g>
         <path
           d="M198.447 105.965L184.227 152.337L212.05 179.542L324.578 134.407L302.938 92.3629L258.422 52.1741L220.088 37.3352L198.447 105.965Z"
-          fill="white"
+          className={styles.defaultFill}
         />
         <path
           d="M90.8649 227.15L125.489 213.548L157.022 238.898L120.543 354.518L84.0637 340.297L42.6383 304.436L15.4336 256.21L90.8649 227.15Z"
-          fill="white"
+          className={styles.defaultFill}
         />
         <circle
           cx="170.006"
@@ -65,7 +65,12 @@ const LoadingIcon: React.FC<LogoProps> = ({ colour = "gray" }) => {
           fill="url(#paint0_linear_64_286)"
           fillOpacity="0.49"
         />
-        <circle cx="170.624" cy="195.617" r="8.03776" fill="white" />
+        <circle
+          cx="170.624"
+          cy="195.617"
+          r="8.03776"
+          className={styles.defaultFill}
+        />
         <g className={styles.needle}>
           <circle
             cx="380.37"

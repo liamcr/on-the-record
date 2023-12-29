@@ -1,6 +1,7 @@
 .dropzoneContainer {
   width: 100%;
   aspect-ratio: 1;
+  z-index: 1;
   border-radius: 32px;
   cursor: pointer;
   position: relative;
@@ -11,6 +12,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+  border-radius: 32px;
   opacity: 0;
   transition: opacity 0.2s;
   background-color: rgba(var(--nav-overlay-rbga));
