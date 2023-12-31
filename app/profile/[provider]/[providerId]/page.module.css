@@ -36,6 +36,11 @@
 
 .main {
   display: flex;
+  flex-direction: row;
+}
+
+.mainContent {
+  display: flex;
   flex-direction: column;
   padding: 2rem;
   min-height: 90vh;
@@ -111,8 +116,6 @@
 
 .aboutUser {
   width: clamp(250px, 18vw, 600px);
-  position: absolute;
-  right: 7vw;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -179,8 +182,9 @@
 
 /* Tablet/Mobile */
 @media (max-width: 768px) {
-  .main {
+  .mainContent {
     width: 95vw;
+    padding-bottom: 8rem;
   }
 
   .profileHeader {

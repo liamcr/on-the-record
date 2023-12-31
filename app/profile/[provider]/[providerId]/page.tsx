@@ -13,13 +13,7 @@ import { useMediaQuery } from "@mui/material";
 import styles from "./page.module.css";
 import BottomNav from "@/components/BottomNav/BottomNav";
 import SideNav from "@/components/SideNav/SideNav";
-import {
-  Entity,
-  EntityType,
-  PostType,
-  TimelineResponse,
-  User,
-} from "@/common/types";
+import { Entity, PostType, TimelineResponse, User } from "@/common/types";
 import Image from "next/image";
 import Heading from "@/components/Heading/Heading";
 import Body from "@/components/Body/Body";
@@ -211,63 +205,166 @@ export default function Profile({
           <main className={styles.main}>
             {user !== null && (
               <>
-                <div className={styles.profileHeader}>
-                  <div className={styles.profilePicContainer}>
-                    <Image
-                      src={user.profilePictureSrc}
-                      alt={user.name}
-                      className={styles.profilePic}
-                      fill
-                    />
-                  </div>
-                  <div className={styles.profileData}>
-                    <div className={styles.profileDataText}>
-                      <Heading
-                        component="h1"
-                        content={user.name}
-                        className={styles.profileName}
-                      />
-                      <Body
-                        content={`Joined ${new Date(
-                          user.createdOn
-                        ).getFullYear()}`}
-                        className={styles.profileDate}
+                <div className={styles.mainContent}>
+                  <div className={styles.profileHeader}>
+                    <div className={styles.profilePicContainer}>
+                      <Image
+                        src={user.profilePictureSrc}
+                        alt={user.name}
+                        className={styles.profilePic}
+                        fill
                       />
                     </div>
-                    <button
-                      className={styles.followButton}
-                      onClick={() => {
-                        if (!isCurrentUser) {
-                          onFollowClick();
-                        } else {
-                          setEditModalEnabled(true);
-                        }
-                      }}
-                      disabled={isLoadingFollow}
-                      style={{
-                        color: `${userColour}80`,
-                      }}
-                    >
-                      {isCurrentUser && (
-                        <EditOutlinedIcon className={styles.followButtonIcon} />
-                      )}
-                      {!isCurrentUser && isFollowing && (
-                        <PersonRemoveOutlinedIcon
-                          className={styles.followButtonIcon}
+                    <div className={styles.profileData}>
+                      <div className={styles.profileDataText}>
+                        <Heading
+                          component="h1"
+                          content={user.name}
+                          className={styles.profileName}
                         />
-                      )}
-                      {!isCurrentUser && !isFollowing && (
-                        <PersonAddOutlinedIcon
-                          className={styles.followButtonIcon}
+                        <Body
+                          content={`Joined ${new Date(
+                            user.createdOn
+                          ).getFullYear()}`}
+                          className={styles.profileDate}
                         />
-                      )}
-                    </button>
+                      </div>
+                      <button
+                        className={styles.followButton}
+                        onClick={() => {
+                          if (!isCurrentUser) {
+                            onFollowClick();
+                          } else {
+                            setEditModalEnabled(true);
+                          }
+                        }}
+                        disabled={isLoadingFollow}
+                        style={{
+                          color: `${userColour}80`,
+                        }}
+                      >
+                        {isCurrentUser && (
+                          <EditOutlinedIcon
+                            className={styles.followButtonIcon}
+                          />
+                        )}
+                        {!isCurrentUser && isFollowing && (
+                          <PersonRemoveOutlinedIcon
+                            className={styles.followButtonIcon}
+                          />
+                        )}
+                        {!isCurrentUser && !isFollowing && (
+                          <PersonAddOutlinedIcon
+                            className={styles.followButtonIcon}
+                          />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  {isMobile && (
+                    <>
+                      <div
+                        className={styles.followStatsContainer}
+                        style={{
+                          backgroundColor: `${userColour}40`,
+                        }}
+                      >
+                        <div className={styles.followStats}>
+                          <Heading
+                            component="h2"
+                            content={`${user.followers}`}
+                          />
+                          <Body
+                            className={styles.followStatsLabel}
+                            content="Followers"
+                          />
+                        </div>
+                        <div className={styles.followStats}>
+                          <Heading
+                            component="h2"
+                            content={`${user.following}`}
+                          />
+                          <Body
+                            className={styles.followStatsLabel}
+                            content="Following"
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.musicNotes}>
+                        {user.musicNotes.map((musicNote, i) => (
+                          <MusicNote
+                            key={i}
+                            prompt={musicNote.prompt}
+                            src={musicNote.imageSrc}
+                            title={musicNote.title}
+                            subtitle={musicNote.subtitle}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  <div className={styles.activityContainer}>
+                    <Heading component="h2" content="Activity" />
+                    {isLoadingTimeline && (
+                      <div className={styles.loadingIconTimelineOuterContainer}>
+                        <div
+                          className={styles.loadingIconTimelineInnerContainer}
+                        >
+                          <LoadingIcon colour={userColour} />
+                        </div>
+                      </div>
+                    )}
+                    {results.length === 0 && !isLoadingTimeline ? (
+                      <div className={styles.noResultsContainer}>
+                        <div className={styles.upperNoResults}>
+                          <Body
+                            className={styles.noResultsText}
+                            content="🦗🦗🦗"
+                          />
+                          <Body
+                            className={styles.noResultsText}
+                            content="There's nothing here..."
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={styles.timelineContainer}>
+                        {results.map((result) =>
+                          result.type === PostType.Review ? (
+                            <ReviewCard
+                              key={result.data.id}
+                              author={result.author}
+                              id={result.data.id}
+                              score={result.data.score}
+                              src={result.data.imageSrc}
+                              subtitle={result.data.subtitle}
+                              timestamp={result.timestamp}
+                              title={result.data.title}
+                              type={result.data.type}
+                              colour={result.data.colour}
+                              review={result.data.body}
+                            />
+                          ) : (
+                            <TopFive
+                              key={result.data.id}
+                              author={result.author}
+                              id={result.data.id}
+                              colour={result.data.colour}
+                              timestamp={result.timestamp}
+                              title={result.data.title}
+                              type={result.data.type}
+                              list={result.data.listElements}
+                            />
+                          )
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
-                {isMobile && (
-                  <>
+                {!isMobile && user !== null && (
+                  <div className={styles.aboutUser}>
                     <div
-                      className={styles.followStatsContainer}
+                      className={styles.followStatsContainerExtended}
                       style={{
                         backgroundColor: `${userColour}40`,
                       }}
@@ -286,7 +383,22 @@ export default function Profile({
                           content="Following"
                         />
                       </div>
+                      <div className={styles.followStats}>
+                        <Heading component="h2" content={`${numReviews}`} />
+                        <Body
+                          className={styles.followStatsLabel}
+                          content="Reviews"
+                        />
+                      </div>
+                      <div className={styles.followStats}>
+                        <Heading component="h2" content={`${numLists}`} />
+                        <Body
+                          className={styles.followStatsLabel}
+                          content="Lists"
+                        />
+                      </div>
                     </div>
+                    <Heading component="h2" content="About Me" />
                     <div className={styles.musicNotes}>
                       {user.musicNotes.map((musicNote, i) => (
                         <MusicNote
@@ -298,111 +410,11 @@ export default function Profile({
                         />
                       ))}
                     </div>
-                  </>
+                  </div>
                 )}
-                <div className={styles.activityContainer}>
-                  <Heading component="h2" content="Activity" />
-                  {isLoadingTimeline && (
-                    <div className={styles.loadingIconTimelineOuterContainer}>
-                      <div className={styles.loadingIconTimelineInnerContainer}>
-                        <LoadingIcon colour={userColour} />
-                      </div>
-                    </div>
-                  )}
-                  {results.length === 0 && !isLoadingTimeline ? (
-                    <div className={styles.noResultsContainer}>
-                      <div className={styles.upperNoResults}>
-                        <Body
-                          className={styles.noResultsText}
-                          content="🦗🦗🦗"
-                        />
-                        <Body
-                          className={styles.noResultsText}
-                          content="There's nothing here..."
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className={styles.timelineContainer}>
-                      {results.map((result) =>
-                        result.type === PostType.Review ? (
-                          <ReviewCard
-                            key={result.data.id}
-                            author={result.author}
-                            id={result.data.id}
-                            score={result.data.score}
-                            src={result.data.imageSrc}
-                            subtitle={result.data.subtitle}
-                            timestamp={result.timestamp}
-                            title={result.data.title}
-                            type={result.data.type}
-                            colour={result.data.colour}
-                            review={result.data.body}
-                          />
-                        ) : (
-                          <TopFive
-                            key={result.data.id}
-                            author={result.author}
-                            id={result.data.id}
-                            colour={result.data.colour}
-                            timestamp={result.timestamp}
-                            title={result.data.title}
-                            type={result.data.type}
-                            list={result.data.listElements}
-                          />
-                        )
-                      )}
-                    </div>
-                  )}
-                </div>
               </>
             )}
           </main>
-          {!isMobile && user !== null && (
-            <div className={styles.aboutUser}>
-              <div
-                className={styles.followStatsContainerExtended}
-                style={{
-                  backgroundColor: `${userColour}40`,
-                }}
-              >
-                <div className={styles.followStats}>
-                  <Heading component="h2" content={`${user.followers}`} />
-                  <Body
-                    className={styles.followStatsLabel}
-                    content="Followers"
-                  />
-                </div>
-                <div className={styles.followStats}>
-                  <Heading component="h2" content={`${user.following}`} />
-                  <Body
-                    className={styles.followStatsLabel}
-                    content="Following"
-                  />
-                </div>
-                <div className={styles.followStats}>
-                  <Heading component="h2" content={`${numReviews}`} />
-                  <Body className={styles.followStatsLabel} content="Reviews" />
-                </div>
-                <div className={styles.followStats}>
-                  <Heading component="h2" content={`${numLists}`} />
-                  <Body className={styles.followStatsLabel} content="Lists" />
-                </div>
-              </div>
-              <Heading component="h2" content="About Me" />
-              <div className={styles.musicNotes}>
-                {user.musicNotes.map((musicNote, i) => (
-                  <MusicNote
-                    key={i}
-                    prompt={musicNote.prompt}
-                    src={musicNote.imageSrc}
-                    title={musicNote.title}
-                    subtitle={musicNote.subtitle}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
           {isMobile && (
             <BottomNav
               colour={userColour}

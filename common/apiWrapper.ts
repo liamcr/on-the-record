@@ -489,7 +489,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "GET",
-        url: `http://localhost:8080/user/posts?provider=${streamingService}&provider_id=${userId}`,
+        url: `http://localhost:8080/user/activity?provider=${streamingService}&provider_id=${userId}`,
         data: {},
       });
 
