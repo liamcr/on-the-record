@@ -12,7 +12,7 @@
 
 .modal {
   margin: 3rem;
-  width: 25vw;
+  width: clamp(400px, 40vw, 600px);
   background-color: rgb(var(--search-background-rgb));
   padding: 2rem;
   border-radius: 16px;
@@ -78,4 +78,12 @@
 
 .loadingIconContainer {
   width: clamp(1px, 60vw, 200px);
+}
+
+/* Mobile */
+@media (max-width: 450px) {
+  .modal {
+    width: 90%;
+    padding: 1rem;
+  }
 }

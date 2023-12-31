@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import Heading from "../../components/Heading/Heading";
 import ButtonBase from "../../components/ButtonBase/ButtonBase";
 import Body from "@/components/Body/Body";
-import ColourSelection from "@/components/ColourSelection/ColourSelection";
 import Search from "@/components/Search/Search";
-import { Entity, EntityType, MusicNote } from "@/common/types";
+import { Entity, MusicNote } from "@/common/types";
 import Select from "@/components/Select/Select";
 import MenuItem from "@mui/material/MenuItem";
 import EditableMusicNote from "@/components/EditableMusicNote/EditableMusicNote";
@@ -98,7 +97,8 @@ export default function Onboarding() {
     setIsLoading(true);
 
     APIWrapper.createUser(
-      sessionStorage.getItem("otrStreamingService") as StreamingService,
+      (sessionStorage.getItem("otrStreamingService") as StreamingService) ||
+        "spotify",
       sessionStorage.getItem("otrStreamingServiceId") || "",
       name,
       colour,
@@ -109,7 +109,9 @@ export default function Onboarding() {
         if (!resp.error) {
           localStorage.setItem("otrColour", colour);
           // Success!
-          window.location.href = "/home";
+          if (window) {
+            window.location.href = "/home";
+          }
           return;
         }
 

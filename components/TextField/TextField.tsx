@@ -4,7 +4,13 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { header } from "@/common/fonts";
 
-const customTheme = (colour: string, isTopFive: boolean) =>
+type breakpoint = "md" | "lg";
+
+const customTheme = (
+  colour: string,
+  isTopFive: boolean,
+  breakpoint: breakpoint
+) =>
   createTheme({
     components: {
       MuiTextField: {
@@ -24,7 +30,12 @@ const customTheme = (colour: string, isTopFive: boolean) =>
             "& .MuiInputBase-root": {
               color: isTopFive ? "#000" : "rgb(var(--foreground-rgb))",
               fontWeight: isTopFive ? "bold" : "normal",
-              fontSize: isTopFive ? "2rem" : "inherit",
+              fontSize:
+                isTopFive && breakpoint === "lg"
+                  ? "2rem"
+                  : isTopFive && breakpoint === "md"
+                  ? "1.5rem"
+                  : "inherit",
             },
           },
         },
@@ -86,9 +97,14 @@ const customTheme = (colour: string, isTopFive: boolean) =>
     },
   });
 
-const TextField = ({ colour = "gray", isTopFive = false, ...rest }) => {
+const TextField = ({
+  colour = "gray",
+  isTopFive = false,
+  breakpoint = "lg" as breakpoint,
+  ...rest
+}) => {
   return (
-    <ThemeProvider theme={customTheme(colour, isTopFive)}>
+    <ThemeProvider theme={customTheme(colour, isTopFive, breakpoint)}>
       <MuiTextField {...rest} />
     </ThemeProvider>
   );

@@ -180,10 +180,30 @@
   line-height: 1.5;
 }
 
+/* Small Laptop */
+@media (max-width: 1400px) {
+  .musicNotes {
+    grid-template-columns: auto auto;
+  }
+
+  .followButtonIcon {
+    /* I have to use !important here because MaterialUI adds a font-size
+    of 1.5rem to their icons by default, which takes precedence over any
+    font size I would typically set here */
+    font-size: 3rem !important;
+  }
+
+  .profileDate {
+    font-size: 1.2rem;
+  }
+}
+
 /* Tablet/Mobile */
 @media (max-width: 768px) {
   .mainContent {
-    width: 95vw;
+    width: 90vw;
+    padding-left: 0;
+    padding-right: 0;
     padding-bottom: 8rem;
   }
 
@@ -198,10 +218,6 @@
   .profileData {
     max-width: 100%;
     width: 100%;
-  }
-
-  .musicNotes {
-    grid-template-columns: auto auto;
   }
 }
 

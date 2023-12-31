@@ -24,7 +24,7 @@ const EditableMusicNote: React.FC<EditableMusicNoteProps> = ({
     <div className={styles.editableMusicNoteContainer}>
       {entity && (
         <button className={styles.deleteButton} onClick={onRemove}>
-          <CloseRoundedIcon className={styles.closeIcon} />
+          <CloseRoundedIcon className={styles.deleteIcon} />
         </button>
       )}
       {entity ? (
@@ -40,7 +40,7 @@ const EditableMusicNote: React.FC<EditableMusicNoteProps> = ({
           <div className={styles.gradientOverlay}></div>
           <div className={styles.titlesContainer}>
             <Heading
-              component="h5"
+              component="h4"
               content={entity.title}
               className={styles.title}
             />

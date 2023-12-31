@@ -33,4 +33,8 @@
   .profileSelection {
     grid-template-columns: auto auto;
   }
+
+  .colourSelectionContainer {
+    gap: 0.5rem;
+  }
 }

@@ -1,8 +1,7 @@
 .listContainer {
   border-radius: 16px;
   position: relative;
-  padding: 7.5%;
-  padding-top: calc(7.5% + 1rem);
+  padding: 4rem 7.5% 7.5% 7.5%;
   box-shadow: 0px 8px 10px 0px rgba(40, 40, 40, 0.2);
   margin-top: 6rem;
 }
@@ -62,10 +61,37 @@
   white-space: nowrap;
 }
 
+/* Small Laptop */
+@media (max-width: 1400px) {
+  .postProfileIconLink {
+    top: -2.5rem;
+  }
+
+  .postProfileIconContainer {
+    width: 5rem;
+  }
+
+  .listContainer {
+    padding-top: 4.5rem;
+  }
+}
+
 /* Mobile */
 @media (max-width: 520px) {
   .listElementImageContainer {
     height: 3rem;
     margin-inline: 0.75rem;
+  }
+
+  .postProfileIconLink {
+    top: -2.5rem;
+  }
+
+  .postProfileIconContainer {
+    width: 5rem;
+  }
+
+  .listContainer {
+    padding-top: 3.5rem;
   }
 }

@@ -59,7 +59,7 @@ const BottomNav: React.FC<BottomNavProps> = ({
               <HomeOutlinedIcon className={styles.navIcon} />
             </div>
           </Link>
-          <Link href={`/user/${userProvider}/${userProviderId}`}>
+          <Link href={`/profile/${userProvider}/${userProviderId}`}>
             <div className={styles.navButton}>
               <PersonOutlinedIcon className={styles.navIcon} />
             </div>

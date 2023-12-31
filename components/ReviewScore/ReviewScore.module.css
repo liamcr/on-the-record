@@ -46,3 +46,10 @@
   color: var(--subtitle-rgb);
   margin-left: 5%;
 }
+
+/* Mobile */
+@media (max-width: 520px) {
+  .outOfTen {
+    font-size: 0.6rem;
+  }
+}

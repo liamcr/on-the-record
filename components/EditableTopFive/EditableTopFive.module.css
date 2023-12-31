@@ -84,3 +84,18 @@
   overflow-x: hidden;
   white-space: nowrap;
 }
+
+/* Mobile */
+@media (max-width: 520px) {
+  .listElementImageContainer {
+    height: 3rem;
+    margin-inline: 0.75rem;
+  }
+
+  .addIcon {
+    /* I have to use !important here because MaterialUI adds a font-size
+    of 1.5rem to their icons by default, which takes precedence over any
+    font size I would typically set here */
+    font-size: 2rem !important;
+  }
+}

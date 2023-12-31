@@ -114,7 +114,10 @@
     top: -0.75rem;
   }
 
-  .closeIcon {
-    font-size: 1rem;
+  .deleteIcon {
+    /* I have to use !important here because MaterialUI adds a font-size
+    of 1.5rem to their icons by default, which takes precedence over any
+    font size I would typically set here */
+    font-size: 1rem !important;
   }
 }

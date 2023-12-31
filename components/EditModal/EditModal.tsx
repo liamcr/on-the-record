@@ -5,7 +5,7 @@ import ImageUpload from "../ImageUpload/ImageUpload";
 import TextField from "../TextField/TextField";
 import ColourSelection from "../ColourSelection/ColourSelection";
 import EditableMusicNote from "../EditableMusicNote/EditableMusicNote";
-import { MenuItem } from "@mui/material";
+import { MenuItem, useMediaQuery } from "@mui/material";
 import Select from "../Select/Select";
 
 import styles from "./EditModal.module.css";
@@ -30,6 +30,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, colour, onClose }) => {
   const [searchEnabled, setSearchEnabled] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 770px)");
 
   const [firstPromptIndex, setFirstPromptIndex] = useState<string | number>(
     user.musicNotes.length < 1
@@ -206,7 +207,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, colour, onClose }) => {
             }}
             isListSelection
             style={{
-              gap: "1rem",
+              gap: isMobile ? "0.5rem" : "1rem",
             }}
           />
           <Heading

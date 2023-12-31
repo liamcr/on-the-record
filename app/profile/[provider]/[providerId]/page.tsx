@@ -33,6 +33,7 @@ export default function Profile({
   const router = useRouter();
 
   const isMobile = useMediaQuery("(max-width: 770px)");
+  const isSmallLaptop = useMediaQuery("(max-width: 1400px)");
 
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [isLoadingTimeline, setIsLoadingTimeline] = useState(true);
@@ -58,13 +59,7 @@ export default function Profile({
       params.provider === userProvider &&
       params.providerId === userProviderId.toString()
     );
-  }, [userProvider, userProviderId]);
-
-  const onUserSelect = (user: Entity) => {
-    if (!user.href) return;
-
-    window.location.href = user.href;
-  };
+  }, [userProvider, userProviderId, params.provider, params.providerId]);
 
   useEffect(() => {
     const colour = localStorage.getItem("otrColour");
@@ -142,7 +137,7 @@ export default function Profile({
         });
       });
     });
-  }, []);
+  }, [params.provider, params.providerId, router]);
 
   const onFollowClick = () => {
     setIsLoadingFollow(true);
@@ -261,7 +256,7 @@ export default function Profile({
                       </button>
                     </div>
                   </div>
-                  {isMobile && (
+                  {isSmallLaptop && (
                     <>
                       <div
                         className={styles.followStatsContainer}
@@ -361,7 +356,7 @@ export default function Profile({
                     )}
                   </div>
                 </div>
-                {!isMobile && user !== null && (
+                {!isSmallLaptop && user !== null && (
                   <div className={styles.aboutUser}>
                     <div
                       className={styles.followStatsContainerExtended}

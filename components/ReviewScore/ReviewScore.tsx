@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./ReviewScore.module.css";
 import Heading from "../Heading/Heading";
 import Body from "../Body/Body";
+import { useMediaQuery } from "@mui/material";
 
 interface ReviewScoreProps {
   /**
@@ -38,6 +39,8 @@ const ReviewScore: React.FC<ReviewScoreProps> = ({
 }) => {
   const [selectedScore, setSelectedScore] = useState(score);
   const [displayedScore, setDisplayedScore] = useState(score);
+
+  const isMobile = useMediaQuery("(max-width: 770px)");
   const reviewMeterRef = useRef<HTMLDivElement>(null);
 
   const onMouseMove = (event: MouseEvent) => {
@@ -46,9 +49,17 @@ const ReviewScore: React.FC<ReviewScoreProps> = ({
         reviewMeterRef.current.getBoundingClientRect().width;
       let reviewStartingX = reviewMeterRef.current.getBoundingClientRect().x;
 
-      setDisplayedScore(
-        Math.ceil(((event.pageX - reviewStartingX) * 10) / reviewMeterWidth)
+      let newScore = Math.ceil(
+        ((event.pageX - reviewStartingX) * 10) / reviewMeterWidth
       );
+      setDisplayedScore(newScore);
+
+      console.log(isMobile);
+      if (isMobile) {
+        setSelectedScore(newScore);
+
+        if (onChange) onChange(newScore);
+      }
     }
   };
 
@@ -83,7 +94,7 @@ const ReviewScore: React.FC<ReviewScoreProps> = ({
         ref={reviewMeterRef}
         onMouseEnter={editable ? onMouseOver : () => {}}
         onMouseLeave={editable ? onMouseExit : () => {}}
-        onMouseDown={editable ? onClick : () => {}}
+        onClick={editable && !isMobile ? onClick : () => {}}
       >
         <div className={styles.neutralBackground} />
         <div

@@ -7,6 +7,7 @@ import Heading from "../Heading/Heading";
 import TextField from "../TextField/TextField";
 import Search from "../Search/Search";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import { useMediaQuery } from "@mui/material";
 
 interface EditableTopFiveProps {
   type: EntityType;
@@ -33,6 +34,8 @@ const EditableTopFive: React.FC<EditableTopFiveProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [searchEnabled, setSearchEnabled] = useState(false);
 
+  const isMobile = useMediaQuery("(max-width: 520px)");
+
   return (
     <div className={styles.listContainer} style={{ backgroundColor: colour }}>
       <div className={styles.titleHeader} aria-autocomplete="none">
@@ -47,6 +50,7 @@ const EditableTopFive: React.FC<EditableTopFiveProps> = ({
             placeholder="...Title"
             id="list-title"
             defaultValue="Hello world"
+            breakpoint={isMobile ? "md" : "lg"}
           />
         </div>
       </div>
