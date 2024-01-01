@@ -259,7 +259,6 @@ export default function Onboarding() {
           } else if (selectedPrompt === 1) {
             setSecondMusicNote(entity);
           }
-          setSearchEnabled(false);
         }}
         onClose={() => setSearchEnabled(false)}
       />

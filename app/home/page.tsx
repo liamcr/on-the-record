@@ -47,7 +47,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(process.env.API_URL);
     const colour = localStorage.getItem("otrColour");
     if (colour !== null) {
       setUserColour(colour);
@@ -68,6 +67,10 @@ export default function Home() {
       ).then((otrUser) => {
         setUserProvider(otrUser.data?.provider || "");
         setUserProviderId(otrUser.data?.providerId || -1);
+        if (otrUser.data?.colour) {
+          setUserColour(otrUser.data.colour);
+          localStorage.setItem("otrColour", otrUser.data.colour);
+        }
 
         if (otrUser.error && otrUser.error.code === 404) {
           // User does not exist in our system, redirect to onboarding
