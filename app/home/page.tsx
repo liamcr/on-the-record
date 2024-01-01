@@ -47,6 +47,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    console.log(process.env.API_URL);
     const colour = localStorage.getItem("otrColour");
     if (colour !== null) {
       setUserColour(colour);
@@ -60,7 +61,11 @@ export default function Home() {
     ).then((user) => {
       sessionStorage.setItem("otrStreamingServiceId", user.id);
 
-      APIWrapper.getUser(user.streamingService, user.id).then((otrUser) => {
+      APIWrapper.getUser(
+        process.env.API_URL || "",
+        user.streamingService,
+        user.id
+      ).then((otrUser) => {
         setUserProvider(otrUser.data?.provider || "");
         setUserProviderId(otrUser.data?.providerId || -1);
 
@@ -76,18 +81,20 @@ export default function Home() {
 
         setIsLoadingUser(false);
 
-        APIWrapper.getTimeline(user.streamingService, user.id).then(
-          (timelineResp) => {
-            if (timelineResp.error) {
-              // TODO: Come up with designs for error case
-              setIsError(true);
-              return;
-            }
-
-            setIsLoadingTimeline(false);
-            setResults(timelineResp.data || []);
+        APIWrapper.getTimeline(
+          process.env.API_URL || "",
+          user.streamingService,
+          user.id
+        ).then((timelineResp) => {
+          if (timelineResp.error) {
+            // TODO: Come up with designs for error case
+            setIsError(true);
+            return;
           }
-        );
+
+          setIsLoadingTimeline(false);
+          setResults(timelineResp.data || []);
+        });
       });
     });
   }, [router]);

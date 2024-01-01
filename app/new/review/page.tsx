@@ -76,6 +76,7 @@ export default function NewReview() {
 
     setIsLoading(true);
     APIWrapper.createReview(
+      process.env.API_URL || "",
       sessionStorage.getItem("otrStreamingService") as StreamingService,
       sessionStorage.getItem("otrStreamingServiceId") || "",
       selectedType || EntityType.Track,

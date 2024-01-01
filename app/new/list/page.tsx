@@ -74,6 +74,7 @@ export default function NewList() {
   const onSubmit = () => {
     setIsLoading(true);
     APIWrapper.createList(
+      process.env.API_URL || "",
       sessionStorage.getItem("otrStreamingService") as StreamingService,
       sessionStorage.getItem("otrStreamingServiceId") || "",
       selectedType || EntityType.Track,

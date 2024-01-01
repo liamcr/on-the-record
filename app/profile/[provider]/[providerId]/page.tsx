@@ -75,7 +75,11 @@ export default function Profile({
     ).then((user) => {
       sessionStorage.setItem("otrStreamingServiceId", user.id);
 
-      APIWrapper.getUser(user.streamingService, user.id).then((otrUser) => {
+      APIWrapper.getUser(
+        process.env.API_URL || "",
+        user.streamingService,
+        user.id
+      ).then((otrUser) => {
         setUserProvider(otrUser.data?.provider || "");
         setUserProviderId(otrUser.data?.providerId || -1);
 
@@ -90,6 +94,7 @@ export default function Profile({
         }
 
         APIWrapper.getUser(
+          process.env.API_URL || "",
           params.provider as StreamingService,
           params.providerId,
           otrUser.data?.provider,
@@ -108,6 +113,7 @@ export default function Profile({
           setIsLoadingUser(false);
 
           APIWrapper.getUserPosts(
+            process.env.API_URL || "",
             params.provider as StreamingService,
             params.providerId
           ).then((timelineResp) => {
@@ -143,6 +149,7 @@ export default function Profile({
     setIsLoadingFollow(true);
     if (!isFollowing) {
       APIWrapper.followUser(
+        process.env.API_URL || "",
         userProvider as StreamingService,
         userProviderId.toString() || "",
         params.provider as StreamingService,
@@ -159,6 +166,7 @@ export default function Profile({
         });
     } else {
       APIWrapper.unfollowUser(
+        process.env.API_URL || "",
         userProvider as StreamingService,
         userProviderId.toString() || "",
         params.provider as StreamingService,

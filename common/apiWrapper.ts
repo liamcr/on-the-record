@@ -22,6 +22,7 @@ interface APIResponse<T> {
 
 class APIWrapper {
   static getUser = async (
+    host: string,
     streamingService: StreamingService,
     userId: string,
     requestingStreamingService?: StreamingService,
@@ -30,7 +31,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "GET",
-        url: `http://localhost:8080/user?provider=${streamingService}&provider_id=${userId}${
+        url: `${host}/user?provider=${streamingService}&provider_id=${userId}${
           requestingStreamingService
             ? `&requesting_provider=${requestingStreamingService}&requesting_provider_id=${requestingUserId}`
             : ""
@@ -75,12 +76,13 @@ class APIWrapper {
   };
 
   static searchUsers = async (
+    host: string,
     query: string
   ): Promise<APIResponse<Entity[]>> => {
     try {
       const resp = await axios({
         method: "GET",
-        url: `http://localhost:8080/user/search?query=${query}`,
+        url: `${host}/user/search?query=${query}`,
         data: {},
       });
 
@@ -114,6 +116,7 @@ class APIWrapper {
   };
 
   static createUser = async (
+    host: string,
     streamingService: StreamingService,
     userId: string,
     name: string,
@@ -124,7 +127,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `http://localhost:8080/user`,
+        url: `${host}/user`,
         data: {
           provider: streamingService,
           providerId: userId,
@@ -171,6 +174,7 @@ class APIWrapper {
   };
 
   static updateUser = async (
+    host: string,
     streamingService: StreamingService,
     userId: string,
     name: string,
@@ -181,7 +185,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "PUT",
-        url: `http://localhost:8080/user`,
+        url: `${host}/user`,
         data: {
           provider: streamingService,
           providerId: userId,
@@ -230,6 +234,7 @@ class APIWrapper {
   };
 
   static followUser = async (
+    host: string,
     streamingService: StreamingService,
     userId: string,
     toFollowProvider: StreamingService,
@@ -238,7 +243,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `http://localhost:8080/user/follow?provider=${streamingService}&provider_id=${userId}`,
+        url: `${host}/user/follow?provider=${streamingService}&provider_id=${userId}`,
         data: {
           provider: toFollowProvider,
           providerId: toFollowProviderId,
@@ -271,6 +276,7 @@ class APIWrapper {
   };
 
   static unfollowUser = async (
+    host: string,
     streamingService: StreamingService,
     userId: string,
     toFollowProvider: StreamingService,
@@ -279,7 +285,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `http://localhost:8080/user/unfollow?provider=${streamingService}&provider_id=${userId}`,
+        url: `${host}/user/unfollow?provider=${streamingService}&provider_id=${userId}`,
         data: {
           provider: toFollowProvider,
           providerId: toFollowProviderId,
@@ -312,6 +318,7 @@ class APIWrapper {
   };
 
   static createReview = async (
+    host: string,
     streamingService: StreamingService,
     userId: string,
     type: EntityType,
@@ -324,7 +331,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `http://localhost:8080/review`,
+        url: `${host}/review`,
         data: {
           provider: streamingService,
           providerId: userId,
@@ -379,6 +386,7 @@ class APIWrapper {
   };
 
   static createList = async (
+    host: string,
     streamingService: StreamingService,
     userId: string,
     type: EntityType,
@@ -389,7 +397,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `http://localhost:8080/list`,
+        url: `${host}/list`,
         data: {
           provider: streamingService,
           providerId: userId,
@@ -439,13 +447,14 @@ class APIWrapper {
   };
 
   static getTimeline = async (
+    host: string,
     streamingService: StreamingService,
     userId: string
   ): Promise<APIResponse<TimelineResponse[]>> => {
     try {
       const resp = await axios({
         method: "GET",
-        url: `http://localhost:8080/timeline?provider=${streamingService}&provider_id=${userId}`,
+        url: `${host}/timeline?provider=${streamingService}&provider_id=${userId}`,
         data: {},
       });
 
@@ -483,13 +492,14 @@ class APIWrapper {
   };
 
   static getUserPosts = async (
+    host: string,
     streamingService: StreamingService,
     userId: string
   ): Promise<APIResponse<TimelineResponse[]>> => {
     try {
       const resp = await axios({
         method: "GET",
-        url: `http://localhost:8080/user/activity?provider=${streamingService}&provider_id=${userId}`,
+        url: `${host}/user/activity?provider=${streamingService}&provider_id=${userId}`,
         data: {},
       });
 

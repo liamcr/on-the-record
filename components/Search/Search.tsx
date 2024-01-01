@@ -41,7 +41,10 @@ const Search: React.FC<SearchProps> = ({
       return;
     }
     if (type === EntityType.User) {
-      APIWrapper.searchUsers(event.target.value).then((resp) => {
+      APIWrapper.searchUsers(
+        process.env.API_URL || "",
+        event.target.value
+      ).then((resp) => {
         if (!resp.data) {
           // TODO, handle error
           return;
