@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Review } from "../../common/types";
 import Image from "next/image";
 import Heading from "../Heading/Heading";
@@ -19,11 +19,20 @@ const ReviewCard: React.FC<Review> = ({
   colour,
   review,
 }) => {
+  const reviewRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
   const onShowClick = () => {
     setExpanded((oldVal) => !oldVal);
   };
+
+  useEffect(() => {
+    const el = reviewRef.current;
+    if (el !== null && el.offsetHeight < el.scrollHeight) {
+      setIsOverflowing(true);
+    }
+  }, []);
 
   return (
     <div
@@ -81,15 +90,18 @@ const ReviewCard: React.FC<Review> = ({
               expanded ? "" : styles.reviewBodyCollapsed
             }`}
             content={review}
+            ref={reviewRef}
           />
-          <div className={styles.showButtonContainer}>
-            <p
-              className={`${body.className} ${styles.showButton}`}
-              onClick={onShowClick}
-            >
-              {expanded ? "Show less" : "Show more"}
-            </p>
-          </div>
+          {isOverflowing && (
+            <div className={styles.showButtonContainer}>
+              <p
+                className={`${body.className} ${styles.showButton}`}
+                onClick={onShowClick}
+              >
+                {expanded ? "Show less" : "Show more"}
+              </p>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -9,15 +9,18 @@ interface BodyProps {
   style?: React.CSSProperties;
 }
 
-const Body: React.FC<BodyProps> = ({ content, className, style }) => {
-  return (
-    <p
-      className={`${body.className} ${className ? className : ""}`}
-      style={style}
-    >
-      {content}
-    </p>
-  );
-};
+const Body = React.forwardRef<HTMLParagraphElement, BodyProps>(
+  ({ content, className, style }, ref) => {
+    return (
+      <p
+        className={`${body.className} ${className ? className : ""}`}
+        style={style}
+        ref={ref}
+      >
+        {content}
+      </p>
+    );
+  }
+);
 
 export default Body;

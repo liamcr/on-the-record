@@ -176,7 +176,6 @@ export default function NewReview() {
               label="Tell us more..."
               value={body}
               size="large"
-              inputProps={{ maxLength: 30, name: "otrName" }}
             />
             <footer className={styles.submitContainer}>
               <ButtonBase
