@@ -22,5 +22,6 @@ const Body = React.forwardRef<HTMLParagraphElement, BodyProps>(
     );
   }
 );
+Body.displayName = "Body";
 
 export default Body;

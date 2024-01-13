@@ -43,7 +43,7 @@
 }
 
 .outOfTen {
-  color: var(--subtitle-rgb);
+  color: rgb(var(--subtitle-rgb));
   margin-left: 5%;
 }
 

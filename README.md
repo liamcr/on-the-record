@@ -1,34 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# On The Record
 
-## Getting Started
+## Deployment
 
-First, run the development server:
+Build a new image that will be pushed to docker hub:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+`docker build -t liamcrocketdev/otr:VERSION .`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Where `VERSION` is a valid semver value (e.g. `0.3.0`)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Then push that image:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+`docker push liamcrocketdev/otr:VERSION`
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+In GCP, navigate to Cloud Run, click `otr`, click `EDIT & DEPLOY NEW REVISION`, update the
+version in the `Container image URL` field to match the version that was just pushed, and
+click `DEPLOY`. The new version of the site should come up shortly after.

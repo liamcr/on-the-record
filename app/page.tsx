@@ -35,7 +35,8 @@ export default function Home() {
             </div>
             <Body className={styles.spotifyText} content="Spotify" />
           </Link>
-          <Link
+          {/* TODO: Add different streaming services */}
+          {/* <Link
             href={StreamingServiceController.buildAuthenticationUri(
               "appleMusic",
               "",
@@ -62,7 +63,7 @@ export default function Home() {
               <Image src={AmazonMusic} alt="Amazon Music Logo" fill />
             </div>
             <Body className={styles.amazonMusicText} content="Amazon Music" />
-          </Link>
+          </Link> */}
         </div>
       </div>
     </>
