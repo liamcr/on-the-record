@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
       status: 201,
     });
   } catch (err) {
+    console.error(err);
+
     return new NextResponse(
       JSON.stringify({ error: "Something went wrong uploading your image..." }),
       { status: 500 }

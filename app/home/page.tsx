@@ -57,49 +57,59 @@ export default function Home() {
     StreamingServiceController.getCurrentUser(
       sessionStorage.getItem("otrStreamingService") as StreamingService,
       sessionStorage.getItem("otrAccessToken") || ""
-    ).then((user) => {
-      sessionStorage.setItem("otrStreamingServiceId", user.id);
+    )
+      .then((user) => {
+        sessionStorage.setItem("otrStreamingServiceId", user.id);
 
-      APIWrapper.getUser(
-        process.env.API_URL || "",
-        user.streamingService,
-        user.id
-      ).then((otrUser) => {
-        setUserProvider(otrUser.data?.provider || "");
-        setUserProviderId(otrUser.data?.providerId || -1);
-        if (otrUser.data?.colour) {
-          setUserColour(otrUser.data.colour);
-          localStorage.setItem("otrColour", otrUser.data.colour);
-        }
-
-        if (otrUser.error && otrUser.error.code === 404) {
-          // User does not exist in our system, redirect to onboarding
-          router.push("/onboarding");
-          return;
-        } else if (otrUser.error) {
-          // TODO: Come up with designs for error case
-          setIsError(true);
-          return;
-        }
-
-        setIsLoadingUser(false);
-
-        APIWrapper.getTimeline(
+        APIWrapper.getUser(
           process.env.API_URL || "",
           user.streamingService,
           user.id
-        ).then((timelineResp) => {
-          if (timelineResp.error) {
-            // TODO: Come up with designs for error case
-            setIsError(true);
-            return;
-          }
+        )
+          .then((otrUser) => {
+            setUserProvider(otrUser.data?.provider || "");
+            setUserProviderId(otrUser.data?.providerId || -1);
+            if (otrUser.data?.colour) {
+              setUserColour(otrUser.data.colour);
+              localStorage.setItem("otrColour", otrUser.data.colour);
+            }
 
-          setIsLoadingTimeline(false);
-          setResults(timelineResp.data || []);
-        });
+            if (otrUser.error && otrUser.error.code === 404) {
+              // User does not exist in our system, redirect to onboarding
+              router.push("/onboarding");
+              return;
+            } else if (otrUser.error) {
+              setIsError(true);
+              return;
+            }
+
+            setIsLoadingUser(false);
+
+            APIWrapper.getTimeline(
+              process.env.API_URL || "",
+              user.streamingService,
+              user.id
+            ).then((timelineResp) => {
+              if (timelineResp.error) {
+                setIsError(true);
+                return;
+              }
+
+              setIsLoadingTimeline(false);
+              setResults(timelineResp.data || []);
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+
+            setIsError(true);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+
+        setIsError(true);
       });
-    });
   }, [router]);
 
   return (
@@ -222,18 +232,18 @@ export default function Home() {
             onClose={() => setSearchEnabled(false)}
             onSelect={onUserSelect}
           />
-          <Snackbar
-            open={isError}
-            autoHideDuration={6000}
-            onClose={() => setIsError(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          >
-            <Alert onClose={() => setIsError(false)} severity="error">
-              Something went wrong... Please try again later.
-            </Alert>
-          </Snackbar>
         </>
       )}
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={() => setIsError(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setIsError(false)} severity="error">
+          Something went wrong... Please try again later.
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

@@ -46,5 +46,5 @@
 }
 
 .loadingIconContainer {
-  width: clamp(1px, 60vw, 200px);
+  width: 8rem;
 }

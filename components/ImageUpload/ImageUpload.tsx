@@ -53,7 +53,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        if (res.status !== 200 || !res.data?.url) {
+        if (res.status !== 201 || !res.data?.url) {
           setIsError(true);
 
           return;
