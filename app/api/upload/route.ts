@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
   const file = formData.get("image") as File;
 
   if (file === null) {
-    return new Response("Hello");
+    return new NextResponse(
+      JSON.stringify({ error: "No file provided in request" }),
+      { status: 400 }
+    );
   }
 
   const suffix = file.name.split(".")[file.name.split(".").length - 1];
@@ -28,8 +31,13 @@ export async function POST(req: NextRequest) {
   try {
     const data = await s3.upload(params).promise();
 
-    return new Response(JSON.stringify({ url: data.Location }));
+    return new NextResponse(JSON.stringify({ url: data.Location }), {
+      status: 201,
+    });
   } catch (err) {
-    return new Response("Error");
+    return new NextResponse(
+      JSON.stringify({ error: "Something went wrong uploading your image..." }),
+      { status: 500 }
+    );
   }
 }
