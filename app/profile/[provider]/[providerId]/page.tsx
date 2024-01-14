@@ -8,7 +8,7 @@ import { APIWrapper } from "../../../../common/apiWrapper";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
-import { useMediaQuery } from "@mui/material";
+import { Alert, Snackbar, useMediaQuery } from "@mui/material";
 
 import styles from "./page.module.css";
 import BottomNav from "@/components/BottomNav/BottomNav";
@@ -43,7 +43,6 @@ export default function Profile({
   const [userProvider, setUserProvider] = useState("");
   const [userProviderId, setUserProviderId] = useState(-1);
 
-  const [searchEnabled, setSearchEnabled] = useState(false);
   const [editModalEnabled, setEditModalEnabled] = useState(false);
 
   const [user, setUser] = useState<User | null>(null);
@@ -436,6 +435,16 @@ export default function Profile({
           )}
         </>
       )}
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={() => setIsError(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setIsError(false)} severity="error">
+          Something went wrong... Please try again later.
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import EditableTopFive from "@/components/EditableTopFive/EditableTopFive";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
 import { APIWrapper } from "@/common/apiWrapper";
 import { StreamingService } from "@/common/streamingServiceFns";
+import { Alert, Snackbar } from "@mui/material";
 
 const nameToEntityType = {
   Track: EntityType.Track,
@@ -160,6 +161,16 @@ export default function NewList() {
             </footer>
           </>
         )}
+        <Snackbar
+          open={isError}
+          autoHideDuration={6000}
+          onClose={() => setIsError(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert onClose={() => setIsError(false)} severity="error">
+            Something went wrong... Please try again later.
+          </Alert>
+        </Snackbar>
       </div>
       {isLoading && (
         <div className={styles.loadingOverlay}>

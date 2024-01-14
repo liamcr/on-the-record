@@ -18,6 +18,7 @@ import { APIWrapper } from "@/common/apiWrapper";
 import { StreamingService } from "@/common/streamingServiceFns";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { promptTypeMap, prompts } from "@/common/consts";
+import { Alert, Snackbar } from "@mui/material";
 
 export default function Onboarding() {
   const [page, setPage] = useState(0);
@@ -262,6 +263,16 @@ export default function Onboarding() {
         }}
         onClose={() => setSearchEnabled(false)}
       />
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={() => setIsError(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setIsError(false)} severity="error">
+          Something went wrong... Please try again later.
+        </Alert>
+      </Snackbar>
       {isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingIconContainer}>
