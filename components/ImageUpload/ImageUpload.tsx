@@ -82,37 +82,40 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   });
 
   return (
-    <div {...getRootProps()} className={styles.dropzoneContainer}>
-      <input {...getInputProps()} />
-      <div
-        className={styles.fileUploadContainer}
-        style={{
-          opacity: isLoading ? 1 : "",
-          cursor: isLoading ? "default" : "pointer",
-        }}
-      >
-        {isLoading ? (
-          <div className={styles.loadingIconContainer}>
-            <LoadingIcon colour={colour} />
-          </div>
-        ) : (
-          <FileUploadRoundedIcon className={styles.fileUploadIcon} />
-        )}
-      </div>
-      <div className={styles.profilePicContainer}>
-        <Image
-          className={styles.profilePic}
-          alt="Profile picture"
-          src={url}
-          fill
-          onLoad={() => {
-            setIsLoading(false);
+    <>
+      <div {...getRootProps()} className={styles.dropzoneContainer}>
+        <input {...getInputProps()} />
+        <div
+          className={styles.fileUploadContainer}
+          style={{
+            opacity: isLoading ? 1 : "",
+            cursor: isLoading ? "default" : "pointer",
           }}
-          onError={() => {
-            setIsLoading(false);
-            setIsError(true);
-          }}
-        />
+        >
+          {isLoading ? (
+            <div className={styles.loadingIconContainer}>
+              <LoadingIcon colour={colour} />
+            </div>
+          ) : (
+            <FileUploadRoundedIcon className={styles.fileUploadIcon} />
+          )}
+        </div>
+        <div className={styles.profilePicContainer}>
+          <Image
+            className={styles.profilePic}
+            alt="Profile picture"
+            src={url}
+            fill
+            onLoad={() => {
+              setIsLoading(false);
+            }}
+            onError={(err) => {
+              console.error(err);
+              setIsLoading(false);
+              setIsError(true);
+            }}
+          />
+        </div>
       </div>
       <Snackbar
         open={isError}
@@ -124,7 +127,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           Something went wrong uploading your image
         </Alert>
       </Snackbar>
-    </div>
+    </>
   );
 };
 
