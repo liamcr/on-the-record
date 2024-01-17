@@ -42,7 +42,7 @@ const Search: React.FC<SearchProps> = ({
     }
     if (type === EntityType.User) {
       APIWrapper.searchUsers(
-        process.env.API_URL || "",
+        process.env.NEXT_PUBLIC_API_URL || "",
         event.target.value
       ).then((resp) => {
         if (!resp.data) {

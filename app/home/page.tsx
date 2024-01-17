@@ -62,7 +62,7 @@ export default function Home() {
         sessionStorage.setItem("otrStreamingServiceId", user.id);
 
         APIWrapper.getUser(
-          process.env.API_URL || "",
+          process.env.NEXT_PUBLIC_API_URL || "",
           user.streamingService,
           user.id
         )
@@ -86,7 +86,7 @@ export default function Home() {
             setIsLoadingUser(false);
 
             APIWrapper.getTimeline(
-              process.env.API_URL || "",
+              process.env.NEXT_PUBLIC_API_URL || "",
               user.streamingService,
               user.id
             ).then((timelineResp) => {

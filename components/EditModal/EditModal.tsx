@@ -114,7 +114,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, colour, onClose }) => {
     setIsLoading(true);
 
     APIWrapper.updateUser(
-      process.env.API_URL || "",
+      process.env.NEXT_PUBLIC_API_URL || "",
       sessionStorage.getItem("otrStreamingService") as StreamingService,
       sessionStorage.getItem("otrStreamingServiceId") || "",
       name,
