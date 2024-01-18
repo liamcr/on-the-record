@@ -5,7 +5,7 @@ import {
   StreamingServiceController,
 } from "../../../../common/streamingServiceFns";
 import { APIWrapper } from "../../../../common/apiWrapper";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { Alert, Snackbar, useMediaQuery } from "@mui/material";
@@ -24,6 +24,8 @@ import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EditModal from "@/components/EditModal/EditModal";
+
+const limit = 3;
 
 export default function Profile({
   params,
@@ -49,9 +51,29 @@ export default function Profile({
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
 
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [results, setResults] = useState<TimelineResponse[]>([]);
+
+  // TODO: Update getUser to return this data
   const [numReviews, setNumReviews] = useState(0);
   const [numLists, setNumLists] = useState(0);
+
+  const observer = useRef<IntersectionObserver>();
+
+  const bottomRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isLoadingTimeline || typeof window === "undefined") return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setOffset((prevOffset) => prevOffset + limit);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [observer, isLoadingTimeline, hasMore]
+  );
 
   const isCurrentUser = useMemo(() => {
     return (
@@ -110,39 +132,58 @@ export default function Profile({
             setIsFollowing(specifiedUser.data.isFollowing);
           }
           setIsLoadingUser(false);
-
-          APIWrapper.getUserPosts(
-            process.env.NEXT_PUBLIC_API_URL || "",
-            params.provider as StreamingService,
-            params.providerId
-          ).then((timelineResp) => {
-            if (timelineResp.error) {
-              // TODO: Come up with designs for error case
-              setIsError(true);
-              return;
-            }
-
-            setIsLoadingTimeline(false);
-            const activityResults = timelineResp.data || [];
-
-            let reviewCount = 0;
-            let listCount = 0;
-            for (let post of activityResults) {
-              if (post.type === PostType.Review) {
-                reviewCount++;
-              } else if (post.type === PostType.List) {
-                listCount++;
-              }
-            }
-
-            setResults(timelineResp.data || []);
-            setNumReviews(reviewCount);
-            setNumLists(listCount);
-          });
         });
       });
     });
   }, [params.provider, params.providerId, router]);
+
+  useEffect(() => {
+    if (userProvider === "" || userProviderId === -1) {
+      return;
+    }
+
+    let isMounted = true;
+    setIsLoadingTimeline(true);
+    APIWrapper.getUserPosts(
+      process.env.NEXT_PUBLIC_API_URL || "",
+      params.provider as StreamingService,
+      params.providerId,
+      offset,
+      limit
+    )
+      .then((timelineResp) => {
+        if (isMounted) {
+          if (timelineResp.error) {
+            setIsError(true);
+            return;
+          }
+
+          setResults((prevResults) =>
+            timelineResp.data === undefined
+              ? prevResults
+              : [...prevResults, ...timelineResp.data]
+          );
+
+          if (timelineResp.data && timelineResp.data.length < limit) {
+            setHasMore(false);
+          }
+        }
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingTimeline(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    userProvider,
+    userProviderId,
+    offset,
+    setHasMore,
+    setIsLoadingTimeline,
+    setResults,
+  ]);
 
   const onFollowClick = () => {
     setIsLoadingFollow(true);
@@ -307,15 +348,6 @@ export default function Profile({
                   )}
                   <div className={styles.activityContainer}>
                     <Heading component="h2" content="Activity" />
-                    {isLoadingTimeline && (
-                      <div className={styles.loadingIconTimelineOuterContainer}>
-                        <div
-                          className={styles.loadingIconTimelineInnerContainer}
-                        >
-                          <LoadingIcon colour={userColour} />
-                        </div>
-                      </div>
-                    )}
                     {results.length === 0 && !isLoadingTimeline ? (
                       <div className={styles.noResultsContainer}>
                         <div className={styles.upperNoResults}>
@@ -358,6 +390,20 @@ export default function Profile({
                               list={result.data.listElements}
                             />
                           )
+                        )}
+                        {hasMore && (
+                          <div
+                            className={styles.loadingIconTimelineOuterContainer}
+                            ref={bottomRef}
+                          >
+                            <div
+                              className={
+                                styles.loadingIconTimelineInnerContainer
+                              }
+                            >
+                              <LoadingIcon colour={userColour} />
+                            </div>
+                          </div>
                         )}
                       </div>
                     )}

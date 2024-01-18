@@ -449,12 +449,14 @@ class APIWrapper {
   static getTimeline = async (
     host: string,
     streamingService: StreamingService,
-    userId: string
+    userId: string,
+    offset?: number,
+    limit?: number
   ): Promise<APIResponse<TimelineResponse[]>> => {
     try {
       const resp = await axios({
         method: "GET",
-        url: `${host}/timeline?provider=${streamingService}&provider_id=${userId}`,
+        url: `${host}/timeline?provider=${streamingService}&provider_id=${userId}&offset=${offset}&limit=${limit}`,
         data: {},
       });
 
@@ -494,12 +496,14 @@ class APIWrapper {
   static getUserPosts = async (
     host: string,
     streamingService: StreamingService,
-    userId: string
+    userId: string,
+    offset?: number,
+    limit?: number
   ): Promise<APIResponse<TimelineResponse[]>> => {
     try {
       const resp = await axios({
         method: "GET",
-        url: `${host}/user/activity?provider=${streamingService}&provider_id=${userId}`,
+        url: `${host}/user/activity?provider=${streamingService}&provider_id=${userId}&offset=${offset}&limit=${limit}`,
         data: {},
       });
 

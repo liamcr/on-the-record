@@ -5,7 +5,7 @@ import {
   StreamingServiceController,
 } from "../../common/streamingServiceFns";
 import { APIWrapper } from "../../common/apiWrapper";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { Alert, Snackbar, useMediaQuery } from "@mui/material";
@@ -23,6 +23,8 @@ import { Entity, EntityType, PostType, TimelineResponse } from "@/common/types";
 import ReviewCard from "@/components/ReviewCard/ReviewCard";
 import TopFive from "@/components/TopFive/TopFive";
 
+const limit = 3;
+
 export default function Home() {
   const router = useRouter();
 
@@ -36,9 +38,27 @@ export default function Home() {
   const [userProvider, setUserProvider] = useState("");
   const [userProviderId, setUserProviderId] = useState(-1);
 
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [results, setResults] = useState<TimelineResponse[]>([]);
 
   const [searchEnabled, setSearchEnabled] = useState(false);
+
+  const observer = useRef<IntersectionObserver>();
+
+  const bottomRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isLoadingTimeline || typeof window === "undefined") return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setOffset((prevOffset) => prevOffset + limit);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [observer, isLoadingTimeline, hasMore]
+  );
 
   const onUserSelect = (user: Entity) => {
     if (!user.href) return;
@@ -84,20 +104,6 @@ export default function Home() {
             }
 
             setIsLoadingUser(false);
-
-            APIWrapper.getTimeline(
-              process.env.NEXT_PUBLIC_API_URL || "",
-              user.streamingService,
-              user.id
-            ).then((timelineResp) => {
-              if (timelineResp.error) {
-                setIsError(true);
-                return;
-              }
-
-              setIsLoadingTimeline(false);
-              setResults(timelineResp.data || []);
-            });
           })
           .catch((err) => {
             console.error(err);
@@ -111,6 +117,54 @@ export default function Home() {
         setIsError(true);
       });
   }, [router]);
+
+  useEffect(() => {
+    if (userProvider === "" || userProviderId === -1) {
+      return;
+    }
+
+    let isMounted = true;
+    setIsLoadingTimeline(true);
+    APIWrapper.getTimeline(
+      process.env.NEXT_PUBLIC_API_URL || "",
+      userProvider as StreamingService,
+      userProviderId.toString(10),
+      offset,
+      limit
+    )
+      .then((timelineResp) => {
+        if (isMounted) {
+          if (timelineResp.error) {
+            setIsError(true);
+            return;
+          }
+
+          setResults((prevResults) =>
+            timelineResp.data === undefined
+              ? prevResults
+              : [...prevResults, ...timelineResp.data]
+          );
+
+          if (timelineResp.data && timelineResp.data.length < limit) {
+            setHasMore(false);
+          }
+        }
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingTimeline(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    userProvider,
+    userProviderId,
+    offset,
+    setHasMore,
+    setIsLoadingTimeline,
+    setResults,
+  ]);
 
   return (
     <div className={styles.pageContainer}>
@@ -131,13 +185,6 @@ export default function Home() {
           )}
           <main className={styles.main}>
             <Heading component="h1" content="What's New?" />
-            {isLoadingTimeline && (
-              <div className={styles.loadingIconTimelineOuterContainer}>
-                <div className={styles.loadingIconTimelineInnerContainer}>
-                  <LoadingIcon colour={userColour} />
-                </div>
-              </div>
-            )}
             {results.length === 0 && !isLoadingTimeline ? (
               <div className={styles.noResultsContainer}>
                 <div className={styles.upperNoResults}>
@@ -215,6 +262,16 @@ export default function Home() {
                       list={result.data.listElements}
                     />
                   )
+                )}
+                {hasMore && (
+                  <div
+                    className={styles.loadingIconTimelineOuterContainer}
+                    ref={bottomRef}
+                  >
+                    <div className={styles.loadingIconTimelineInnerContainer}>
+                      <LoadingIcon colour={userColour} />
+                    </div>
+                  </div>
                 )}
               </div>
             )}
