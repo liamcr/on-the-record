@@ -183,9 +183,10 @@ export default function Onboarding() {
                   open={firstOpen}
                   onOpen={() => setFirstOpen(true)}
                   onClose={() => setFirstOpen(false)}
-                  onChange={(e) =>
-                    setFirstPromptIndex(e.target.value as number)
-                  }
+                  onChange={(e) => {
+                    setFirstMusicNote(undefined);
+                    setFirstPromptIndex(e.target.value as number);
+                  }}
                   value={firstPromptIndex}
                 >
                   {prompts.map((prompt, i) => (
@@ -213,16 +214,19 @@ export default function Onboarding() {
                     open={secondOpen}
                     onOpen={() => setSecondOpen(true)}
                     onClose={() => setSecondOpen(false)}
-                    onChange={(e) =>
-                      setSecondPromptIndex(e.target.value as number)
-                    }
+                    onChange={(e) => {
+                      setSecondMusicNote(undefined);
+                      setSecondPromptIndex(e.target.value as number);
+                    }}
                     value={secondPromptIndex}
                   >
-                    {prompts.map((prompt, i) => (
-                      <MenuItem value={i} key={i}>
-                        {prompt}
-                      </MenuItem>
-                    ))}
+                    {prompts
+                      .filter((_, i) => i !== firstPromptIndex)
+                      .map((prompt, i) => (
+                        <MenuItem value={i} key={i}>
+                          {prompt}
+                        </MenuItem>
+                      ))}
                   </Select>
                 )}
                 {secondPromptIndex !== "" && (
