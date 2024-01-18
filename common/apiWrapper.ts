@@ -49,6 +49,8 @@ class APIWrapper {
           profilePictureSrc: resp.data.imageSrc,
           followers: resp.data.followers,
           following: resp.data.following,
+          reviews: resp.data.reviews,
+          lists: resp.data.lists,
           isFollowing: resp.data.isFollowing,
           createdOn: resp.data.createdOn,
           musicNotes: resp.data.musicNotes,

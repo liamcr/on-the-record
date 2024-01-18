@@ -44,6 +44,14 @@ export interface User extends UserCondensed {
    */
   following: number;
   /**
+   * The number of reviews a user has created.
+   */
+  reviews?: number;
+  /**
+   * The number of lists a user has created.
+   */
+  lists?: number;
+  /**
    * Is the currently logged-in user following this user?
    */
   isFollowing?: boolean;

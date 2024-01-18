@@ -55,7 +55,6 @@ export default function Profile({
   const [hasMore, setHasMore] = useState(true);
   const [results, setResults] = useState<TimelineResponse[]>([]);
 
-  // TODO: Update getUser to return this data
   const [numReviews, setNumReviews] = useState(0);
   const [numLists, setNumLists] = useState(0);
 
@@ -131,6 +130,8 @@ export default function Profile({
           if (specifiedUser.data.isFollowing !== undefined) {
             setIsFollowing(specifiedUser.data.isFollowing);
           }
+          setNumReviews(specifiedUser.data.reviews || 0);
+          setNumLists(specifiedUser.data.lists || 0);
           setIsLoadingUser(false);
         });
       });
