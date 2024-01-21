@@ -115,7 +115,7 @@
   .deleteButton {
     height: 1.5rem;
     width: 1.5rem;
-    right: -0.75rem;
+    right: 0;
     top: -0.75rem;
   }
 

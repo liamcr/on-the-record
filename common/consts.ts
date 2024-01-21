@@ -1,5 +1,7 @@
 import { EntityType } from "./types";
 
+export const entityTypeStrings = ["Track", "Album", "Artist"];
+
 export const prompts = [
   "My Favourite Artist",
   "My Favourite Album",

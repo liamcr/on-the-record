@@ -348,7 +348,11 @@ export default function Profile({
                     </>
                   )}
                   <div className={styles.activityContainer}>
-                    <Heading component="h2" content="Activity" />
+                    <Heading
+                      className={styles.activityHeader}
+                      component="h2"
+                      content="Activity"
+                    />
                     {results.length === 0 && !isLoadingTimeline ? (
                       <div className={styles.noResultsContainer}>
                         <div className={styles.upperNoResults}>

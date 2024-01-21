@@ -184,7 +184,11 @@ export default function Home() {
             />
           )}
           <main className={styles.main}>
-            <Heading component="h1" content="What's New?" />
+            <Heading
+              component="h1"
+              className={styles.whatsNewHeader}
+              content="What's New?"
+            />
             {results.length === 0 && !isLoadingTimeline ? (
               <div className={styles.noResultsContainer}>
                 <div className={styles.upperNoResults}>
@@ -206,7 +210,6 @@ export default function Home() {
                     onClick={() => {
                       window.location.href = "/new/review";
                     }}
-                    animated={false}
                     className={styles.slidingButton}
                   />
                   <div className={styles.orContainer}>
@@ -228,7 +231,6 @@ export default function Home() {
                     onClick={() => {
                       setSearchEnabled(true);
                     }}
-                    animated={false}
                     className={styles.slidingButton}
                   />
                 </div>

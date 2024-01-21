@@ -25,10 +25,6 @@ interface SlidingButtonProps {
    */
   onClick: () => any;
   /**
-   * Is the button going to slide in/out on hover?
-   */
-  animated?: boolean;
-  /**
    * Name of the HTML class of the parent div
    */
   className?: string;
@@ -39,38 +35,14 @@ const SlidingButton: React.FC<SlidingButtonProps> = ({
   iconSize,
   text,
   onClick,
-  animated: interactive = true,
   className,
 }) => {
   const Icon = icon;
-  const [isHovering, setIsHovering] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
-
-  const onMouseEnter = () => {
-    setIsHovering(true);
-  };
-
-  const onMouseExit = () => {
-    setIsHovering(false);
-  };
 
   return (
-    <div
-      className={`${styles.slidingButton} ${className}`}
-      style={{
-        width:
-          isHovering || !interactive
-            ? `calc(${iconSize} + ${textRef.current?.offsetWidth}px + 0.5rem)`
-            : `calc(${iconSize} + 0.5rem)`,
-      }}
-      onMouseEnter={interactive ? onMouseEnter : () => {}}
-      onMouseLeave={interactive ? onMouseExit : () => {}}
-      onClick={onClick}
-    >
+    <div className={`${styles.slidingButton} ${className}`} onClick={onClick}>
       <Icon className={styles.icon} style={{ fontSize: iconSize }} />
-      <p ref={textRef} className={`${body.className} ${styles.text}`}>
-        {text}
-      </p>
+      <p className={`${body.className} ${styles.text}`}>{text}</p>
     </div>
   );
 };

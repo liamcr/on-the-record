@@ -23,10 +23,6 @@ interface MusicNoteProps {
    */
   src: string;
   /**
-   * Can the user remove/add a music note?
-   */
-  editable?: boolean;
-  /**
    * CSS styles to apply to the parent div
    */
   style?: React.CSSProperties;
@@ -38,7 +34,6 @@ const MusicNote: React.FC<MusicNoteProps> = ({
   src,
   style,
   prompt,
-  editable = false,
 }) => {
   return (
     <div className={styles.musicNote} style={style}>

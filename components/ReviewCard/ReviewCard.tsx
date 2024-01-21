@@ -8,6 +8,7 @@ import Link from "next/link";
 import styles from "./ReviewCard.module.css";
 import ReviewScore from "../ReviewScore/ReviewScore";
 import { body } from "../../common/fonts";
+import { entityTypeStrings } from "@/common/consts";
 
 const ReviewCard: React.FC<Review> = ({
   author,
@@ -73,7 +74,10 @@ const ReviewCard: React.FC<Review> = ({
               content={title}
               className={styles.reviewTitle}
             />
-            <Body content={subtitle} className={styles.reviewSubtitle} />
+            <Body
+              content={`${entityTypeStrings[type]} • ${subtitle}`}
+              className={styles.reviewSubtitle}
+            />
           </div>
           <ReviewScore editable={false} score={score} />
         </div>
