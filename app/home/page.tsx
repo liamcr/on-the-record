@@ -251,6 +251,11 @@ export default function Home() {
                       type={result.data.type}
                       colour={result.data.colour}
                       review={result.data.body}
+                      belongsToCurrentUser={
+                        userProvider === result.author.provider &&
+                        userProviderId === result.author.providerId
+                      }
+                      userColour={userColour}
                     />
                   ) : (
                     <TopFive
@@ -262,6 +267,11 @@ export default function Home() {
                       title={result.data.title}
                       type={result.data.type}
                       list={result.data.listElements}
+                      belongsToCurrentUser={
+                        userProvider === result.author.provider &&
+                        userProviderId === result.author.providerId
+                      }
+                      userColour={userColour}
                     />
                   )
                 )}

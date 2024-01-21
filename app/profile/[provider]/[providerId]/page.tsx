@@ -382,6 +382,8 @@ export default function Profile({
                               type={result.data.type}
                               colour={result.data.colour}
                               review={result.data.body}
+                              belongsToCurrentUser={isCurrentUser}
+                              userColour={userColour}
                             />
                           ) : (
                             <TopFive
@@ -393,6 +395,8 @@ export default function Profile({
                               title={result.data.title}
                               type={result.data.type}
                               list={result.data.listElements}
+                              belongsToCurrentUser={isCurrentUser}
+                              userColour={userColour}
                             />
                           )
                         )}

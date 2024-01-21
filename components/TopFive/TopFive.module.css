@@ -61,6 +61,103 @@
   white-space: nowrap;
 }
 
+.cardActions {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+}
+
+.cardActionButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.cardActionButton:hover {
+  opacity: 0.8;
+}
+
+.cardActionButton:active {
+  opacity: 0.9;
+}
+
+.cardActionIcon {
+  /* I have to use !important here because MaterialUI adds a font-size
+    of 1.5rem to their icons by default, which takes precedence over any
+    font size I would typically set here */
+  font-size: 1.7rem !important;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.deleteModalOverlay {
+  position: fixed;
+  width: 100vw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(var(--nav-overlay-rbga));
+  z-index: 400;
+}
+
+.deleteModal {
+  width: 400px;
+  background-color: rgb(var(--search-background-rgb));
+  padding: 2rem;
+  border-radius: 16px;
+}
+
+.areYouSure {
+  margin-bottom: 1rem;
+}
+
+.modalButtons {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 1rem;
+}
+
+.modalButton {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.modalButton:active {
+  opacity: 0.8;
+}
+
+.cancel {
+  background-color: rgba(var(--review-score-background-rgba));
+}
+
+.delete {
+  background-color: rgba(var(--danger-rgba));
+}
+
+.loadingOverlay {
+  position: fixed;
+  width: 100vw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(var(--nav-overlay-rbga));
+  z-index: 400;
+}
+
+.loadingIconContainer {
+  width: 8rem;
+}
+
 /* Small Laptop */
 @media (max-width: 1400px) {
   .postProfileIconLink {
@@ -93,5 +190,13 @@
 
   .listContainer {
     padding-top: 3.5rem;
+  }
+
+  .modalButton {
+    font-size: 1rem;
+  }
+
+  .deleteModal {
+    width: 80vw;
   }
 }

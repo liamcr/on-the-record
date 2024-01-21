@@ -9,8 +9,18 @@ import styles from "./ReviewCard.module.css";
 import ReviewScore from "../ReviewScore/ReviewScore";
 import { body } from "../../common/fonts";
 import { entityTypeStrings } from "@/common/consts";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import { Alert, Snackbar } from "@mui/material";
+import { APIWrapper } from "@/common/apiWrapper";
+import LoadingIcon from "../LoadingIcon/LoadingIcon";
 
-const ReviewCard: React.FC<Review> = ({
+interface ReviewProps extends Review {
+  userColour?: string;
+  belongsToCurrentUser?: boolean;
+}
+
+const ReviewCard: React.FC<ReviewProps> = ({
+  id,
   author,
   score,
   src,
@@ -19,13 +29,48 @@ const ReviewCard: React.FC<Review> = ({
   type,
   colour,
   review,
+  userColour = "#888",
+  belongsToCurrentUser = true,
 }) => {
   const reviewRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const onShowClick = () => {
     setExpanded((oldVal) => !oldVal);
+  };
+
+  const onDeleteIconClick = () => {
+    setDeleteModalVisible(true);
+  };
+
+  const onCancelDelete = () => {
+    setDeleteModalVisible(false);
+  };
+
+  const onDelete = () => {
+    setIsLoading(true);
+    APIWrapper.deleteReview(process.env.NEXT_PUBLIC_API_URL || "", id)
+      .then((resp) => {
+        if (!resp.error) {
+          // Success!
+          window.location.reload();
+          return;
+        }
+
+        console.error(resp.error);
+        setIsError(true);
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setIsError(true);
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -107,6 +152,67 @@ const ReviewCard: React.FC<Review> = ({
             </div>
           )}
         </>
+      )}
+      <div className={styles.cardActions}>
+        {belongsToCurrentUser && (
+          <button
+            className={styles.cardActionButton}
+            onClick={onDeleteIconClick}
+          >
+            <DeleteOutlinedIcon className={styles.cardActionIcon} />
+          </button>
+        )}
+      </div>
+      {deleteModalVisible && (
+        <div
+          className={styles.deleteModalOverlay}
+          onClick={(event) => {
+            if (event.target !== event.currentTarget) {
+              return;
+            }
+
+            onCancelDelete();
+          }}
+        >
+          <div className={styles.deleteModal}>
+            <Heading
+              className={styles.areYouSure}
+              component="h3"
+              content="Are You Sure?"
+            />
+            <div className={styles.modalButtons}>
+              <button
+                className={`${styles.modalButton} ${styles.cancel}`}
+                onClick={onCancelDelete}
+              >
+                <Body content="Cancel" />
+              </button>
+              <button
+                className={`${styles.modalButton} ${styles.delete}`}
+                onClick={onDelete}
+              >
+                <Body content="Delete" />
+              </button>
+            </div>
+          </div>
+          <Snackbar
+            open={isError}
+            autoHideDuration={6000}
+            onClose={() => setIsError(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <Alert onClose={() => setIsError(false)} severity="error">
+              Something went wrong... Please try again later.
+            </Alert>
+          </Snackbar>
+        </div>
+      )}
+      {isLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingIconContainer}>
+            <LoadingIcon colour={userColour} />
+          </div>
+        </div>
       )}
     </div>
   );

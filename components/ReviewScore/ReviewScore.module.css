@@ -15,8 +15,7 @@
   width: 100%;
   border-radius: 8px;
   clip-path: polygon(0% 100%, 100% 100%, 100% 0%);
-  /* background-color: rgb(var(--review-score-background-rgba)); */
-  background-color: rgba(170, 170, 170, 0.3);
+  background-color: rgb(var(--review-score-background-rgba));
   position: absolute;
   left: 0;
 }

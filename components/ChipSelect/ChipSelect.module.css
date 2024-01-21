@@ -4,7 +4,7 @@
 }
 
 .option {
-  background-color: rgba(var(--review-score-background-rgba));
+  background-color: rgba(var(--neutral-background-rgba));
   padding-block: 0.5rem;
   padding-inline: 0.75rem;
   border-radius: 4px;

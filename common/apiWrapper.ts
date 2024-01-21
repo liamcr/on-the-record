@@ -387,6 +387,41 @@ class APIWrapper {
     }
   };
 
+  static deleteReview = async (
+    host: string,
+    id: number
+  ): Promise<APIResponse<boolean>> => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: `${host}/review?id=${id}`,
+      });
+
+      // 200 Response
+      return {
+        data: true,
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
   static createList = async (
     host: string,
     streamingService: StreamingService,
@@ -426,6 +461,41 @@ class APIWrapper {
           type: resp.data.type,
           list: resp.data.listElements,
         },
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  static deleteList = async (
+    host: string,
+    id: string
+  ): Promise<APIResponse<boolean>> => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: `${host}/list?id=${id}`,
+      });
+
+      // 200 Response
+      return {
+        data: true,
       };
     } catch (e) {
       const axiosError = e as AxiosError;

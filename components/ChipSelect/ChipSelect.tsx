@@ -27,7 +27,7 @@ const ChipSelect: React.FC<ChipSelectProps> = ({
             backgroundColor:
               option === selected
                 ? `${selectedColour}40`
-                : "rgba(var(--review-score-background-rgba))",
+                : "rgba(var(--neutral-background-rgba))",
           }}
         >
           <Body content={option} />

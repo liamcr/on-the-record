@@ -5,7 +5,9 @@
 
   --subtitle-rgb: 175, 175, 175;
 
-  --review-score-background-rgba: 50, 50, 50, 0.3;
+  --neutral-background-rgba: 50, 50, 50, 0.3;
+  --review-score-background-rgba: 170, 170, 170, 0.3;
+  --danger-rgba: 255, 0, 0, 0.3;
 
   --navbar-background-rgba: 39, 39, 39, 0.95;
 

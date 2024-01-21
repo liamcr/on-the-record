@@ -1,12 +1,63 @@
 import { TopFiveList } from "../../common/types";
-import React from "react";
+import React, { useState } from "react";
 
 import styles from "./TopFive.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import Heading from "../Heading/Heading";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import { Alert, Snackbar } from "@mui/material";
+import { APIWrapper } from "@/common/apiWrapper";
+import LoadingIcon from "../LoadingIcon/LoadingIcon";
+import Body from "../Body/Body";
 
-const TopFive: React.FC<TopFiveList> = ({ author, title, list, colour }) => {
+interface TopFiveProps extends TopFiveList {
+  userColour?: string;
+  belongsToCurrentUser?: boolean;
+}
+
+const TopFive: React.FC<TopFiveProps> = ({
+  id,
+  author,
+  title,
+  list,
+  colour,
+  userColour = "#888",
+  belongsToCurrentUser = true,
+}) => {
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const onDeleteIconClick = () => {
+    setDeleteModalVisible(true);
+  };
+
+  const onCancelDelete = () => {
+    setDeleteModalVisible(false);
+  };
+
+  const onDelete = () => {
+    setIsLoading(true);
+    APIWrapper.deleteList(process.env.NEXT_PUBLIC_API_URL || "", id)
+      .then((resp) => {
+        if (!resp.error) {
+          // Success!
+          window.location.reload();
+          return;
+        }
+
+        console.error(resp.error);
+        setIsError(true);
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setIsError(true);
+        setIsLoading(false);
+      });
+  };
+
   return (
     <div className={styles.listContainer} style={{ backgroundColor: colour }}>
       <Link
@@ -49,6 +100,67 @@ const TopFive: React.FC<TopFiveList> = ({ author, title, list, colour }) => {
           />
         </div>
       ))}
+      <div className={styles.cardActions}>
+        {belongsToCurrentUser && (
+          <button
+            className={styles.cardActionButton}
+            onClick={onDeleteIconClick}
+          >
+            <DeleteOutlinedIcon className={styles.cardActionIcon} />
+          </button>
+        )}
+      </div>
+      {deleteModalVisible && (
+        <div
+          className={styles.deleteModalOverlay}
+          onClick={(event) => {
+            if (event.target !== event.currentTarget) {
+              return;
+            }
+
+            onCancelDelete();
+          }}
+        >
+          <div className={styles.deleteModal}>
+            <Heading
+              className={styles.areYouSure}
+              component="h3"
+              content="Are You Sure?"
+            />
+            <div className={styles.modalButtons}>
+              <button
+                className={`${styles.modalButton} ${styles.cancel}`}
+                onClick={onCancelDelete}
+              >
+                <Body content="Cancel" />
+              </button>
+              <button
+                className={`${styles.modalButton} ${styles.delete}`}
+                onClick={onDelete}
+              >
+                <Body content="Delete" />
+              </button>
+            </div>
+          </div>
+          <Snackbar
+            open={isError}
+            autoHideDuration={6000}
+            onClose={() => setIsError(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <Alert onClose={() => setIsError(false)} severity="error">
+              Something went wrong... Please try again later.
+            </Alert>
+          </Snackbar>
+        </div>
+      )}
+      {isLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingIconContainer}>
+            <LoadingIcon colour={userColour} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
