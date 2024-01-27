@@ -223,6 +223,10 @@
     max-width: 100%;
     width: 100%;
   }
+
+  .activityContainer {
+    margin-bottom: 2rem;
+  }
 }
 
 /* Mobile */
