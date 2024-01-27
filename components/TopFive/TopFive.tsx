@@ -10,6 +10,7 @@ import { Alert, Snackbar } from "@mui/material";
 import { APIWrapper } from "@/common/apiWrapper";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
 import Body from "../Body/Body";
+import { formatRelativeTimestamp } from "@/common/functions";
 
 interface TopFiveProps extends TopFiveList {
   userColour?: string;
@@ -22,6 +23,7 @@ const TopFive: React.FC<TopFiveProps> = ({
   title,
   list,
   colour,
+  timestamp,
   userColour = "#888",
   belongsToCurrentUser = true,
 }) => {
@@ -101,6 +103,12 @@ const TopFive: React.FC<TopFiveProps> = ({
         </div>
       ))}
       <div className={styles.cardActions}>
+        <Body
+          className={styles.timestampText}
+          content={`${formatRelativeTimestamp(timestamp)}${
+            belongsToCurrentUser ? " •" : ""
+          }`}
+        />
         {belongsToCurrentUser && (
           <button
             className={styles.cardActionButton}

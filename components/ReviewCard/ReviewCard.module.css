@@ -68,7 +68,7 @@
 
 .reviewSubtitle {
   color: rgb(var(--subtitle-rgb));
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   margin-top: 0.5rem;
   text-overflow: ellipsis;
   overflow-x: hidden;
@@ -117,6 +117,9 @@
   position: absolute;
   right: 1rem;
   bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .cardActionButton {
@@ -208,6 +211,17 @@
 
 .loadingIconContainer {
   width: 8rem;
+}
+
+.timestamp {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  height: 1.7rem;
+}
+
+.timestampText {
+  color: rgb(var(--subtitle-rgb));
 }
 
 /* Small Laptop */

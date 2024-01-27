@@ -13,6 +13,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { Alert, Snackbar } from "@mui/material";
 import { APIWrapper } from "@/common/apiWrapper";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
+import { formatRelativeTimestamp } from "@/common/functions";
 
 interface ReviewProps extends Review {
   userColour?: string;
@@ -29,8 +30,9 @@ const ReviewCard: React.FC<ReviewProps> = ({
   type,
   colour,
   review,
+  timestamp,
   userColour = "#888",
-  belongsToCurrentUser = true,
+  belongsToCurrentUser = false,
 }) => {
   const reviewRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -153,7 +155,14 @@ const ReviewCard: React.FC<ReviewProps> = ({
           )}
         </>
       )}
+      <div className={styles.timestamp}></div>
       <div className={styles.cardActions}>
+        <Body
+          className={styles.timestampText}
+          content={`${formatRelativeTimestamp(timestamp)}${
+            belongsToCurrentUser ? " •" : ""
+          }`}
+        />
         {belongsToCurrentUser && (
           <button
             className={styles.cardActionButton}
