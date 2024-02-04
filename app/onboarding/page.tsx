@@ -219,13 +219,14 @@ export default function Onboarding() {
                     }}
                     value={secondPromptIndex}
                   >
-                    {prompts
-                      .filter((_, i) => i !== firstPromptIndex)
-                      .map((prompt, i) => (
-                        <MenuItem value={i} key={i}>
-                          {prompt}
-                        </MenuItem>
-                      ))}
+                    {prompts.map(
+                      (prompt, i) =>
+                        i !== firstPromptIndex && (
+                          <MenuItem value={i} key={i}>
+                            {prompt}
+                          </MenuItem>
+                        )
+                    )}
                   </Select>
                 )}
                 {secondPromptIndex !== "" && (
