@@ -181,10 +181,25 @@ export interface TopFiveList {
   list: ListElement[];
 }
 
+/**
+ * Represents a post, either a review or a list
+ */
 export interface TimelineResponse {
+  /**
+   * The author of the post
+   */
   author: UserCondensed;
+  /**
+   * The timestamp at which the post was created
+   */
   timestamp: string;
+  /**
+   * The post type, either review or list
+   */
   type: PostType;
+  /**
+   * The data contained within the post
+   */
   data: any;
 }
 

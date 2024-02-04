@@ -56,7 +56,7 @@ const ReviewCard: React.FC<ReviewProps> = ({
 
   const onDelete = () => {
     setIsLoading(true);
-    APIWrapper.deleteReview(process.env.NEXT_PUBLIC_API_URL || "", id)
+    APIWrapper.deleteReview(id)
       .then((resp) => {
         if (!resp.error) {
           // Success!

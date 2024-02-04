@@ -41,7 +41,7 @@ const TopFive: React.FC<TopFiveProps> = ({
 
   const onDelete = () => {
     setIsLoading(true);
-    APIWrapper.deleteList(process.env.NEXT_PUBLIC_API_URL || "", id)
+    APIWrapper.deleteList(id)
       .then((resp) => {
         if (!resp.error) {
           // Success!

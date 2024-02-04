@@ -81,11 +81,7 @@ export default function Home() {
       .then((user) => {
         sessionStorage.setItem("otrStreamingServiceId", user.id);
 
-        APIWrapper.getUser(
-          process.env.NEXT_PUBLIC_API_URL || "",
-          user.streamingService,
-          user.id
-        )
+        APIWrapper.getUser(user.streamingService, user.id)
           .then((otrUser) => {
             setUserProvider(otrUser.data?.provider || "");
             setUserProviderId(otrUser.data?.providerId || -1);
@@ -126,7 +122,6 @@ export default function Home() {
     let isMounted = true;
     setIsLoadingTimeline(true);
     APIWrapper.getTimeline(
-      process.env.NEXT_PUBLIC_API_URL || "",
       userProvider as StreamingService,
       userProviderId.toString(10),
       offset,

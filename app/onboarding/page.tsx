@@ -98,7 +98,6 @@ export default function Onboarding() {
     setIsLoading(true);
 
     APIWrapper.createUser(
-      process.env.NEXT_PUBLIC_API_URL || "",
       (sessionStorage.getItem("otrStreamingService") as StreamingService) ||
         "spotify",
       sessionStorage.getItem("otrStreamingServiceId") || "",

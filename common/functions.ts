@@ -1,5 +1,12 @@
 import { months } from "./consts";
 
+/**
+ * Debounces a function, ensuring it is only called after a specified delay since the last invocation.
+ *
+ * @param func The function to be debounced
+ * @param delay The interval (in milliseconds) to wait until invoking the function again
+ * @returns
+ */
 export function debounce<T extends (...args: any[]) => void>(
   func: T,
   delay: number
@@ -18,7 +25,11 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
-export function generateUUID() {
+/**
+ * Helper function to generate a UUID
+ * @returns The generated UUID
+ */
+export function generateUUID(): string {
   var d = new Date().getTime();
   var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
     /[xy]/g,
@@ -31,6 +42,12 @@ export function generateUUID() {
   return uuid;
 }
 
+/**
+ * Format a timestamp into "Month Date, Year". Year only occurs if the timestamp's year
+ * differs from the current year
+ * @param timestamp Timestamp to format
+ * @returns The timestamp formatted into "Month Date, Year"
+ */
 function formatTimestamp(timestamp: number): string {
   let date = new Date(timestamp).getDate();
   let month = new Date(timestamp).getMonth();
@@ -45,6 +62,12 @@ function formatTimestamp(timestamp: number): string {
   return dateString;
 }
 
+/**
+ * Format a timestamp into a string that describes how long ago that timestamp was. For example, if a timestamp
+ * was from 6 hours ago, this function would return "6 hours ago"
+ * @param timestamp The timestamp to format
+ * @returns A string representing how long ago the timestamp was
+ */
 export function formatRelativeTimestamp(timestamp: string): string {
   let ts = Date.parse(timestamp);
   let nowTs = Date.now();
