@@ -54,7 +54,6 @@ const ReviewScore: React.FC<ReviewScoreProps> = ({
       );
       setDisplayedScore(newScore);
 
-      console.log(isMobile);
       if (isMobile) {
         setSelectedScore(newScore);
 
