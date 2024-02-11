@@ -59,6 +59,17 @@
   cursor: pointer;
 }
 
+.featured {
+  background-color: rgb(var(--search-background-rgb));
+  border-radius: 8px;
+}
+
+.featuredText {
+  padding: 0.75rem;
+  font-style: italic;
+  color: rgb(var(--subtitle-rgb));
+}
+
 .noResults {
   display: flex;
   flex-direction: column;

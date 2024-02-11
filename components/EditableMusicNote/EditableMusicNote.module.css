@@ -23,7 +23,7 @@
 }
 
 .deleteButton:hover {
-  opacity: 0.95;
+  background-color: rgb(var(--search-background-hover-rgb));
 }
 
 .deleteButton:active {

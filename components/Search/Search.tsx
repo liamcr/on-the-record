@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
 import styles from "./Search.module.css";
-import { Entity, EntityType } from "@/common/types";
+import { Entity, EntityType, UserCondensed } from "@/common/types";
 import { debounce } from "@/common/functions";
 import {
   StreamingService,
@@ -11,6 +11,8 @@ import {
 } from "@/common/streamingServiceFns";
 import Body from "../Body/Body";
 import Image from "next/image";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 import DefaultProfile from "../../public/defaultProfile.png";
 import { APIWrapper } from "@/common/apiWrapper";
@@ -30,16 +32,23 @@ const Search: React.FC<SearchProps> = ({
   onSelect,
   onClose,
 }) => {
+  const [featuredUsers, setFeaturedUsers] = useState<UserCondensed[]>([]);
+  const [showFeaturedUsers, setShowFeaturedUsers] = useState(
+    type === EntityType.User
+  );
   const [noResults, setNoResults] = useState(false);
   const [results, setResults] = useState<Entity[]>([]);
+  const [isError, setIsError] = useState(false);
 
   const onSearchChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (event.target.value === "") {
+      setShowFeaturedUsers(type === EntityType.User);
       setResults([]);
       return;
     }
+    setShowFeaturedUsers(false);
     if (type === EntityType.User) {
       APIWrapper.searchUsers(event.target.value).then((resp) => {
         if (!resp.data) {
@@ -71,6 +80,16 @@ const Search: React.FC<SearchProps> = ({
       });
     }
   };
+
+  useEffect(() => {
+    if (type === EntityType.User) {
+      APIWrapper.getFeaturedUsers().then((resp) => {
+        if (resp.data) {
+          setFeaturedUsers(resp.data);
+        }
+      });
+    }
+  }, [setFeaturedUsers]);
 
   return (
     enabled && (
@@ -106,6 +125,37 @@ const Search: React.FC<SearchProps> = ({
           />
         </div>
         <div className={styles.resultsContainer}>
+          {showFeaturedUsers && (
+            <div className={styles.featured}>
+              <Body className={styles.featuredText} content="Featured Users" />
+              {featuredUsers.map((featuredUser, i) => (
+                <a
+                  key={i}
+                  className={styles.result}
+                  href={`/profile/${featuredUser.provider}/${featuredUser.providerId}`}
+                >
+                  <div className={styles.imageContainer}>
+                    <Image
+                      src={
+                        featuredUser.profilePictureSrc !== "/"
+                          ? featuredUser.profilePictureSrc
+                          : DefaultProfile.src
+                      }
+                      fill
+                      alt={featuredUser.name}
+                      className={styles.image}
+                    />
+                  </div>
+                  <div className={styles.titlesContainer}>
+                    <Body
+                      content={featuredUser.name}
+                      className={styles.title}
+                    />
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
           {noResults ? (
             <div className={styles.noResults}>
               <Body className={styles.crickets} content="🦗 🦗 🦗" />
@@ -149,6 +199,16 @@ const Search: React.FC<SearchProps> = ({
             ))
           )}
         </div>
+        <Snackbar
+          open={isError}
+          autoHideDuration={6000}
+          onClose={() => setIsError(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert onClose={() => setIsError(false)} severity="error">
+            Something went wrong
+          </Alert>
+        </Snackbar>
       </div>
     )
   );

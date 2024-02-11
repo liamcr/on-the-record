@@ -160,7 +160,7 @@
 
 .deleteModal {
   width: 400px;
-  background-color: rgb(var(--search-background-rgb));
+  background-color: rgb(var(--modal-background-rgb));
   padding: 2rem;
   border-radius: 16px;
 }

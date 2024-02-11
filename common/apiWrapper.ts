@@ -9,6 +9,7 @@ import {
   TimelineResponse,
   TopFiveList,
   User,
+  UserCondensed,
 } from "./types";
 
 /**
@@ -81,6 +82,48 @@ class APIWrapper {
           createdOn: resp.data.createdOn,
           musicNotes: resp.data.musicNotes,
         },
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  /**
+   * Gets a list of the currently featured users
+   * @returns A list of the featured users
+   */
+  static getFeaturedUsers = async (): Promise<APIResponse<UserCondensed[]>> => {
+    try {
+      const resp = await axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/user/featured`,
+        data: {},
+      });
+
+      // 200 Response
+      return {
+        data: resp.data.map((featuredUser: any) => ({
+          name: featuredUser.name,
+          profilePictureSrc: featuredUser.imageSrc,
+          provider: featuredUser.provider,
+          providerId: featuredUser.providerId,
+        })),
       };
     } catch (e) {
       const axiosError = e as AxiosError;

@@ -12,8 +12,10 @@
   --navbar-background-rgba: 39, 39, 39, 0.95;
 
   --card-background-rgba: 40, 40, 40, 0.8;
-  --search-background-rgb: 40, 40, 40;
-  --search-background-hover-rgb: 60, 60, 60;
+  --search-background-rgb: 50, 50, 50;
+  --search-background-hover-rgb: 80, 80, 80;
+
+  --modal-background-rgb: 40, 40, 40;
 
   --nav-overlay-rbga: 0, 0, 0, 0.25;
 
