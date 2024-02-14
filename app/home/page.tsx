@@ -36,7 +36,7 @@ export default function Home() {
   const [userColour, setUserColour] = useState("#888");
 
   const [userProvider, setUserProvider] = useState("");
-  const [userProviderId, setUserProviderId] = useState(-1);
+  const [userProviderId, setUserProviderId] = useState("");
 
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -84,7 +84,7 @@ export default function Home() {
         APIWrapper.getUser(user.streamingService, user.id)
           .then((otrUser) => {
             setUserProvider(otrUser.data?.provider || "");
-            setUserProviderId(otrUser.data?.providerId || -1);
+            setUserProviderId(otrUser.data?.providerId || "");
             if (otrUser.data?.colour) {
               setUserColour(otrUser.data.colour);
               localStorage.setItem("otrColour", otrUser.data.colour);
@@ -115,7 +115,7 @@ export default function Home() {
   }, [router]);
 
   useEffect(() => {
-    if (userProvider === "" || userProviderId === -1) {
+    if (userProvider === "" || userProviderId === "") {
       return;
     }
 
@@ -123,7 +123,7 @@ export default function Home() {
     setIsLoadingTimeline(true);
     APIWrapper.getTimeline(
       userProvider as StreamingService,
-      userProviderId.toString(10),
+      userProviderId,
       offset,
       limit
     )

@@ -44,6 +44,7 @@
 .outOfTen {
   color: rgb(var(--subtitle-rgb));
   margin-left: 5%;
+  white-space: nowrap;
 }
 
 /* Mobile */

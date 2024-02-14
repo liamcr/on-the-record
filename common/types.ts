@@ -12,7 +12,7 @@ export interface UserCondensed {
   /**
    * The ID of the user, as assigned by the streaming service.
    */
-  providerId: number;
+  providerId: string;
   /**
    * The user's display name.
    */

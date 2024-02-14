@@ -13,7 +13,7 @@ import { Alert, Snackbar, useMediaQuery } from "@mui/material";
 import styles from "./page.module.css";
 import BottomNav from "@/components/BottomNav/BottomNav";
 import SideNav from "@/components/SideNav/SideNav";
-import { Entity, PostType, TimelineResponse, User } from "@/common/types";
+import { PostType, TimelineResponse, User } from "@/common/types";
 import Image from "next/image";
 import Heading from "@/components/Heading/Heading";
 import Body from "@/components/Body/Body";
@@ -43,7 +43,7 @@ export default function Profile({
   const [userColour, setUserColour] = useState("#888");
 
   const [userProvider, setUserProvider] = useState("");
-  const [userProviderId, setUserProviderId] = useState(-1);
+  const [userProviderId, setUserProviderId] = useState("");
 
   const [editModalEnabled, setEditModalEnabled] = useState(false);
 
@@ -76,8 +76,7 @@ export default function Profile({
 
   const isCurrentUser = useMemo(() => {
     return (
-      params.provider === userProvider &&
-      params.providerId === userProviderId.toString()
+      params.provider === userProvider && params.providerId === userProviderId
     );
   }, [userProvider, userProviderId, params.provider, params.providerId]);
 
@@ -97,7 +96,7 @@ export default function Profile({
 
       APIWrapper.getUser(user.streamingService, user.id).then((otrUser) => {
         setUserProvider(otrUser.data?.provider || "");
-        setUserProviderId(otrUser.data?.providerId || -1);
+        setUserProviderId(otrUser.data?.providerId || "");
 
         if (otrUser.error && otrUser.error.code === 404) {
           // User does not exist in our system, redirect to onboarding
@@ -113,7 +112,7 @@ export default function Profile({
           params.provider as StreamingService,
           params.providerId,
           otrUser.data?.provider,
-          otrUser.data?.providerId.toString(10)
+          otrUser.data?.providerId
         ).then((specifiedUser) => {
           if (specifiedUser.error || specifiedUser.data === undefined) {
             // TODO: Come up with designs for error case
@@ -134,7 +133,7 @@ export default function Profile({
   }, [params.provider, params.providerId, router]);
 
   useEffect(() => {
-    if (userProvider === "" || userProviderId === -1) {
+    if (userProvider === "" || userProviderId === "") {
       return;
     }
 
@@ -447,18 +446,22 @@ export default function Profile({
                         />
                       </div>
                     </div>
-                    <Heading component="h2" content="About Me" />
-                    <div className={styles.musicNotes}>
-                      {user.musicNotes.map((musicNote, i) => (
-                        <MusicNote
-                          key={i}
-                          prompt={musicNote.prompt}
-                          src={musicNote.imageSrc}
-                          title={musicNote.title}
-                          subtitle={musicNote.subtitle}
-                        />
-                      ))}
-                    </div>
+                    {user.musicNotes.length > 0 && (
+                      <>
+                        <Heading component="h2" content="About Me" />
+                        <div className={styles.musicNotes}>
+                          {user.musicNotes.map((musicNote, i) => (
+                            <MusicNote
+                              key={i}
+                              prompt={musicNote.prompt}
+                              src={musicNote.imageSrc}
+                              title={musicNote.title}
+                              subtitle={musicNote.subtitle}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </>

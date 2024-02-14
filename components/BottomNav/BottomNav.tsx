@@ -25,7 +25,7 @@ interface BottomNavProps {
   /**
    * The ID corresponding to the user, as set by their straming service provider
    */
-  userProviderId: number;
+  userProviderId: string;
 }
 
 const BottomNav: React.FC<BottomNavProps> = ({
