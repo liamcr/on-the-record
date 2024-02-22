@@ -91,16 +91,8 @@
   opacity: 0.95;
 }
 
-.spotifyButton {
+.loginButton {
   background-color: #1db954;
-}
-
-.appleMusicButton {
-  background-color: #fb435b;
-}
-
-.amazonMusicButton {
-  background-color: #1b9ba1;
 }
 
 .logoContainer {
@@ -109,9 +101,7 @@
   aspect-ratio: 1;
 }
 
-.spotifyText,
-.appleMusicText,
-.amazonMusicText {
+.loginText {
   color: #fff;
   font-size: 1.25rem;
   margin-left: 0.5rem;

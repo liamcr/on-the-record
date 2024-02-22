@@ -22,10 +22,12 @@ import Search from "@/components/Search/Search";
 import { Entity, EntityType, PostType, TimelineResponse } from "@/common/types";
 import ReviewCard from "@/components/ReviewCard/ReviewCard";
 import TopFive from "@/components/TopFive/TopFive";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const limit = 3;
 
 export default function Home() {
+  const { user, error, isLoading } = useUser();
   const router = useRouter();
 
   const isMobile = useMediaQuery("(max-width: 770px)");
@@ -66,53 +68,57 @@ export default function Home() {
     window.location.href = user.href;
   };
 
+  // useEffect(() => {
+  //   const colour = localStorage.getItem("otrColour");
+  //   if (colour !== null) {
+  //     setUserColour(colour);
+  //   }
+
+  //   StreamingServiceController.handleLogin(window.location);
+
+  //   StreamingServiceController.getCurrentUser(
+  //     sessionStorage.getItem("otrStreamingService") as StreamingService,
+  //     sessionStorage.getItem("otrAccessToken") || ""
+  //   )
+  //     .then((user) => {
+  //       sessionStorage.setItem("otrStreamingServiceId", user.id);
+
+  //       APIWrapper.getUser(user.streamingService, user.id)
+  //         .then((otrUser) => {
+  //           setUserProvider(otrUser.data?.provider || "");
+  //           setUserProviderId(otrUser.data?.providerId || "");
+  //           if (otrUser.data?.colour) {
+  //             setUserColour(otrUser.data.colour);
+  //             localStorage.setItem("otrColour", otrUser.data.colour);
+  //           }
+
+  //           if (otrUser.error && otrUser.error.code === 404) {
+  //             // User does not exist in our system, redirect to onboarding
+  //             router.push("/onboarding");
+  //             return;
+  //           } else if (otrUser.error) {
+  //             setIsError(true);
+  //             return;
+  //           }
+
+  //           setIsLoadingUser(false);
+  //         })
+  //         .catch((err) => {
+  //           console.error(err);
+
+  //           setIsError(true);
+  //         });
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+
+  //       setIsError(true);
+  //     });
+  // }, [router]);
+
   useEffect(() => {
-    const colour = localStorage.getItem("otrColour");
-    if (colour !== null) {
-      setUserColour(colour);
-    }
-
-    StreamingServiceController.handleLogin(window.location);
-
-    StreamingServiceController.getCurrentUser(
-      sessionStorage.getItem("otrStreamingService") as StreamingService,
-      sessionStorage.getItem("otrAccessToken") || ""
-    )
-      .then((user) => {
-        sessionStorage.setItem("otrStreamingServiceId", user.id);
-
-        APIWrapper.getUser(user.streamingService, user.id)
-          .then((otrUser) => {
-            setUserProvider(otrUser.data?.provider || "");
-            setUserProviderId(otrUser.data?.providerId || "");
-            if (otrUser.data?.colour) {
-              setUserColour(otrUser.data.colour);
-              localStorage.setItem("otrColour", otrUser.data.colour);
-            }
-
-            if (otrUser.error && otrUser.error.code === 404) {
-              // User does not exist in our system, redirect to onboarding
-              router.push("/onboarding");
-              return;
-            } else if (otrUser.error) {
-              setIsError(true);
-              return;
-            }
-
-            setIsLoadingUser(false);
-          })
-          .catch((err) => {
-            console.error(err);
-
-            setIsError(true);
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-
-        setIsError(true);
-      });
-  }, [router]);
+    console.log(user);
+  }, [user]);
 
   useEffect(() => {
     if (userProvider === "" || userProviderId === "") {
@@ -160,6 +166,9 @@ export default function Home() {
     setIsLoadingTimeline,
     setResults,
   ]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
 
   return (
     <div className={styles.pageContainer}>
