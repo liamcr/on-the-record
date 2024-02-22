@@ -173,71 +173,26 @@ class StreamingServiceController {
   };
 
   /**
-   * Search the database of a streaming service
-   * @param streamingService The streaming service to search
-   * @param accessToken The user's access token to the specified streaming service
+   * Search the Deezer database
    * @param query The search query
    * @param type The type of entity to search for, e.g. album, track, etc.
    * @returns A list of results
    */
-  static search = async (
-    streamingService: StreamingService,
-    accessToken: string,
-    query: string,
-    type: string
-  ) => {
-    if (streamingService === "spotify") {
-      const resp = await this.apiRequest(
-        "GET",
-        `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-          query
-        )}&type=${type}&limit=5`,
-        accessToken,
-        {}
-      );
+  static search = async (query: string, type: string) => {
+    let resp = await axios({
+      method: "GET",
+      url: `/api/search?q=${encodeURIComponent(query)}&type=${type}`,
+    });
 
-      if (resp.status !== 200) {
-        // Token is expired, redirect to login screen
-        window.location.href = "/";
-        return [];
-      }
-
-      let results = resp.data[`${type}s`]?.items;
-
-      let entities: Entity[] = results.map((item: any) => {
-        let subtitle = "";
-        if (item.artists !== undefined && item.artists.length > 0) {
-          subtitle += item.artists[0].name;
-          for (let artist of item.artists.slice(1)) {
-            subtitle += `, ${artist.name}`;
-          }
-        }
-
-        let image = "/";
-        if (type === "track") {
-          if (
-            item?.album?.images &&
-            item.album.images.length > 0 &&
-            item.album.images[0].url
-          ) {
-            image = item.album.images[0].url;
-          }
-        } else {
-          if (item.images && item.images.length > 0 && item.images[0].url) {
-            image = item.images[0].url;
-          }
-        }
-
-        return {
-          title: item.name,
-          subtitle,
-          imageSrc: image,
-        };
-      });
-
-      return entities;
+    if (resp.status !== 200) {
+      // Token is expired, redirect to login screen
+      window.location.href = "/";
+      return [];
     }
 
+    if (resp.data?.data) {
+      return resp.data.data.slice(0, 5);
+    }
     return [];
   };
 }

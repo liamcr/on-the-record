@@ -65,8 +65,6 @@ const Search: React.FC<SearchProps> = ({
       });
     } else {
       StreamingServiceController.search(
-        sessionStorage.getItem("otrStreamingService") as StreamingService,
-        sessionStorage.getItem("otrAccessToken") || "",
         event.target.value,
         entityTypeNames[type].toLowerCase()
       ).then((resp) => {
