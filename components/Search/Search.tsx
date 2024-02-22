@@ -16,6 +16,7 @@ import Alert from "@mui/material/Alert";
 
 import DefaultProfile from "../../public/defaultProfile.png";
 import { APIWrapper } from "@/common/apiWrapper";
+import axios from "axios";
 
 interface SearchProps {
   enabled: boolean;
@@ -64,18 +65,36 @@ const Search: React.FC<SearchProps> = ({
         }
       });
     } else {
-      StreamingServiceController.search(
-        event.target.value,
-        entityTypeNames[type].toLowerCase()
-      ).then((resp) => {
-        setResults(resp);
+      axios({
+        method: "GET",
+        url: `/api/search?q=${encodeURIComponent(
+          event.target.value
+        )}&type=${entityTypeNames[type].toLowerCase()}`,
+      })
+        .then((resp) => {
+          if (resp.status !== 200) {
+            setIsError(true);
+            return [];
+          }
 
-        if (resp.length === 0 && event.target.value.length !== 0) {
-          setNoResults(true);
-        } else {
-          setNoResults(false);
-        }
-      });
+          let searchResults = [];
+          if (resp.data?.data) {
+            searchResults = resp.data.data.slice(0, 5);
+          }
+
+          setResults(searchResults);
+
+          if (searchResults === 0 && event.target.value.length !== 0) {
+            setNoResults(true);
+          } else {
+            setNoResults(false);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+
+          setIsError(true);
+        });
     }
   };
 

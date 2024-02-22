@@ -70,6 +70,10 @@ export interface MusicNote extends Entity {
 
 export interface Entity {
   /**
+   * Deezer ID of the entity (track, album, artist)
+   */
+  id?: string;
+  /**
    * src for the image corresponding to the title and subtitle
    */
   imageSrc: string;

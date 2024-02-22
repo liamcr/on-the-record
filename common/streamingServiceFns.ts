@@ -1,6 +1,5 @@
 import axios from "axios";
 import { redirect } from "next/navigation";
-import { Entity } from "./types";
 
 export type StreamingService = "spotify" | "appleMusic" | "amazonMusic";
 
@@ -170,30 +169,6 @@ class StreamingServiceController {
       id: "",
       streamingService: "spotify",
     };
-  };
-
-  /**
-   * Search the Deezer database
-   * @param query The search query
-   * @param type The type of entity to search for, e.g. album, track, etc.
-   * @returns A list of results
-   */
-  static search = async (query: string, type: string) => {
-    let resp = await axios({
-      method: "GET",
-      url: `/api/search?q=${encodeURIComponent(query)}&type=${type}`,
-    });
-
-    if (resp.status !== 200) {
-      // Token is expired, redirect to login screen
-      window.location.href = "/";
-      return [];
-    }
-
-    if (resp.data?.data) {
-      return resp.data.data.slice(0, 5);
-    }
-    return [];
   };
 }
 
