@@ -92,17 +92,13 @@
 }
 
 .loginButton {
-  background-color: #1db954;
-}
-
-.logoContainer {
-  position: relative;
-  height: 2rem;
-  aspect-ratio: 1;
+  background-image: linear-gradient(to right, #dc249c 0%, #4a569d 100%);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .loginText {
   color: #fff;
   font-size: 1.25rem;
-  margin-left: 0.5rem;
 }

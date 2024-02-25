@@ -90,7 +90,7 @@ const ReviewCard: React.FC<ReviewProps> = ({
       }}
     >
       <Link
-        href={`/profile/${author.provider}/${author.providerId}`}
+        href={`/profile/${author.id}`}
         className={styles.postProfileIconLink}
       >
         <div className={styles.postProfileIconContainer}>

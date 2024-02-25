@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-import { StreamingService } from "./streamingServiceFns";
 import {
   Entity,
   EntityType,
@@ -41,27 +40,19 @@ interface APIResponse<T> {
 class APIWrapper {
   /**
    * Get a user from the database.
-   * @param streamingService The streaming service that the user to get authorized with
    * @param userId The ID of the user to get
-   * @param requestingStreamingService The streaming service of the user making this API call
    * @param requestingUserId The ID of the user making this API call
    * @returns The requested user
    */
   static getUser = async (
-    streamingService: StreamingService,
     userId: string,
-    requestingStreamingService?: StreamingService,
     requestingUserId?: string
   ): Promise<APIResponse<User>> => {
     try {
       const resp = await axios({
         method: "GET",
-        url: `${
-          process.env.NEXT_PUBLIC_API_URL || ""
-        }/user?provider=${streamingService}&provider_id=${userId}${
-          requestingStreamingService
-            ? `&requesting_provider=${requestingStreamingService}&requesting_provider_id=${requestingUserId}`
-            : ""
+        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/user?id=${userId}${
+          requestingUserId ? `&requesting_id=${requestingUserId}` : ""
         }`,
         data: {},
       });
@@ -69,8 +60,7 @@ class APIWrapper {
       // 200 Response
       return {
         data: {
-          provider: resp.data.provider,
-          providerId: resp.data.providerId,
+          id: resp.data.id,
           name: resp.data.name,
           colour: resp.data.colour,
           profilePictureSrc: resp.data.imageSrc,
@@ -121,8 +111,7 @@ class APIWrapper {
         data: resp.data.map((featuredUser: any) => ({
           name: featuredUser.name,
           profilePictureSrc: featuredUser.imageSrc,
-          provider: featuredUser.provider,
-          providerId: featuredUser.providerId,
+          id: featuredUser.id,
         })),
       };
     } catch (e) {
@@ -168,7 +157,7 @@ class APIWrapper {
         data: resp.data.map((user: any) => ({
           imageSrc: user.imageSrc,
           title: user.name,
-          href: `/profile/${user.provider}/${user.providerId}`,
+          href: `/profile/${user.id}`,
         })),
       };
     } catch (e) {
@@ -194,7 +183,6 @@ class APIWrapper {
 
   /**
    * Create a new user
-   * @param streamingService The streaming service that the new user is associated with
    * @param userId The ID of the user
    * @param name The name of the user
    * @param colour The user's preferred colour
@@ -203,7 +191,6 @@ class APIWrapper {
    * @returns The created user
    */
   static createUser = async (
-    streamingService: StreamingService,
     userId: string,
     name: string,
     colour: string,
@@ -215,8 +202,7 @@ class APIWrapper {
         method: "POST",
         url: `${process.env.NEXT_PUBLIC_API_URL || ""}/user`,
         data: {
-          provider: streamingService,
-          providerId: userId,
+          id: userId,
           name: name,
           imageSrc: profilePictureSrc,
           colour: colour,
@@ -227,8 +213,7 @@ class APIWrapper {
       // 200 Response
       return {
         data: {
-          provider: resp.data.provider,
-          providerId: resp.data.providerId,
+          id: resp.data.id,
           name: resp.data.name,
           colour: resp.data.colour,
           profilePictureSrc: resp.data.imageSrc,
@@ -261,7 +246,6 @@ class APIWrapper {
 
   /**
    * Update an existing user
-   * @param streamingService The streaming service that the updated user is associated with
    * @param userId The ID of the user
    * @param name The name of the user
    * @param colour The user's preferred colour
@@ -270,7 +254,6 @@ class APIWrapper {
    * @returns The updated user
    */
   static updateUser = async (
-    streamingService: StreamingService,
     userId: string,
     name: string,
     colour: string,
@@ -282,8 +265,7 @@ class APIWrapper {
         method: "PUT",
         url: `${process.env.NEXT_PUBLIC_API_URL || ""}/user`,
         data: {
-          provider: streamingService,
-          providerId: userId,
+          id: userId,
           name: name,
           imageSrc: profilePictureSrc,
           colour: colour,
@@ -294,8 +276,7 @@ class APIWrapper {
       // 200 Response
       return {
         data: {
-          provider: resp.data.provider,
-          providerId: resp.data.providerId,
+          id: resp.data.id,
           name: resp.data.name,
           colour: resp.data.colour,
           profilePictureSrc: resp.data.imageSrc,
@@ -328,27 +309,22 @@ class APIWrapper {
 
   /**
    * Follow a user
-   * @param streamingService Streaming service of the user requesting to follow
    * @param userId User ID of the user requesting to follow
-   * @param toFollowProvider Streaming service of the user being followed
-   * @param toFollowProviderId User ID of the user being followed
+   * @param toFollowUserId User ID of the user being followed
    * @returns
    */
   static followUser = async (
-    streamingService: StreamingService,
     userId: string,
-    toFollowProvider: StreamingService,
-    toFollowProviderId: string
+    toFollowUserId: string
   ): Promise<APIResponse<null>> => {
     try {
       const resp = await axios({
         method: "POST",
         url: `${
           process.env.NEXT_PUBLIC_API_URL || ""
-        }/user/follow?provider=${streamingService}&provider_id=${userId}`,
+        }/user/follow?id=${userId}`,
         data: {
-          provider: toFollowProvider,
-          providerId: toFollowProviderId,
+          id: toFollowUserId,
         },
       });
 
@@ -379,27 +355,22 @@ class APIWrapper {
 
   /**
    * Unfollow a user
-   * @param streamingService Streaming service of the user requesting to unfollow
    * @param userId User ID of the user requesting to unfollow
-   * @param toFollowProvider Streaming service of the user being unfollowed
-   * @param toFollowProviderId User ID of the user being unfollowed
+   * @param toUnfollowUserId User ID of the user being unfollowed
    * @returns
    */
   static unfollowUser = async (
-    streamingService: StreamingService,
     userId: string,
-    toFollowProvider: StreamingService,
-    toFollowProviderId: string
+    toUnfollowUserId: string
   ): Promise<APIResponse<null>> => {
     try {
       const resp = await axios({
         method: "POST",
         url: `${
           process.env.NEXT_PUBLIC_API_URL || ""
-        }/user/unfollow?provider=${streamingService}&provider_id=${userId}`,
+        }/user/unfollow?id=${userId}`,
         data: {
-          provider: toFollowProvider,
-          providerId: toFollowProviderId,
+          id: toUnfollowUserId,
         },
       });
 
@@ -430,8 +401,8 @@ class APIWrapper {
 
   /**
    * Create a new review
-   * @param streamingService The streaming service of the user creating the review
    * @param userId The user ID of the user creating the review
+   * @param entityId The entity ID of the entity being reviewed
    * @param type The type of review (Album or Track)
    * @param title The title of the review (Album or track title)
    * @param subtitle The subtitle of the review (Typically the artist name)
@@ -441,8 +412,8 @@ class APIWrapper {
    * @returns The created review
    */
   static createReview = async (
-    streamingService: StreamingService,
     userId: string,
+    entityId: string,
     type: EntityType,
     title: string,
     subtitle: string,
@@ -455,8 +426,8 @@ class APIWrapper {
         method: "POST",
         url: `${process.env.NEXT_PUBLIC_API_URL || ""}/review`,
         data: {
-          provider: streamingService,
-          providerId: userId,
+          userId: userId,
+          entityId: entityId,
           title: title,
           imageSrc: imageSrc,
           subtitle: subtitle,
@@ -476,10 +447,10 @@ class APIWrapper {
           author: {
             name: "",
             profilePictureSrc: "",
-            provider: streamingService,
-            providerId: userId,
+            id: userId,
           },
           id: resp.data.id,
+          entityId: resp.data.entityId,
           score: resp.data.score,
           subtitle: resp.data.subtitle,
           type: resp.data.type,
@@ -546,7 +517,6 @@ class APIWrapper {
 
   /**
    * Create a new list
-   * @param streamingService The streaming service of the user creating the list
    * @param userId The user ID of the user creating the list
    * @param type The type of list (Track, Album, Artist)
    * @param title The title of the list
@@ -555,7 +525,6 @@ class APIWrapper {
    * @returns The created list
    */
   static createList = async (
-    streamingService: StreamingService,
     userId: string,
     type: EntityType,
     title: string,
@@ -567,8 +536,7 @@ class APIWrapper {
         method: "POST",
         url: `${process.env.NEXT_PUBLIC_API_URL || ""}/list`,
         data: {
-          provider: streamingService,
-          providerId: userId,
+          userId: userId,
           title: title,
           type: type,
           colour: colour,
@@ -585,8 +553,7 @@ class APIWrapper {
           author: {
             name: "",
             profilePictureSrc: "",
-            provider: streamingService,
-            providerId: userId,
+            id: userId,
           },
           id: resp.data.id,
           type: resp.data.type,
@@ -653,14 +620,12 @@ class APIWrapper {
 
   /**
    * Get a list of posts included in a user's timeline.
-   * @param streamingService The streaming service of the user getting their timeline
    * @param userId The user ID of the user getting their timeline
    * @param offset The index to start collecting posts from
    * @param limit The maximum number of posts you want to retrieve
    * @returns A list of posts
    */
   static getTimeline = async (
-    streamingService: StreamingService,
     userId: string,
     offset?: number,
     limit?: number
@@ -670,7 +635,7 @@ class APIWrapper {
         method: "GET",
         url: `${
           process.env.NEXT_PUBLIC_API_URL || ""
-        }/timeline?provider=${streamingService}&provider_id=${userId}&offset=${offset}&limit=${limit}`,
+        }/timeline?id=${userId}&offset=${offset}&limit=${limit}`,
         data: {},
       });
 
@@ -679,8 +644,7 @@ class APIWrapper {
         data: resp.data.map((respElement: any) => ({
           ...respElement,
           author: {
-            provider: respElement.author.provider,
-            providerId: respElement.author.providerId,
+            id: respElement.author.id,
             profilePictureSrc: respElement.author.imageSrc,
             name: respElement.author.name,
           },
@@ -709,14 +673,12 @@ class APIWrapper {
 
   /**
    * Get a list of posts posted by a specific user
-   * @param streamingService The streaming service of the user
    * @param userId The ID of the user
    * @param offset The index to start collecting posts from
    * @param limit The maximum number of posts you want to retrieve
    * @returns A list of posts
    */
   static getUserPosts = async (
-    streamingService: StreamingService,
     userId: string,
     offset?: number,
     limit?: number
@@ -726,7 +688,7 @@ class APIWrapper {
         method: "GET",
         url: `${
           process.env.NEXT_PUBLIC_API_URL || ""
-        }/user/activity?provider=${streamingService}&provider_id=${userId}&offset=${offset}&limit=${limit}`,
+        }/user/activity?id=${userId}&offset=${offset}&limit=${limit}`,
         data: {},
       });
 
@@ -735,8 +697,7 @@ class APIWrapper {
         data: resp.data.map((respElement: any) => ({
           ...respElement,
           author: {
-            provider: respElement.author.provider,
-            providerId: respElement.author.providerId,
+            id: respElement.author.id,
             profilePictureSrc: respElement.author.imageSrc,
             name: respElement.author.name,
           },

@@ -19,20 +19,12 @@ interface BottomNavProps {
    */
   colour: string;
   /**
-   * The user's streaming service provider (spotify, apple music, etc.)
+   * The user's ID
    */
-  userProvider: string;
-  /**
-   * The ID corresponding to the user, as set by their straming service provider
-   */
-  userProviderId: string;
+  userId: string;
 }
 
-const BottomNav: React.FC<BottomNavProps> = ({
-  colour,
-  userProvider,
-  userProviderId,
-}) => {
+const BottomNav: React.FC<BottomNavProps> = ({ colour, userId }) => {
   const [moreActionsEnabled, setMoreActionsEnabled] = useState(false);
   const [searchEnabled, setSearchEnabled] = useState(false);
 
@@ -59,7 +51,7 @@ const BottomNav: React.FC<BottomNavProps> = ({
               <HomeOutlinedIcon className={styles.navIcon} />
             </div>
           </Link>
-          <Link href={`/profile/${userProvider}/${userProviderId}`}>
+          <Link href={`/profile/${userId}`}>
             <div className={styles.navButton}>
               <PersonOutlinedIcon className={styles.navIcon} />
             </div>

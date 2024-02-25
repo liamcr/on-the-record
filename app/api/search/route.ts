@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
       title,
       subtitle,
       imageSrc: image,
-      id: item.id,
+      entityId: item.id.toString(),
     };
   });
 

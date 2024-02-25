@@ -63,7 +63,7 @@ const TopFive: React.FC<TopFiveProps> = ({
   return (
     <div className={styles.listContainer} style={{ backgroundColor: colour }}>
       <Link
-        href={`/profile/${author.provider}/${author.providerId}`}
+        href={`/profile/${author.id}`}
         className={styles.postProfileIconLink}
       >
         <div className={styles.postProfileIconContainer}>

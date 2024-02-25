@@ -9,7 +9,10 @@ export default function Home() {
       <div className={styles.innerBackdrop}>
         <Logo />
         <div className={styles.buttons}>
-          <a href="/api/auth/login" className={`${styles.loginButton}`}>
+          <a
+            href="/api/auth/login"
+            className={`${styles.loginButton} ${styles.button}`}
+          >
             <Body className={styles.loginText} content="Login" />
           </a>
         </div>

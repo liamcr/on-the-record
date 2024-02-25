@@ -12,8 +12,9 @@ import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import EditableTopFive from "@/components/EditableTopFive/EditableTopFive";
 import ColourSelection from "@/components/ColourSelection/ColourSelection";
 import { APIWrapper } from "@/common/apiWrapper";
-import { StreamingService } from "@/common/streamingServiceFns";
 import { Alert, Snackbar } from "@mui/material";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { translateAuth0Id } from "@/common/functions";
 
 const nameToEntityType = {
   Track: EntityType.Track,
@@ -24,10 +25,11 @@ const nameToEntityType = {
 const EntityTypeToName = ["Track", "Album", "Artist"];
 
 export default function NewList() {
+  const { user, error, isLoading } = useUser();
   const [selectedType, setSelectedType] = useState<EntityType | undefined>();
   const [userColour, setUserColour] = useState("#888");
   const [listColour, setListColour] = useState("#6471E5");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [list, setList] = useState<any[]>([
     undefined,
     undefined,
@@ -73,10 +75,16 @@ export default function NewList() {
   };
 
   const onSubmit = () => {
-    setIsLoading(true);
+    if (error || isLoading) {
+      if (error) {
+        console.error(error.message);
+      }
+      setIsError(true);
+      return;
+    }
+    setIsLoadingSubmit(true);
     APIWrapper.createList(
-      sessionStorage.getItem("otrStreamingService") as StreamingService,
-      sessionStorage.getItem("otrStreamingServiceId") || "",
+      translateAuth0Id(user?.sub),
       selectedType || EntityType.Track,
       listTitle,
       listColour,
@@ -97,7 +105,7 @@ export default function NewList() {
         setIsError(true);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingSubmit(false);
       });
   };
 
@@ -171,7 +179,7 @@ export default function NewList() {
           </Alert>
         </Snackbar>
       </div>
-      {isLoading && (
+      {isLoadingSubmit && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingIconContainer}>
             <LoadingIcon colour={userColour} />

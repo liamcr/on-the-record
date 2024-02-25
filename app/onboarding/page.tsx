@@ -15,15 +15,19 @@ import Colour from "./colour";
 
 import styles from "./page.module.css";
 import { APIWrapper } from "@/common/apiWrapper";
-import { StreamingService } from "@/common/streamingServiceFns";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { promptTypeMap, prompts } from "@/common/consts";
 import { Alert, Snackbar } from "@mui/material";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { translateAuth0Id } from "@/common/functions";
 
 export default function Onboarding() {
+  const { user, error, isLoading } = useUser();
   const [page, setPage] = useState(0);
   const [name, setName] = useState("");
-  const [profilePicUrl, setProfilePicUrl] = useState("");
+  const [profilePicUrl, setProfilePicUrl] = useState(
+    "https://on-the-record-images.s3.us-east-2.amazonaws.com/defaultProfile.png"
+  );
   const [colour, setColour] = useState("");
   const [searchEnabled, setSearchEnabled] = useState(false);
 
@@ -39,7 +43,7 @@ export default function Onboarding() {
   const [secondOpen, setSecondOpen] = useState(false);
 
   const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
   const onFirstRemoved = () => {
     setFirstPromptIndex(secondPromptIndex);
@@ -71,6 +75,7 @@ export default function Onboarding() {
         title: firstMusicNote.title,
         imageSrc: firstMusicNote.imageSrc,
         subtitle: firstMusicNote.subtitle,
+        entityId: firstMusicNote.entityId,
       },
     ];
 
@@ -80,6 +85,7 @@ export default function Onboarding() {
         title: secondMusicNote.title,
         imageSrc: secondMusicNote.imageSrc,
         subtitle: secondMusicNote.subtitle,
+        entityId: secondMusicNote.entityId,
       });
     }
 
@@ -87,20 +93,18 @@ export default function Onboarding() {
   };
 
   const onSubmit = () => {
-    if (
-      !sessionStorage.getItem("otrStreamingService") ||
-      !sessionStorage.getItem("otrStreamingServiceId")
-    ) {
+    if (error || isLoading) {
+      if (error) {
+        console.error(error.message);
+      }
       setIsError(true);
       return;
     }
 
-    setIsLoading(true);
+    setIsLoadingSubmit(true);
 
     APIWrapper.createUser(
-      (sessionStorage.getItem("otrStreamingService") as StreamingService) ||
-        "spotify",
-      sessionStorage.getItem("otrStreamingServiceId") || "",
+      translateAuth0Id(user?.sub),
       name,
       colour,
       profilePicUrl,
@@ -123,7 +127,7 @@ export default function Onboarding() {
         console.error(e);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingSubmit(false);
       });
   };
 
@@ -277,7 +281,7 @@ export default function Onboarding() {
           Something went wrong... Please try again later.
         </Alert>
       </Snackbar>
-      {isLoading && (
+      {isLoadingSubmit && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingIconContainer}>
             <LoadingIcon colour={colour || "gray"} />

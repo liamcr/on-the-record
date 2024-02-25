@@ -14,7 +14,6 @@ import { promptTypeMap, prompts } from "@/common/consts";
 import ButtonBase from "../ButtonBase/ButtonBase";
 import Body from "../Body/Body";
 import { APIWrapper } from "@/common/apiWrapper";
-import { StreamingService } from "@/common/streamingServiceFns";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
 
 interface EditModalProps {
@@ -87,6 +86,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, colour, onClose }) => {
         title: firstMusicNote.title,
         imageSrc: firstMusicNote.imageSrc,
         subtitle: firstMusicNote.subtitle,
+        id: firstMusicNote.entityId,
       },
     ];
 
@@ -96,6 +96,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, colour, onClose }) => {
         title: secondMusicNote.title,
         imageSrc: secondMusicNote.imageSrc,
         subtitle: secondMusicNote.subtitle,
+        id: secondMusicNote.entityId,
       });
     }
 
@@ -103,19 +104,10 @@ const EditModal: React.FC<EditModalProps> = ({ user, colour, onClose }) => {
   };
 
   const onSubmit = () => {
-    if (
-      !sessionStorage.getItem("otrStreamingService") ||
-      !sessionStorage.getItem("otrStreamingServiceId")
-    ) {
-      setIsError(true);
-      return;
-    }
-
     setIsLoading(true);
 
     APIWrapper.updateUser(
-      sessionStorage.getItem("otrStreamingService") as StreamingService,
-      sessionStorage.getItem("otrStreamingServiceId") || "",
+      user.id,
       name,
       selectedColour,
       profilePicUrl,

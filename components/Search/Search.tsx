@@ -5,10 +5,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import styles from "./Search.module.css";
 import { Entity, EntityType, UserCondensed } from "@/common/types";
 import { debounce } from "@/common/functions";
-import {
-  StreamingService,
-  StreamingServiceController,
-} from "@/common/streamingServiceFns";
 import Body from "../Body/Body";
 import Image from "next/image";
 import Snackbar from "@mui/material/Snackbar";
@@ -149,7 +145,7 @@ const Search: React.FC<SearchProps> = ({
                 <a
                   key={i}
                   className={styles.result}
-                  href={`/profile/${featuredUser.provider}/${featuredUser.providerId}`}
+                  href={`/profile/${featuredUser.id}`}
                 >
                   <div className={styles.imageContainer}>
                     <Image

@@ -1,9 +1,5 @@
 "use client";
 
-import {
-  StreamingService,
-  StreamingServiceController,
-} from "../../common/streamingServiceFns";
 import { APIWrapper } from "../../common/apiWrapper";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -23,6 +19,7 @@ import { Entity, EntityType, PostType, TimelineResponse } from "@/common/types";
 import ReviewCard from "@/components/ReviewCard/ReviewCard";
 import TopFive from "@/components/TopFive/TopFive";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { translateAuth0Id } from "@/common/functions";
 
 const limit = 3;
 
@@ -36,9 +33,6 @@ export default function Home() {
   const [isLoadingTimeline, setIsLoadingTimeline] = useState(true);
   const [isError, setIsError] = useState(false);
   const [userColour, setUserColour] = useState("#888");
-
-  const [userProvider, setUserProvider] = useState("");
-  const [userProviderId, setUserProviderId] = useState("");
 
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -68,71 +62,62 @@ export default function Home() {
     window.location.href = user.href;
   };
 
-  // useEffect(() => {
-  //   const colour = localStorage.getItem("otrColour");
-  //   if (colour !== null) {
-  //     setUserColour(colour);
-  //   }
+  useEffect(() => {
+    if (isLoading) return;
+    if (error) {
+      // User session most likely expired, redirect to landing page
+      router.push("/");
+      return;
+    }
+    if (!user?.sub) {
+      return;
+    }
 
-  //   StreamingServiceController.handleLogin(window.location);
+    const colour = localStorage.getItem("otrColour");
+    if (colour !== null) {
+      setUserColour(colour);
+    }
 
-  //   StreamingServiceController.getCurrentUser(
-  //     sessionStorage.getItem("otrStreamingService") as StreamingService,
-  //     sessionStorage.getItem("otrAccessToken") || ""
-  //   )
-  //     .then((user) => {
-  //       sessionStorage.setItem("otrStreamingServiceId", user.id);
+    APIWrapper.getUser(translateAuth0Id(user.sub))
+      .then((otrUser) => {
+        if (otrUser.data?.colour) {
+          setUserColour(otrUser.data.colour);
+          localStorage.setItem("otrColour", otrUser.data.colour);
+        }
 
-  //       APIWrapper.getUser(user.streamingService, user.id)
-  //         .then((otrUser) => {
-  //           setUserProvider(otrUser.data?.provider || "");
-  //           setUserProviderId(otrUser.data?.providerId || "");
-  //           if (otrUser.data?.colour) {
-  //             setUserColour(otrUser.data.colour);
-  //             localStorage.setItem("otrColour", otrUser.data.colour);
-  //           }
+        if (otrUser.error && otrUser.error.code === 404) {
+          // User does not exist in our system, redirect to onboarding
+          router.push("/onboarding");
+          return;
+        } else if (otrUser.error) {
+          setIsError(true);
+          return;
+        }
 
-  //           if (otrUser.error && otrUser.error.code === 404) {
-  //             // User does not exist in our system, redirect to onboarding
-  //             router.push("/onboarding");
-  //             return;
-  //           } else if (otrUser.error) {
-  //             setIsError(true);
-  //             return;
-  //           }
+        setIsLoadingUser(false);
+      })
+      .catch((err) => {
+        console.error(err);
 
-  //           setIsLoadingUser(false);
-  //         })
-  //         .catch((err) => {
-  //           console.error(err);
-
-  //           setIsError(true);
-  //         });
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-
-  //       setIsError(true);
-  //     });
-  // }, [router]);
+        setIsError(true);
+      });
+  }, [isLoading, error, user, router]);
 
   useEffect(() => {
     console.log(user);
+    if (user?.sub) {
+      console.log(translateAuth0Id(user.sub));
+    }
   }, [user]);
 
   useEffect(() => {
-    if (userProvider === "" || userProviderId === "") {
+    if (!user?.sub) {
       return;
     }
 
     let isMounted = true;
     setIsLoadingTimeline(true);
-    APIWrapper.getTimeline(
-      userProvider as StreamingService,
-      userProviderId,
-      offset,
-      limit
-    )
+    APIWrapper.getTimeline(translateAuth0Id(user.sub), offset, limit)
       .then((timelineResp) => {
         if (isMounted) {
           if (timelineResp.error) {
@@ -158,21 +143,11 @@ export default function Home() {
     return () => {
       isMounted = false;
     };
-  }, [
-    userProvider,
-    userProviderId,
-    offset,
-    setHasMore,
-    setIsLoadingTimeline,
-    setResults,
-  ]);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
+  }, [user, offset, setHasMore, setIsLoadingTimeline, setResults]);
 
   return (
     <div className={styles.pageContainer}>
-      {isLoadingUser ? (
+      {isLoadingUser || isLoading ? (
         <div className={styles.loadingIconOuterContainer}>
           <div className={styles.loadingIconInnerContainer}>
             <LoadingIcon colour={userColour} />
@@ -181,11 +156,7 @@ export default function Home() {
       ) : (
         <>
           {!isMobile && (
-            <SideNav
-              colour={userColour}
-              userProvider={userProvider}
-              userProviderId={userProviderId}
-            />
+            <SideNav colour={userColour} userId={translateAuth0Id(user?.sub)} />
           )}
           <main className={styles.main}>
             <Heading
@@ -247,6 +218,7 @@ export default function Home() {
                       key={result.data.id}
                       author={result.author}
                       id={result.data.id}
+                      entityId={result.data.entityId}
                       score={result.data.score}
                       src={result.data.imageSrc}
                       subtitle={result.data.subtitle}
@@ -256,8 +228,7 @@ export default function Home() {
                       colour={result.data.colour}
                       review={result.data.body}
                       belongsToCurrentUser={
-                        userProvider === result.author.provider &&
-                        userProviderId === result.author.providerId
+                        translateAuth0Id(user?.sub) === result.author.id
                       }
                       userColour={userColour}
                     />
@@ -272,8 +243,7 @@ export default function Home() {
                       type={result.data.type}
                       list={result.data.listElements}
                       belongsToCurrentUser={
-                        userProvider === result.author.provider &&
-                        userProviderId === result.author.providerId
+                        translateAuth0Id(user?.sub) === result.author.id
                       }
                       userColour={userColour}
                     />
@@ -295,8 +265,7 @@ export default function Home() {
           {isMobile && (
             <BottomNav
               colour={userColour}
-              userProvider={userProvider}
-              userProviderId={userProviderId}
+              userId={translateAuth0Id(user?.sub)}
             />
           )}
           <Search
