@@ -93,3 +93,31 @@ export function formatRelativeTimestamp(timestamp: string): string {
     return formatTimestamp(ts);
   }
 }
+
+/**
+ * auth0 returns user IDs in a weird format that looks strange when put in a URL (e.g. for
+ * the `/profile/[userId]` path). Because of this, I'm applying a transformation to the IDs to make them
+ * look more natural, while also ensuring they are unique.
+ * @param auth0Id The generated user ID from Auth0
+ * @returns A transformed user ID
+ */
+export function translateAuth0Id(auth0Id?: string | null): string {
+  if (!auth0Id) return "";
+  let authSections = auth0Id.split("|");
+
+  if (authSections.length !== 2) {
+    console.error("Unexpected auth0 ID format");
+    return auth0Id;
+  }
+
+  if (authSections[0] === "auth0") {
+    return "0" + authSections[1];
+  } else if (authSections[0] === "facebook") {
+    return "1" + authSections[1];
+  } else if (authSections[0] === "google-oauth2") {
+    return "2" + authSections[1];
+  }
+
+  console.error("Unrecognized auth provider:", authSections[0]);
+  return auth0Id;
+}

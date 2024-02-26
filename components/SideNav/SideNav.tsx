@@ -18,20 +18,12 @@ interface SideNavProps {
    */
   colour: string;
   /**
-   * The user's streaming service provider (spotify, apple music, etc.)
+   * The user's ID
    */
-  userProvider: string;
-  /**
-   * The ID corresponding to the user, as set by their straming service provider
-   */
-  userProviderId: string;
+  userId: string;
 }
 
-const SideNav: React.FC<SideNavProps> = ({
-  colour,
-  userProvider,
-  userProviderId,
-}) => {
+const SideNav: React.FC<SideNavProps> = ({ colour, userId }) => {
   const [searchEnabled, setSearchEnabled] = useState(false);
 
   const onUserSelect = (user: Entity) => {
@@ -56,10 +48,7 @@ const SideNav: React.FC<SideNavProps> = ({
             <HomeOutlinedIcon />
             <Body className={styles.sideNavButtonText} content="Home" />
           </Link>
-          <Link
-            className={styles.sideNavButton}
-            href={`/profile/${userProvider}/${userProviderId}`}
-          >
+          <Link className={styles.sideNavButton} href={`/profile/${userId}`}>
             <PersonOutlinedIcon />
             <Body className={styles.sideNavButtonText} content="Profile" />
           </Link>

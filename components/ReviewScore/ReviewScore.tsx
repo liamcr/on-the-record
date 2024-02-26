@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import styles from "./ReviewScore.module.css";
 import Heading from "../Heading/Heading";

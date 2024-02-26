@@ -100,6 +100,7 @@ const EditableTopFive: React.FC<EditableTopFiveProps> = ({
           newList[selectedIndex] = {
             name: selectedEntity.title,
             src: selectedEntity.imageSrc,
+            entityId: selectedEntity.entityId,
           };
 
           onListChange(newList);

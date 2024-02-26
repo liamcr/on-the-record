@@ -14,8 +14,9 @@ import ButtonBase from "@/components/ButtonBase/ButtonBase";
 import Body from "@/components/Body/Body";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { APIWrapper } from "@/common/apiWrapper";
-import { StreamingService } from "@/common/streamingServiceFns";
 import { Alert, Snackbar } from "@mui/material";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { translateAuth0Id } from "@/common/functions";
 
 const nameToEntityType = {
   Track: EntityType.Track,
@@ -25,13 +26,14 @@ const nameToEntityType = {
 const EntityTypeToName = ["Track", "Album"];
 
 export default function NewReview() {
+  const { user, error, isLoading } = useUser();
   const [entity, setEntity] = useState<Entity | undefined>();
   const [score, setScore] = useState<number | undefined>();
   const [body, setBody] = useState("");
   const [searchEnabled, setSearchEnabled] = useState(false);
   const [selectedType, setSelectedType] = useState<EntityType | undefined>();
   const [userColour, setUserColour] = useState("#888");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [isError, setIsError] = useState(false);
 
   const pageRef = useRef<HTMLDivElement>(null);
@@ -75,10 +77,18 @@ export default function NewReview() {
       return;
     }
 
-    setIsLoading(true);
+    if (error || isLoading) {
+      if (error) {
+        console.error(error.message);
+      }
+      setIsError(true);
+      return;
+    }
+
+    setIsLoadingSubmit(true);
     APIWrapper.createReview(
-      sessionStorage.getItem("otrStreamingService") as StreamingService,
-      sessionStorage.getItem("otrStreamingServiceId") || "",
+      translateAuth0Id(user?.sub),
+      entity.entityId || "",
       selectedType || EntityType.Track,
       entity?.title,
       entity?.subtitle || "",
@@ -101,7 +111,7 @@ export default function NewReview() {
         setIsError(true);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingSubmit(false);
       });
   };
 
@@ -208,7 +218,7 @@ export default function NewReview() {
           </Alert>
         </Snackbar>
       </div>
-      {isLoading && (
+      {isLoadingSubmit && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingIconContainer}>
             <LoadingIcon colour={userColour} />

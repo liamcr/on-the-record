@@ -1,18 +1,12 @@
-import { StreamingService } from "./streamingServiceFns";
-
 /**
  * UserCondensed is a representation of a user with only
  * the fields relevant to a given post.
  */
 export interface UserCondensed {
   /**
-   * The provider that the user uses (i.e. the streaming service).
+   * The ID of the user, as assigned by auth0.
    */
-  provider: StreamingService;
-  /**
-   * The ID of the user, as assigned by the streaming service.
-   */
-  providerId: string;
+  id: string;
   /**
    * The user's display name.
    */
@@ -72,7 +66,7 @@ export interface Entity {
   /**
    * Deezer ID of the entity (track, album, artist)
    */
-  id?: string;
+  entityId?: string;
   /**
    * src for the image corresponding to the title and subtitle
    */
@@ -99,6 +93,10 @@ export interface Review {
    * The ID of the review
    */
   id: number;
+  /**
+   * The ID of the entity being reviewed
+   */
+  entityId: string;
   /**
    * Timestamp of when the review was submitted
    */
@@ -141,6 +139,10 @@ export interface Review {
  * Represents an element in a top 5 list
  */
 export interface ListElement {
+  /**
+   * The ID of the entity corresponding to this list element
+   */
+  entityId: string;
   /**
    * Image src of the list element
    */

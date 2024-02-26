@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 
 import styles from "./SlidingButton.module.css";
 import { OverridableComponent } from "@mui/material/OverridableComponent";

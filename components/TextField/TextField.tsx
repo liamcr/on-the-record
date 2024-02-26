@@ -1,6 +1,5 @@
 import React from "react";
 import MuiTextField from "@mui/material/TextField";
-import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { header } from "@/common/fonts";
 

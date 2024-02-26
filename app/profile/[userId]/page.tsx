@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  StreamingService,
-  StreamingServiceController,
-} from "../../../../common/streamingServiceFns";
-import { APIWrapper } from "../../../../common/apiWrapper";
+import { APIWrapper } from "../../../common/apiWrapper";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
@@ -24,14 +20,13 @@ import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EditModal from "@/components/EditModal/EditModal";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { translateAuth0Id } from "@/common/functions";
 
 const limit = 3;
 
-export default function Profile({
-  params,
-}: {
-  params: { provider: string; providerId: string };
-}) {
+export default function Profile({ params }: { params: { userId: string } }) {
+  const { user: auth0User, error, isLoading } = useUser();
   const router = useRouter();
 
   const isMobile = useMediaQuery("(max-width: 770px)");
@@ -41,9 +36,6 @@ export default function Profile({
   const [isLoadingTimeline, setIsLoadingTimeline] = useState(true);
   const [isError, setIsError] = useState(false);
   const [userColour, setUserColour] = useState("#888");
-
-  const [userProvider, setUserProvider] = useState("");
-  const [userProviderId, setUserProviderId] = useState("");
 
   const [editModalEnabled, setEditModalEnabled] = useState(false);
 
@@ -75,76 +67,73 @@ export default function Profile({
   );
 
   const isCurrentUser = useMemo(() => {
-    return (
-      params.provider === userProvider && params.providerId === userProviderId
-    );
-  }, [userProvider, userProviderId, params.provider, params.providerId]);
+    return translateAuth0Id(auth0User?.sub) === params.userId;
+  }, [auth0User, params.userId]);
 
   useEffect(() => {
+    if (isLoading) return;
+    if (error) {
+      // User session most likely expired, redirect to landing page
+      router.push("/");
+      return;
+    }
+    if (!auth0User?.sub) {
+      return;
+    }
+    if (user !== null) {
+      return;
+    }
+
     const colour = localStorage.getItem("otrColour");
     if (colour !== null) {
       setUserColour(colour);
     }
 
-    StreamingServiceController.handleLogin(window.location);
-
-    StreamingServiceController.getCurrentUser(
-      sessionStorage.getItem("otrStreamingService") as StreamingService,
-      sessionStorage.getItem("otrAccessToken") || ""
-    ).then((user) => {
-      sessionStorage.setItem("otrStreamingServiceId", user.id);
-
-      APIWrapper.getUser(user.streamingService, user.id).then((otrUser) => {
-        setUserProvider(otrUser.data?.provider || "");
-        setUserProviderId(otrUser.data?.providerId || "");
+    APIWrapper.getUser(translateAuth0Id(auth0User.sub))
+      .then((otrUser) => {
+        if (otrUser.data?.colour) {
+          setUserColour(otrUser.data.colour);
+          localStorage.setItem("otrColour", otrUser.data.colour);
+        }
 
         if (otrUser.error && otrUser.error.code === 404) {
           // User does not exist in our system, redirect to onboarding
           router.push("/onboarding");
           return;
         } else if (otrUser.error) {
-          // TODO: Come up with designs for error case
           setIsError(true);
           return;
         }
 
-        APIWrapper.getUser(
-          params.provider as StreamingService,
-          params.providerId,
-          otrUser.data?.provider,
-          otrUser.data?.providerId
-        ).then((specifiedUser) => {
-          if (specifiedUser.error || specifiedUser.data === undefined) {
-            // TODO: Come up with designs for error case
-            setIsError(true);
-            return;
-          }
+        APIWrapper.getUser(params.userId, translateAuth0Id(auth0User.sub)).then(
+          (specifiedUser) => {
+            if (specifiedUser.error || specifiedUser.data === undefined) {
+              // TODO: Come up with designs for error case
+              setIsError(true);
+              return;
+            }
 
-          setUser(specifiedUser.data);
-          if (specifiedUser.data.isFollowing !== undefined) {
-            setIsFollowing(specifiedUser.data.isFollowing);
+            setUser(specifiedUser.data);
+            if (specifiedUser.data.isFollowing !== undefined) {
+              setIsFollowing(specifiedUser.data.isFollowing);
+            }
+            setNumReviews(specifiedUser.data.reviews || 0);
+            setNumLists(specifiedUser.data.lists || 0);
+            setIsLoadingUser(false);
           }
-          setNumReviews(specifiedUser.data.reviews || 0);
-          setNumLists(specifiedUser.data.lists || 0);
-          setIsLoadingUser(false);
-        });
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+
+        setIsError(true);
       });
-    });
-  }, [params.provider, params.providerId, router]);
+  }, [isLoading, error, user, router]);
 
   useEffect(() => {
-    if (userProvider === "" || userProviderId === "") {
-      return;
-    }
-
     let isMounted = true;
     setIsLoadingTimeline(true);
-    APIWrapper.getUserPosts(
-      params.provider as StreamingService,
-      params.providerId,
-      offset,
-      limit
-    )
+    APIWrapper.getUserPosts(params.userId, offset, limit)
       .then((timelineResp) => {
         if (isMounted) {
           if (timelineResp.error) {
@@ -170,24 +159,12 @@ export default function Profile({
     return () => {
       isMounted = false;
     };
-  }, [
-    userProvider,
-    userProviderId,
-    offset,
-    setHasMore,
-    setIsLoadingTimeline,
-    setResults,
-  ]);
+  }, [offset, setHasMore, setIsLoadingTimeline, setResults]);
 
   const onFollowClick = () => {
     setIsLoadingFollow(true);
     if (!isFollowing) {
-      APIWrapper.followUser(
-        userProvider as StreamingService,
-        userProviderId.toString() || "",
-        params.provider as StreamingService,
-        params.providerId
-      )
+      APIWrapper.followUser(translateAuth0Id(auth0User?.sub), params.userId)
         .then(() => {
           setIsFollowing(true);
         })
@@ -198,12 +175,7 @@ export default function Profile({
           setIsLoadingFollow(false);
         });
     } else {
-      APIWrapper.unfollowUser(
-        userProvider as StreamingService,
-        userProviderId.toString() || "",
-        params.provider as StreamingService,
-        params.providerId
-      )
+      APIWrapper.unfollowUser(translateAuth0Id(auth0User?.sub), params.userId)
         .then(() => {
           setIsFollowing(false);
         })
@@ -222,7 +194,7 @@ export default function Profile({
         editModalEnabled ? styles.modalOpen : ""
       }`}
     >
-      {isLoadingUser ? (
+      {isLoadingUser || isLoading ? (
         <div className={styles.loadingIconOuterContainer}>
           <div className={styles.loadingIconInnerContainer}>
             <LoadingIcon colour={userColour} />
@@ -233,8 +205,7 @@ export default function Profile({
           {!isMobile && (
             <SideNav
               colour={userColour}
-              userProvider={userProvider}
-              userProviderId={userProviderId}
+              userId={translateAuth0Id(auth0User?.sub)}
             />
           )}
           <main className={styles.main}>
@@ -365,6 +336,7 @@ export default function Profile({
                               key={result.data.id}
                               author={result.author}
                               id={result.data.id}
+                              entityId={result.data.entityId}
                               score={result.data.score}
                               src={result.data.imageSrc}
                               subtitle={result.data.subtitle}
@@ -470,8 +442,7 @@ export default function Profile({
           {isMobile && (
             <BottomNav
               colour={userColour}
-              userProvider={userProvider}
-              userProviderId={userProviderId}
+              userId={translateAuth0Id(auth0User?.sub)}
             />
           )}
           {editModalEnabled && user !== null && (
