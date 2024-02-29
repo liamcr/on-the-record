@@ -207,6 +207,14 @@ export interface TimelineResponse {
    * The data contained within the post
    */
   data: any;
+  /**
+   * The number of likes a particular post has gotten
+   */
+  numLikes: number;
+  /**
+   * True if the requestng user has liked the post, false otherwise
+   */
+  isLiked: boolean;
 }
 
 export enum EntityType {

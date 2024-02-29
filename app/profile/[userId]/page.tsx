@@ -131,9 +131,17 @@ export default function Profile({ params }: { params: { userId: string } }) {
   }, [isLoading, error, user, router]);
 
   useEffect(() => {
+    if (!auth0User?.sub) {
+      return;
+    }
     let isMounted = true;
     setIsLoadingTimeline(true);
-    APIWrapper.getUserPosts(params.userId, offset, limit)
+    APIWrapper.getUserPosts(
+      params.userId,
+      translateAuth0Id(auth0User?.sub),
+      offset,
+      limit
+    )
       .then((timelineResp) => {
         if (isMounted) {
           if (timelineResp.error) {
@@ -159,7 +167,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
     return () => {
       isMounted = false;
     };
-  }, [offset, setHasMore, setIsLoadingTimeline, setResults]);
+  }, [offset, setHasMore, setIsLoadingTimeline, setResults, user]);
 
   const onFollowClick = () => {
     setIsLoadingFollow(true);
@@ -246,7 +254,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
                         }}
                         disabled={isLoadingFollow}
                         style={{
-                          color: `${userColour}80`,
+                          color: `color-mix(in srgb, ${userColour} 70%, white)`,
                         }}
                       >
                         {isCurrentUser && (
@@ -347,6 +355,8 @@ export default function Profile({ params }: { params: { userId: string } }) {
                               review={result.data.body}
                               belongsToCurrentUser={isCurrentUser}
                               userColour={userColour}
+                              numLikes={result.numLikes}
+                              hasUserLiked={result.isLiked}
                             />
                           ) : (
                             <TopFive
@@ -360,6 +370,8 @@ export default function Profile({ params }: { params: { userId: string } }) {
                               list={result.data.listElements}
                               belongsToCurrentUser={isCurrentUser}
                               userColour={userColour}
+                              numLikes={result.numLikes}
+                              hasUserLiked={result.isLiked}
                             />
                           )
                         )}

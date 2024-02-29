@@ -1,0 +1,40 @@
+.likeCount {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 0.2rem;
+}
+
+.cardActionButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.cardActionButton:hover {
+  opacity: 0.8;
+}
+
+.cardActionButton:active {
+  opacity: 0.9;
+}
+
+.numLikes {
+  font-size: 1rem;
+  margin-right: 0.2rem;
+}
+
+.cardActionIcon {
+  /* I have to use !important here because MaterialUI adds a font-size
+      of 1.5rem to their icons by default, which takes precedence over any
+      font size I would typically set here */
+  font-size: 1.7rem !important;
+}
+
+.listIcon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.reviewIcon {
+  color: rgb(var(--subtitle-rgb));
+}

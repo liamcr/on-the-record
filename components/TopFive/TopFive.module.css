@@ -113,6 +113,10 @@
   border-radius: 16px;
 }
 
+.deleteModalText {
+  color: rgb(var(--foreground-rgb));
+}
+
 .areYouSure {
   margin-bottom: 1rem;
 }

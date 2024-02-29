@@ -231,6 +231,8 @@ export default function Home() {
                         translateAuth0Id(user?.sub) === result.author.id
                       }
                       userColour={userColour}
+                      numLikes={result.numLikes}
+                      hasUserLiked={result.isLiked}
                     />
                   ) : (
                     <TopFive
@@ -246,6 +248,8 @@ export default function Home() {
                         translateAuth0Id(user?.sub) === result.author.id
                       }
                       userColour={userColour}
+                      numLikes={result.numLikes}
+                      hasUserLiked={result.isLiked}
                     />
                   )
                 )}

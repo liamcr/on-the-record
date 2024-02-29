@@ -165,6 +165,10 @@
   border-radius: 16px;
 }
 
+.deleteModalText {
+  color: rgb(var(--foreground-rgb));
+}
+
 .areYouSure {
   margin-bottom: 1rem;
 }
@@ -211,13 +215,6 @@
 
 .loadingIconContainer {
   width: 8rem;
-}
-
-.timestamp {
-  position: absolute;
-  left: 1rem;
-  bottom: 1rem;
-  height: 1.7rem;
 }
 
 .timestampText {

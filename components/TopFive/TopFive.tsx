@@ -1,4 +1,4 @@
-import { TopFiveList } from "../../common/types";
+import { PostType, TopFiveList } from "../../common/types";
 import React, { useState } from "react";
 
 import styles from "./TopFive.module.css";
@@ -11,10 +11,13 @@ import { APIWrapper } from "@/common/apiWrapper";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
 import Body from "../Body/Body";
 import { formatRelativeTimestamp } from "@/common/functions";
+import LikeCount from "../LikeCount/LikeCount";
 
 interface TopFiveProps extends TopFiveList {
   userColour?: string;
   belongsToCurrentUser?: boolean;
+  numLikes: number;
+  hasUserLiked: boolean;
 }
 
 const TopFive: React.FC<TopFiveProps> = ({
@@ -26,6 +29,8 @@ const TopFive: React.FC<TopFiveProps> = ({
   timestamp,
   userColour = "#888",
   belongsToCurrentUser = true,
+  numLikes,
+  hasUserLiked,
 }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -109,6 +114,14 @@ const TopFive: React.FC<TopFiveProps> = ({
             belongsToCurrentUser ? " •" : ""
           }`}
         />
+        <LikeCount
+          userId={author.id}
+          initialLikeCount={numLikes}
+          hasUserLiked={hasUserLiked}
+          postId={id}
+          postType={PostType.List}
+          userColour={userColour}
+        />
         {belongsToCurrentUser && (
           <button
             className={styles.cardActionButton}
@@ -140,13 +153,13 @@ const TopFive: React.FC<TopFiveProps> = ({
                 className={`${styles.modalButton} ${styles.cancel}`}
                 onClick={onCancelDelete}
               >
-                <Body content="Cancel" />
+                <Body className={styles.deleteModalText} content="Cancel" />
               </button>
               <button
                 className={`${styles.modalButton} ${styles.delete}`}
                 onClick={onDelete}
               >
-                <Body content="Delete" />
+                <Body className={styles.deleteModalText} content="Delete" />
               </button>
             </div>
           </div>

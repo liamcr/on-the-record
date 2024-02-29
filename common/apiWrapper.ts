@@ -4,6 +4,7 @@ import {
   EntityType,
   ListElement,
   MusicNote,
+  PostType,
   Review,
   TimelineResponse,
   TopFiveList,
@@ -674,12 +675,14 @@ class APIWrapper {
   /**
    * Get a list of posts posted by a specific user
    * @param userId The ID of the user
+   * @param requestingUserId The ID of the user requesting the posts
    * @param offset The index to start collecting posts from
    * @param limit The maximum number of posts you want to retrieve
    * @returns A list of posts
    */
   static getUserPosts = async (
     userId: string,
+    requestingUserId: string,
     offset?: number,
     limit?: number
   ): Promise<APIResponse<TimelineResponse[]>> => {
@@ -688,7 +691,7 @@ class APIWrapper {
         method: "GET",
         url: `${
           process.env.NEXT_PUBLIC_API_URL || ""
-        }/user/activity?id=${userId}&offset=${offset}&limit=${limit}`,
+        }/user/activity?id=${userId}&requesting_id=${requestingUserId}&offset=${offset}&limit=${limit}`,
         data: {},
       });
 
@@ -701,6 +704,151 @@ class APIWrapper {
             profilePictureSrc: respElement.author.imageSrc,
             name: respElement.author.name,
           },
+        })),
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  /**
+   * Like a post
+   * @param userId The ID of the user liking the post
+   * @param postId The ID of the post being liked
+   * @param postType The type of post (review or list)
+   */
+  static likePost = async (
+    userId: string,
+    postId: number | string,
+    postType: PostType
+  ): Promise<APIResponse<boolean>> => {
+    try {
+      await axios({
+        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/${
+          postType === PostType.List ? "list" : "review"
+        }/like`,
+        data: {
+          userId: userId,
+          listId: postId,
+          reviewId: postId,
+        },
+      });
+
+      // 200 Response
+      return {
+        data: true,
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  /**
+   * Unlike a post
+   * @param userId The ID of the user liking the post
+   * @param postId The ID of the post being liked
+   * @param postType The type of post (review or list)
+   */
+  static unlikePost = async (
+    userId: string,
+    postId: number | string,
+    postType: PostType
+  ): Promise<APIResponse<boolean>> => {
+    try {
+      await axios({
+        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/${
+          postType === PostType.List ? "list" : "review"
+        }/unlike`,
+        data: {
+          userId: userId,
+          listId: postId,
+          reviewId: postId,
+        },
+      });
+
+      // 200 Response
+      return {
+        data: true,
+      };
+    } catch (e) {
+      const axiosError = e as AxiosError;
+
+      if (!axiosError.response) {
+        return {
+          error: {
+            code: 500,
+            message: "Something went wrong",
+          },
+        };
+      }
+
+      return {
+        error: {
+          code: axiosError.response.status,
+          message: axiosError.response.data as string,
+        },
+      };
+    }
+  };
+
+  /**
+   * Get a list of users that liked a post
+   * @param postId The ID of the post being liked
+   * @param postType The type of post (review or list)
+   * @returns A list of users
+   */
+  static getPostLikes = async (
+    postId: string | number,
+    postType: PostType
+  ): Promise<APIResponse<UserCondensed[]>> => {
+    try {
+      const resp = await axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/${
+          postType === PostType.List ? "list" : "review"
+        }/likes?id=${postId}`,
+      });
+
+      // 200 Response
+      return {
+        data: resp.data.map((respElement: any) => ({
+          id: respElement.id,
+          profilePictureSrc: respElement.imageSrc,
+          name: respElement.name,
         })),
       };
     } catch (e) {

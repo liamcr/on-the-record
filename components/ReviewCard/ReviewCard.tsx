@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Review } from "../../common/types";
+import { PostType, Review } from "../../common/types";
 import Image from "next/image";
 import Heading from "../Heading/Heading";
 import Body from "../Body/Body";
@@ -14,10 +14,13 @@ import { Alert, Snackbar } from "@mui/material";
 import { APIWrapper } from "@/common/apiWrapper";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
 import { formatRelativeTimestamp } from "@/common/functions";
+import LikeCount from "../LikeCount/LikeCount";
 
 interface ReviewProps extends Review {
   userColour?: string;
   belongsToCurrentUser?: boolean;
+  numLikes: number;
+  hasUserLiked: boolean;
 }
 
 const ReviewCard: React.FC<ReviewProps> = ({
@@ -33,6 +36,8 @@ const ReviewCard: React.FC<ReviewProps> = ({
   timestamp,
   userColour = "#888",
   belongsToCurrentUser = false,
+  numLikes,
+  hasUserLiked,
 }) => {
   const reviewRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -155,13 +160,20 @@ const ReviewCard: React.FC<ReviewProps> = ({
           )}
         </>
       )}
-      <div className={styles.timestamp}></div>
       <div className={styles.cardActions}>
         <Body
           className={styles.timestampText}
           content={`${formatRelativeTimestamp(timestamp)}${
             belongsToCurrentUser ? " •" : ""
           }`}
+        />
+        <LikeCount
+          userId={author.id}
+          initialLikeCount={numLikes}
+          hasUserLiked={hasUserLiked}
+          postId={id}
+          postType={PostType.Review}
+          userColour={userColour}
         />
         {belongsToCurrentUser && (
           <button
@@ -194,13 +206,13 @@ const ReviewCard: React.FC<ReviewProps> = ({
                 className={`${styles.modalButton} ${styles.cancel}`}
                 onClick={onCancelDelete}
               >
-                <Body content="Cancel" />
+                <Body className={styles.deleteModalText} content="Cancel" />
               </button>
               <button
                 className={`${styles.modalButton} ${styles.delete}`}
                 onClick={onDelete}
               >
-                <Body content="Delete" />
+                <Body className={styles.deleteModalText} content="Delete" />
               </button>
             </div>
           </div>
