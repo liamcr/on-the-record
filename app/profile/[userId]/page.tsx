@@ -357,6 +357,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
                               userColour={userColour}
                               numLikes={result.numLikes}
                               hasUserLiked={result.isLiked}
+                              userId={translateAuth0Id(auth0User?.sub)}
                             />
                           ) : (
                             <TopFive
@@ -372,6 +373,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
                               userColour={userColour}
                               numLikes={result.numLikes}
                               hasUserLiked={result.isLiked}
+                              userId={translateAuth0Id(auth0User?.sub)}
                             />
                           )
                         )}

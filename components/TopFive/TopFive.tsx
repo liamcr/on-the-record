@@ -18,6 +18,7 @@ interface TopFiveProps extends TopFiveList {
   belongsToCurrentUser?: boolean;
   numLikes: number;
   hasUserLiked: boolean;
+  userId: string;
 }
 
 const TopFive: React.FC<TopFiveProps> = ({
@@ -31,6 +32,7 @@ const TopFive: React.FC<TopFiveProps> = ({
   belongsToCurrentUser = true,
   numLikes,
   hasUserLiked,
+  userId,
 }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -110,12 +112,10 @@ const TopFive: React.FC<TopFiveProps> = ({
       <div className={styles.cardActions}>
         <Body
           className={styles.timestampText}
-          content={`${formatRelativeTimestamp(timestamp)}${
-            belongsToCurrentUser ? " •" : ""
-          }`}
+          content={`${formatRelativeTimestamp(timestamp)} • `}
         />
         <LikeCount
-          userId={author.id}
+          userId={userId}
           initialLikeCount={numLikes}
           hasUserLiked={hasUserLiked}
           postId={id}

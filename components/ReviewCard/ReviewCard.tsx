@@ -21,6 +21,7 @@ interface ReviewProps extends Review {
   belongsToCurrentUser?: boolean;
   numLikes: number;
   hasUserLiked: boolean;
+  userId: string;
 }
 
 const ReviewCard: React.FC<ReviewProps> = ({
@@ -38,6 +39,7 @@ const ReviewCard: React.FC<ReviewProps> = ({
   belongsToCurrentUser = false,
   numLikes,
   hasUserLiked,
+  userId,
 }) => {
   const reviewRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -163,12 +165,10 @@ const ReviewCard: React.FC<ReviewProps> = ({
       <div className={styles.cardActions}>
         <Body
           className={styles.timestampText}
-          content={`${formatRelativeTimestamp(timestamp)}${
-            belongsToCurrentUser ? " •" : ""
-          }`}
+          content={`${formatRelativeTimestamp(timestamp)} • `}
         />
         <LikeCount
-          userId={author.id}
+          userId={userId}
           initialLikeCount={numLikes}
           hasUserLiked={hasUserLiked}
           postId={id}
