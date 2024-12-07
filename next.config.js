@@ -6,6 +6,9 @@ const nextConfig = {
         hostname: "i.scdn.co",
       },
       {
+        hostname: "cdn-images.dzcdn.net",
+      },
+      {
         hostname: "e-cdns-images.dzcdn.net",
       },
       {

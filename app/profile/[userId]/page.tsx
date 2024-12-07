@@ -50,6 +50,8 @@ export default function Profile({ params }: { params: { userId: string } }) {
   const [numReviews, setNumReviews] = useState(0);
   const [numLists, setNumLists] = useState(0);
 
+  const [numFollowers, setNumFollowers] = useState(0);
+
   const observer = useRef<IntersectionObserver>();
 
   const bottomRef = useCallback(
@@ -117,6 +119,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
             if (specifiedUser.data.isFollowing !== undefined) {
               setIsFollowing(specifiedUser.data.isFollowing);
             }
+            setNumFollowers(specifiedUser.data.followers || 0);
             setNumReviews(specifiedUser.data.reviews || 0);
             setNumLists(specifiedUser.data.lists || 0);
             setIsLoadingUser(false);
@@ -172,22 +175,24 @@ export default function Profile({ params }: { params: { userId: string } }) {
   const onFollowClick = () => {
     setIsLoadingFollow(true);
     if (!isFollowing) {
+      setIsFollowing(true);
+      setNumFollowers((prevVal) => (prevVal + 1));
       APIWrapper.followUser(translateAuth0Id(auth0User?.sub), params.userId)
-        .then(() => {
-          setIsFollowing(true);
-        })
-        .catch((err) => {
+        .catch(() => {
+          setIsFollowing(false);
+          setNumFollowers((prevVal) => (prevVal - 1));
           setIsError(true);
         })
         .finally(() => {
           setIsLoadingFollow(false);
         });
     } else {
+      setIsFollowing(false);
+      setNumFollowers((prevVal) => (prevVal - 1));
       APIWrapper.unfollowUser(translateAuth0Id(auth0User?.sub), params.userId)
-        .then(() => {
-          setIsFollowing(false);
-        })
-        .catch((err) => {
+        .catch(() => {
+          setIsFollowing(true);
+          setNumFollowers((prevVal) => (prevVal + 1));
           setIsError(true);
         })
         .finally(() => {
@@ -286,7 +291,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
                         <div className={styles.followStats}>
                           <Heading
                             component="h2"
-                            content={`${user.followers}`}
+                            content={`${numFollowers}`}
                           />
                           <Body
                             className={styles.followStatsLabel}
@@ -404,7 +409,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
                       }}
                     >
                       <div className={styles.followStats}>
-                        <Heading component="h2" content={`${user.followers}`} />
+                        <Heading component="h2" content={`${numFollowers}`} />
                         <Body
                           className={styles.followStatsLabel}
                           content="Followers"
