@@ -104,13 +104,6 @@ export default function Home() {
   }, [isLoading, error, user, router]);
 
   useEffect(() => {
-    console.log(user);
-    if (user?.sub) {
-      console.log(translateAuth0Id(user.sub));
-    }
-  }, [user]);
-
-  useEffect(() => {
     if (!user?.sub) {
       return;
     }

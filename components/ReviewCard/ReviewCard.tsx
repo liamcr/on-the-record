@@ -15,6 +15,7 @@ import { APIWrapper } from "@/common/apiWrapper";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
 import { formatRelativeTimestamp } from "@/common/functions";
 import LikeCount from "../LikeCount/LikeCount";
+import axios from "axios";
 
 interface ReviewProps extends Review {
   userColour?: string;
@@ -63,15 +64,18 @@ const ReviewCard: React.FC<ReviewProps> = ({
 
   const onDelete = () => {
     setIsLoading(true);
-    APIWrapper.deleteReview(id)
+    axios({
+      method: "DELETE",
+      url: `/api/review?id=${id}`,
+    })
       .then((resp) => {
-        if (!resp.error) {
+        if (resp.status === 204) {
           // Success!
           window.location.reload();
           return;
         }
 
-        console.error(resp.error);
+        console.error(resp.data?.message);
         setIsError(true);
         setIsLoading(false);
       })
