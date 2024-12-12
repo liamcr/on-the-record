@@ -488,10 +488,10 @@ class APIWrapper {
     try {
       await axios({
         method: "DELETE",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/review?id=${id}`,
+        url: `/api/review?id=${id}`,
       });
 
-      // 200 Response
+      // 204 Response
       return {
         data: true,
       };

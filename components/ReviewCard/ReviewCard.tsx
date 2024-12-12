@@ -64,18 +64,15 @@ const ReviewCard: React.FC<ReviewProps> = ({
 
   const onDelete = () => {
     setIsLoading(true);
-    axios({
-      method: "DELETE",
-      url: `/api/review?id=${id}`,
-    })
+    APIWrapper.deleteReview(id)
       .then((resp) => {
-        if (resp.status === 204) {
+        if (!resp.error) {
           // Success!
           window.location.reload();
           return;
         }
 
-        console.error(resp.data?.message);
+        console.error(resp.error);
         setIsError(true);
         setIsLoading(false);
       })
