@@ -103,13 +103,7 @@ export default function Onboarding() {
 
     setIsLoadingSubmit(true);
 
-    APIWrapper.createUser(
-      translateAuth0Id(user?.sub),
-      name,
-      colour,
-      profilePicUrl,
-      buildMusicNotes()
-    )
+    APIWrapper.createUser(name, colour, profilePicUrl, buildMusicNotes())
       .then((resp) => {
         if (!resp.error) {
           localStorage.setItem("otrColour", colour);

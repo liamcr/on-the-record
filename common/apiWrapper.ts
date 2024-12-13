@@ -184,7 +184,6 @@ class APIWrapper {
 
   /**
    * Create a new user
-   * @param userId The ID of the user
    * @param name The name of the user
    * @param colour The user's preferred colour
    * @param profilePictureSrc The S3 URL corresponding to the user's profile picture
@@ -192,7 +191,6 @@ class APIWrapper {
    * @returns The created user
    */
   static createUser = async (
-    userId: string,
     name: string,
     colour: string,
     profilePictureSrc: string,
@@ -201,9 +199,8 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/user`,
+        url: `/api/user`,
         data: {
-          id: userId,
           name: name,
           imageSrc: profilePictureSrc,
           colour: colour,
@@ -213,16 +210,7 @@ class APIWrapper {
 
       // 200 Response
       return {
-        data: {
-          id: resp.data.id,
-          name: resp.data.name,
-          colour: resp.data.colour,
-          profilePictureSrc: resp.data.imageSrc,
-          followers: 0,
-          following: 0,
-          createdOn: resp.data.createdOn,
-          musicNotes: resp.data.musicNotes,
-        },
+        data: resp.data,
       };
     } catch (e) {
       const axiosError = e as AxiosError;
