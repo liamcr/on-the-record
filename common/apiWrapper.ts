@@ -252,7 +252,7 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "PUT",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/user`,
+        url: `/api/user`,
         data: {
           id: userId,
           name: name,
@@ -264,16 +264,7 @@ class APIWrapper {
 
       // 200 Response
       return {
-        data: {
-          id: resp.data.id,
-          name: resp.data.name,
-          colour: resp.data.colour,
-          profilePictureSrc: resp.data.imageSrc,
-          followers: 0,
-          following: 0,
-          createdOn: resp.data.createdOn,
-          musicNotes: resp.data.musicNotes,
-        },
+        data: resp.data,
       };
     } catch (e) {
       const axiosError = e as AxiosError;
