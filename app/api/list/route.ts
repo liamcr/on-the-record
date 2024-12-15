@@ -8,7 +8,7 @@ export const POST = withApiAuthRequired(async (req: NextRequest) => {
     let reqBody = await req.json();
     await axios({
       method: "POST",
-      url: `${process.env.NEXT_PUBLIC_API_URL || ""}/review`,
+      url: `${process.env.NEXT_PUBLIC_API_URL || ""}/list`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -48,7 +48,7 @@ export const DELETE = withApiAuthRequired(async (req: NextRequest) => {
     const { accessToken } = await getAccessToken();
     await axios({
       method: "DELETE",
-      url: `${process.env.NEXT_PUBLIC_API_URL}/review${req.nextUrl.search}`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/list${req.nextUrl.search}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

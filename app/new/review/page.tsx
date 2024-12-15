@@ -87,7 +87,6 @@ export default function NewReview() {
 
     setIsLoadingSubmit(true);
     APIWrapper.createReview(
-      translateAuth0Id(user?.sub),
       entity.entityId || "",
       selectedType || EntityType.Track,
       entity?.title,

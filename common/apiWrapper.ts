@@ -369,7 +369,6 @@ class APIWrapper {
 
   /**
    * Create a new review
-   * @param userId The user ID of the user creating the review
    * @param entityId The entity ID of the entity being reviewed
    * @param type The type of review (Album or Track)
    * @param title The title of the review (Album or track title)
@@ -380,7 +379,6 @@ class APIWrapper {
    * @returns The created review
    */
   static createReview = async (
-    userId: string,
     entityId: string,
     type: EntityType,
     title: string,
@@ -392,9 +390,8 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/review`,
+        url: `/api/review`,
         data: {
-          userId: userId,
           entityId: entityId,
           title: title,
           imageSrc: imageSrc,
@@ -415,7 +412,7 @@ class APIWrapper {
           author: {
             name: "",
             profilePictureSrc: "",
-            id: userId,
+            id: resp.data.userId,
           },
           id: resp.data.id,
           entityId: resp.data.entityId,
@@ -485,7 +482,6 @@ class APIWrapper {
 
   /**
    * Create a new list
-   * @param userId The user ID of the user creating the list
    * @param type The type of list (Track, Album, Artist)
    * @param title The title of the list
    * @param colour The background colour of the list
@@ -493,7 +489,6 @@ class APIWrapper {
    * @returns The created list
    */
   static createList = async (
-    userId: string,
     type: EntityType,
     title: string,
     colour: string,
@@ -502,9 +497,8 @@ class APIWrapper {
     try {
       const resp = await axios({
         method: "POST",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/list`,
+        url: `/api/list`,
         data: {
-          userId: userId,
           title: title,
           type: type,
           colour: colour,
@@ -521,7 +515,7 @@ class APIWrapper {
           author: {
             name: "",
             profilePictureSrc: "",
-            id: userId,
+            id: resp.data.userId,
           },
           id: resp.data.id,
           type: resp.data.type,
@@ -558,7 +552,7 @@ class APIWrapper {
     try {
       await axios({
         method: "DELETE",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/list?id=${id}`,
+        url: `/api/list?id=${id}`,
       });
 
       // 200 Response

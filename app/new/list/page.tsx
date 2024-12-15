@@ -84,7 +84,6 @@ export default function NewList() {
     }
     setIsLoadingSubmit(true);
     APIWrapper.createList(
-      translateAuth0Id(user?.sub),
       selectedType || EntityType.Track,
       listTitle,
       listColour,
