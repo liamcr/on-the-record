@@ -176,11 +176,11 @@ export default function Profile({ params }: { params: { userId: string } }) {
     setIsLoadingFollow(true);
     if (!isFollowing) {
       setIsFollowing(true);
-      setNumFollowers((prevVal) => (prevVal + 1));
-      APIWrapper.followUser(translateAuth0Id(auth0User?.sub), params.userId)
+      setNumFollowers((prevVal) => prevVal + 1);
+      APIWrapper.followUser(params.userId)
         .catch(() => {
           setIsFollowing(false);
-          setNumFollowers((prevVal) => (prevVal - 1));
+          setNumFollowers((prevVal) => prevVal - 1);
           setIsError(true);
         })
         .finally(() => {
@@ -188,11 +188,11 @@ export default function Profile({ params }: { params: { userId: string } }) {
         });
     } else {
       setIsFollowing(false);
-      setNumFollowers((prevVal) => (prevVal - 1));
-      APIWrapper.unfollowUser(translateAuth0Id(auth0User?.sub), params.userId)
+      setNumFollowers((prevVal) => prevVal - 1);
+      APIWrapper.unfollowUser(params.userId)
         .catch(() => {
           setIsFollowing(true);
-          setNumFollowers((prevVal) => (prevVal + 1));
+          setNumFollowers((prevVal) => prevVal + 1);
           setIsError(true);
         })
         .finally(() => {
@@ -289,10 +289,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
                         }}
                       >
                         <div className={styles.followStats}>
-                          <Heading
-                            component="h2"
-                            content={`${numFollowers}`}
-                          />
+                          <Heading component="h2" content={`${numFollowers}`} />
                           <Body
                             className={styles.followStatsLabel}
                             content="Followers"

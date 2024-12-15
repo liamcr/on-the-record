@@ -289,22 +289,16 @@ class APIWrapper {
 
   /**
    * Follow a user
-   * @param userId User ID of the user requesting to follow
-   * @param toFollowUserId User ID of the user being followed
+   * @param userId User ID of the user being followed
    * @returns
    */
-  static followUser = async (
-    userId: string,
-    toFollowUserId: string
-  ): Promise<APIResponse<null>> => {
+  static followUser = async (userId: string): Promise<APIResponse<null>> => {
     try {
-      const resp = await axios({
+      await axios({
         method: "POST",
-        url: `${
-          process.env.NEXT_PUBLIC_API_URL || ""
-        }/user/follow?id=${userId}`,
+        url: `/api/user/follow`,
         data: {
-          id: toFollowUserId,
+          id: userId,
         },
       });
 
@@ -335,22 +329,16 @@ class APIWrapper {
 
   /**
    * Unfollow a user
-   * @param userId User ID of the user requesting to unfollow
-   * @param toUnfollowUserId User ID of the user being unfollowed
+   * @param userId User ID of the user being unfollowed
    * @returns
    */
-  static unfollowUser = async (
-    userId: string,
-    toUnfollowUserId: string
-  ): Promise<APIResponse<null>> => {
+  static unfollowUser = async (userId: string): Promise<APIResponse<null>> => {
     try {
-      const resp = await axios({
+      await axios({
         method: "POST",
-        url: `${
-          process.env.NEXT_PUBLIC_API_URL || ""
-        }/user/unfollow?id=${userId}`,
+        url: `/api/user/unfollow`,
         data: {
-          id: toUnfollowUserId,
+          id: userId,
         },
       });
 
