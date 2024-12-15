@@ -169,7 +169,6 @@ const ReviewCard: React.FC<ReviewProps> = ({
           content={`${formatRelativeTimestamp(timestamp)} • `}
         />
         <LikeCount
-          userId={userId}
           initialLikeCount={numLikes}
           hasUserLiked={hasUserLiked}
           postId={id}

@@ -690,25 +690,19 @@ class APIWrapper {
 
   /**
    * Like a post
-   * @param userId The ID of the user liking the post
    * @param postId The ID of the post being liked
    * @param postType The type of post (review or list)
    */
   static likePost = async (
-    userId: string,
     postId: number | string,
     postType: PostType
   ): Promise<APIResponse<boolean>> => {
     try {
       await axios({
         method: "POST",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/${
-          postType === PostType.List ? "list" : "review"
-        }/like`,
+        url: `/api/${postType === PostType.List ? "list" : "review"}/like`,
         data: {
-          userId: userId,
-          listId: postId,
-          reviewId: postId,
+          [postType === PostType.List ? "listId" : "reviewId"]: postId,
         },
       });
 
@@ -739,25 +733,19 @@ class APIWrapper {
 
   /**
    * Unlike a post
-   * @param userId The ID of the user liking the post
    * @param postId The ID of the post being liked
    * @param postType The type of post (review or list)
    */
   static unlikePost = async (
-    userId: string,
     postId: number | string,
     postType: PostType
   ): Promise<APIResponse<boolean>> => {
     try {
       await axios({
         method: "POST",
-        url: `${process.env.NEXT_PUBLIC_API_URL || ""}/${
-          postType === PostType.List ? "list" : "review"
-        }/unlike`,
+        url: `/api/${postType === PostType.List ? "list" : "review"}/unlike`,
         data: {
-          userId: userId,
-          listId: postId,
-          reviewId: postId,
+          [postType === PostType.List ? "listId" : "reviewId"]: postId,
         },
       });
 

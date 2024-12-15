@@ -10,7 +10,6 @@ import { APIWrapper } from "@/common/apiWrapper";
 import LikeModal from "../LikeModal/LikeModal";
 
 interface LikeCountProps {
-  userId: string;
   initialLikeCount: number;
   hasUserLiked: boolean;
   postId: number | string;
@@ -19,7 +18,6 @@ interface LikeCountProps {
 }
 
 const LikeCount: React.FC<LikeCountProps> = ({
-  userId,
   initialLikeCount,
   hasUserLiked,
   postId,
@@ -46,7 +44,7 @@ const LikeCount: React.FC<LikeCountProps> = ({
       setIsLiked(false);
       setNumLikes((prevVal) => prevVal - 1);
 
-      APIWrapper.unlikePost(userId, postId, postType).then((resp) => {
+      APIWrapper.unlikePost(postId, postType).then((resp) => {
         if (!resp.data) {
           setIsLiked(true);
           setNumLikes((prevVal) => prevVal + 1);
@@ -58,7 +56,7 @@ const LikeCount: React.FC<LikeCountProps> = ({
       setIsLiked(true);
       setNumLikes((prevVal) => prevVal + 1);
 
-      APIWrapper.likePost(userId, postId, postType).then((resp) => {
+      APIWrapper.likePost(postId, postType).then((resp) => {
         if (!resp.data) {
           setIsLiked(false);
           setNumLikes((prevVal) => prevVal - 1);

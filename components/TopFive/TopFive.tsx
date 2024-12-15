@@ -115,7 +115,6 @@ const TopFive: React.FC<TopFiveProps> = ({
           content={`${formatRelativeTimestamp(timestamp)} • `}
         />
         <LikeCount
-          userId={userId}
           initialLikeCount={numLikes}
           hasUserLiked={hasUserLiked}
           postId={id}
