@@ -8,7 +8,6 @@ Reviews are the simplest kind of posts to make, just select an album or track, g
 
 <img src="https://github.com/liamcr/on-the-record/assets/33944844/2ce72b6b-6124-498d-ba12-c36d42ec8d94" width="300">
 
-
 ## Make a Top-5 List
 
 What were your top five favourite albums from your childhood? What about your favourite pop artists? Top-five best songs that start with the letter "A"? Whatever you want to list, you can do it and share it with your friends in less than a minute. You can also customize the background colour to whatever you think fits best.
@@ -25,7 +24,7 @@ You, along with your music taste, are unique, which is why you're encouraged to 
 
 Build a new image that will be pushed to docker hub:
 
-`docker build -t liamcrocketdev/otr:VERSION .`
+`docker buildx build --platform linux/amd64 -t liamcrocketdev/otr:VERSION .`
 
 Where `VERSION` is a valid semver value (e.g. `0.3.0`)
 
