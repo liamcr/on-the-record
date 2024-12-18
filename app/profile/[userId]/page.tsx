@@ -1,7 +1,7 @@
 "use client";
 
 import { APIWrapper } from "../../../common/apiWrapper";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { Alert, Snackbar, useMediaQuery } from "@mui/material";
@@ -25,7 +25,8 @@ import { translateAuth0Id } from "@/common/functions";
 
 const limit = 3;
 
-export default function Profile({ params }: { params: { userId: string } }) {
+export default function Profile(props: { params: Promise<{ userId: string }> }) {
+  const params = use(props.params);
   const { user: auth0User, error, isLoading } = useUser();
   const router = useRouter();
 
@@ -52,7 +53,7 @@ export default function Profile({ params }: { params: { userId: string } }) {
 
   const [numFollowers, setNumFollowers] = useState(0);
 
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver>(undefined);
 
   const bottomRef = useCallback(
     (node: HTMLDivElement | null) => {

@@ -40,7 +40,7 @@ export default function Home() {
 
   const [searchEnabled, setSearchEnabled] = useState(false);
 
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver>(undefined);
 
   const bottomRef = useCallback(
     (node: HTMLDivElement | null) => {
