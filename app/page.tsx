@@ -15,6 +15,9 @@ export default function Home() {
           >
             <Body className={styles.loginText} content="Login" />
           </a>
+          <a href="/home" className={`${styles.guestButton} ${styles.button}`}>
+            <Body className={styles.guestText} content="Continue as Guest" />
+          </a>
         </div>
       </div>
     </>

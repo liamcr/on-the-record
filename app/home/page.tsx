@@ -20,11 +20,14 @@ import ReviewCard from "@/components/ReviewCard/ReviewCard";
 import TopFive from "@/components/TopFive/TopFive";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { translateAuth0Id } from "@/common/functions";
+import { guestColour, guestSub } from "@/common/consts";
 
-const limit = 3;
+const limit = 8;
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState("");
+  const [isGuest, setIsGuest] = useState(false);
   const router = useRouter();
 
   const isMobile = useMediaQuery("(max-width: 770px)");
@@ -69,16 +72,28 @@ export default function Home() {
       router.push("/");
       return;
     }
-    if (!user?.sub) {
+    if (!user && !isLoading) {
+      setIsGuest(true);
+      setIsLoadingUser(false);
+      setUserColour(guestColour);
+      setUserId(translateAuth0Id(guestSub));
       return;
     }
+    if (!user?.sub) {
+      // Shouldn't get here, redirect to landing page
+      router.push("/");
+      return;
+    }
+
+    const translatedUserID = translateAuth0Id(user.sub);
+    setUserId(translatedUserID);
 
     const colour = localStorage.getItem("otrColour");
     if (colour !== null) {
       setUserColour(colour);
     }
 
-    APIWrapper.getUser(translateAuth0Id(user.sub))
+    APIWrapper.getUser(translatedUserID)
       .then((otrUser) => {
         if (otrUser.data?.colour) {
           setUserColour(otrUser.data.colour);
@@ -104,13 +119,13 @@ export default function Home() {
   }, [isLoading, error, user, router]);
 
   useEffect(() => {
-    if (!user?.sub) {
+    if (userId.length === 0) {
       return;
     }
 
     let isMounted = true;
     setIsLoadingTimeline(true);
-    APIWrapper.getTimeline(translateAuth0Id(user.sub), offset, limit)
+    APIWrapper.getTimeline(userId, offset, limit)
       .then((timelineResp) => {
         if (isMounted) {
           if (timelineResp.error) {
@@ -136,7 +151,7 @@ export default function Home() {
     return () => {
       isMounted = false;
     };
-  }, [user, offset, setHasMore, setIsLoadingTimeline, setResults]);
+  }, [userId, offset, setHasMore, setIsLoadingTimeline, setResults]);
 
   return (
     <div className={styles.pageContainer}>
@@ -149,7 +164,7 @@ export default function Home() {
       ) : (
         <>
           {!isMobile && (
-            <SideNav colour={userColour} userId={translateAuth0Id(user?.sub)} />
+            <SideNav colour={userColour} userId={userId} isGuest={isGuest} />
           )}
           <main className={styles.main}>
             <Heading
@@ -220,13 +235,11 @@ export default function Home() {
                       type={result.data.type}
                       colour={result.data.colour}
                       review={result.data.body}
-                      belongsToCurrentUser={
-                        translateAuth0Id(user?.sub) === result.author.id
-                      }
+                      belongsToCurrentUser={userId === result.author.id}
                       userColour={userColour}
                       numLikes={result.numLikes}
                       hasUserLiked={result.isLiked}
-                      userId={translateAuth0Id(user?.sub)}
+                      isGuest={isGuest}
                     />
                   ) : (
                     <TopFive
@@ -238,13 +251,11 @@ export default function Home() {
                       title={result.data.title}
                       type={result.data.type}
                       list={result.data.listElements}
-                      belongsToCurrentUser={
-                        translateAuth0Id(user?.sub) === result.author.id
-                      }
+                      belongsToCurrentUser={userId === result.author.id}
                       userColour={userColour}
                       numLikes={result.numLikes}
                       hasUserLiked={result.isLiked}
-                      userId={translateAuth0Id(user?.sub)}
+                      isGuest={isGuest}
                     />
                   )
                 )}
@@ -262,10 +273,7 @@ export default function Home() {
             )}
           </main>
           {isMobile && (
-            <BottomNav
-              colour={userColour}
-              userId={translateAuth0Id(user?.sub)}
-            />
+            <BottomNav colour={userColour} userId={userId} isGuest={isGuest} />
           )}
           <Search
             type={EntityType.User}

@@ -11,11 +11,15 @@
   cursor: pointer;
 }
 
-.cardActionButton:hover {
+.cardActionButton:disabled {
+  cursor: default;
+}
+
+.cardActionButton:hover:not(:disabled) {
   opacity: 0.8;
 }
 
-.cardActionButton:active {
+.cardActionButton:active:not(:disabled) {
   opacity: 0.9;
 }
 

@@ -15,14 +15,13 @@ import { APIWrapper } from "@/common/apiWrapper";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
 import { formatRelativeTimestamp } from "@/common/functions";
 import LikeCount from "../LikeCount/LikeCount";
-import axios from "axios";
 
 interface ReviewProps extends Review {
   userColour?: string;
   belongsToCurrentUser?: boolean;
   numLikes: number;
   hasUserLiked: boolean;
-  userId: string;
+  isGuest: boolean;
 }
 
 const ReviewCard: React.FC<ReviewProps> = ({
@@ -40,7 +39,7 @@ const ReviewCard: React.FC<ReviewProps> = ({
   belongsToCurrentUser = false,
   numLikes,
   hasUserLiked,
-  userId,
+  isGuest,
 }) => {
   const reviewRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -174,6 +173,7 @@ const ReviewCard: React.FC<ReviewProps> = ({
           postId={id}
           postType={PostType.Review}
           userColour={userColour}
+          isGuest={isGuest}
         />
         {belongsToCurrentUser && (
           <button

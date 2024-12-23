@@ -8,6 +8,7 @@ import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import Search from "../Search/Search";
 import { Entity, EntityType } from "@/common/types";
@@ -21,9 +22,13 @@ interface SideNavProps {
    * The user's ID
    */
   userId: string;
+  /**
+   * True if the user is a guest
+   */
+  isGuest: boolean;
 }
 
-const SideNav: React.FC<SideNavProps> = ({ colour, userId }) => {
+const SideNav: React.FC<SideNavProps> = ({ colour, userId, isGuest }) => {
   const [searchEnabled, setSearchEnabled] = useState(false);
 
   const onUserSelect = (user: Entity) => {
@@ -48,10 +53,12 @@ const SideNav: React.FC<SideNavProps> = ({ colour, userId }) => {
             <HomeOutlinedIcon />
             <Body className={styles.sideNavButtonText} content="Home" />
           </Link>
-          <Link className={styles.sideNavButton} href={`/profile/${userId}`}>
-            <PersonOutlinedIcon />
-            <Body className={styles.sideNavButtonText} content="Profile" />
-          </Link>
+          {!isGuest && (
+            <Link className={styles.sideNavButton} href={`/profile/${userId}`}>
+              <PersonOutlinedIcon />
+              <Body className={styles.sideNavButtonText} content="Profile" />
+            </Link>
+          )}
           <div
             className={styles.sideNavButton}
             onClick={() => setSearchEnabled(true)}
@@ -59,26 +66,34 @@ const SideNav: React.FC<SideNavProps> = ({ colour, userId }) => {
             <SearchOutlinedIcon />
             <Body className={styles.sideNavButtonText} content="Search" />
           </div>
-          <div className={styles.actionButtons}>
-            <Link
-              className={styles.largeButton}
-              href={"/new/review"}
-              style={{
-                backgroundColor: `${colour}40`,
-              }}
-            >
-              <RateReviewOutlined className={styles.largeButtonIcon} />
+          {!isGuest && (
+            <Link className={styles.sideNavButton} href="/api/auth/logout">
+              <LogoutIcon />
+              <Body className={styles.sideNavButtonText} content="Log Out" />
             </Link>
-            <Link
-              className={styles.largeButton}
-              href={"/new/list"}
-              style={{
-                backgroundColor: `${colour}40`,
-              }}
-            >
-              <ListOutlinedIcon className={styles.largeButtonIcon} />
-            </Link>
-          </div>
+          )}
+          {!isGuest && (
+            <div className={styles.actionButtons}>
+              <Link
+                className={styles.largeButton}
+                href={"/new/review"}
+                style={{
+                  backgroundColor: `${colour}40`,
+                }}
+              >
+                <RateReviewOutlined className={styles.largeButtonIcon} />
+              </Link>
+              <Link
+                className={styles.largeButton}
+                href={"/new/list"}
+                style={{
+                  backgroundColor: `${colour}40`,
+                }}
+              >
+                <ListOutlinedIcon className={styles.largeButtonIcon} />
+              </Link>
+            </div>
+          )}
         </div>
       </nav>
       <Search

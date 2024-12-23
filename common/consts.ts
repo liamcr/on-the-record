@@ -46,3 +46,6 @@ export const months = [
   "November",
   "December",
 ];
+
+export const guestColour = "#bababa";
+export const guestSub = "guest|0";

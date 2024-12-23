@@ -18,7 +18,7 @@ interface TopFiveProps extends TopFiveList {
   belongsToCurrentUser?: boolean;
   numLikes: number;
   hasUserLiked: boolean;
-  userId: string;
+  isGuest: boolean;
 }
 
 const TopFive: React.FC<TopFiveProps> = ({
@@ -32,7 +32,7 @@ const TopFive: React.FC<TopFiveProps> = ({
   belongsToCurrentUser = true,
   numLikes,
   hasUserLiked,
-  userId,
+  isGuest,
 }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -120,6 +120,7 @@ const TopFive: React.FC<TopFiveProps> = ({
           postId={id}
           postType={PostType.List}
           userColour={userColour}
+          isGuest={isGuest}
         />
         {belongsToCurrentUser && (
           <button

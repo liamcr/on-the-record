@@ -116,6 +116,8 @@ export function translateAuth0Id(auth0Id?: string | null): string {
     return "1" + authSections[1];
   } else if (authSections[0] === "google-oauth2") {
     return "2" + authSections[1];
+  } else if (authSections[0] === "guest") {
+    return "3" + authSections[1];
   }
 
   console.error("Unrecognized auth provider:", authSections[0]);

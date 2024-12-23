@@ -22,12 +22,17 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EditModal from "@/components/EditModal/EditModal";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { translateAuth0Id } from "@/common/functions";
+import { guestColour, guestSub } from "@/common/consts";
 
-const limit = 3;
+const limit = 8;
 
-export default function Profile(props: { params: Promise<{ userId: string }> }) {
+export default function Profile(props: {
+  params: Promise<{ userId: string }>;
+}) {
   const params = use(props.params);
   const { user: auth0User, error, isLoading } = useUser();
+  const [auth0UserId, setAuth0UserId] = useState("");
+  const [isGuest, setIsGuest] = useState(false);
   const router = useRouter();
 
   const isMobile = useMediaQuery("(max-width: 770px)");
@@ -70,8 +75,8 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
   );
 
   const isCurrentUser = useMemo(() => {
-    return translateAuth0Id(auth0User?.sub) === params.userId;
-  }, [auth0User, params.userId]);
+    return auth0UserId === params.userId;
+  }, [auth0UserId, params.userId]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -80,10 +85,35 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
       router.push("/");
       return;
     }
-    if (!auth0User?.sub) {
-      return;
-    }
-    if (user !== null) {
+    const isCurrentUserGuest = !auth0User && !isLoading;
+
+    const translatedUserID = translateAuth0Id(
+      isCurrentUserGuest ? guestSub : auth0User?.sub
+    );
+    setAuth0UserId(translatedUserID);
+
+    APIWrapper.getUser(params.userId, translatedUserID).then(
+      (specifiedUser) => {
+        if (specifiedUser.error || specifiedUser.data === undefined) {
+          // TODO: Come up with designs for error case
+          setIsError(true);
+          return;
+        }
+
+        setUser(specifiedUser.data);
+        if (specifiedUser.data.isFollowing !== undefined) {
+          setIsFollowing(specifiedUser.data.isFollowing);
+        }
+        setNumFollowers(specifiedUser.data.followers || 0);
+        setNumReviews(specifiedUser.data.reviews || 0);
+        setNumLists(specifiedUser.data.lists || 0);
+        setIsLoadingUser(false);
+      }
+    );
+
+    if (isCurrentUserGuest) {
+      setIsGuest(true);
+      setUserColour(guestColour);
       return;
     }
 
@@ -92,7 +122,7 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
       setUserColour(colour);
     }
 
-    APIWrapper.getUser(translateAuth0Id(auth0User.sub))
+    APIWrapper.getUser(translatedUserID)
       .then((otrUser) => {
         if (otrUser.data?.colour) {
           setUserColour(otrUser.data.colour);
@@ -107,45 +137,21 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
           setIsError(true);
           return;
         }
-
-        APIWrapper.getUser(params.userId, translateAuth0Id(auth0User.sub)).then(
-          (specifiedUser) => {
-            if (specifiedUser.error || specifiedUser.data === undefined) {
-              // TODO: Come up with designs for error case
-              setIsError(true);
-              return;
-            }
-
-            setUser(specifiedUser.data);
-            if (specifiedUser.data.isFollowing !== undefined) {
-              setIsFollowing(specifiedUser.data.isFollowing);
-            }
-            setNumFollowers(specifiedUser.data.followers || 0);
-            setNumReviews(specifiedUser.data.reviews || 0);
-            setNumLists(specifiedUser.data.lists || 0);
-            setIsLoadingUser(false);
-          }
-        );
       })
       .catch((err) => {
         console.error(err);
 
         setIsError(true);
       });
-  }, [isLoading, error, user, router]);
+  }, [isLoading, error, auth0User, router]);
 
   useEffect(() => {
-    if (!auth0User?.sub) {
+    if (auth0UserId.length === 0) {
       return;
     }
     let isMounted = true;
     setIsLoadingTimeline(true);
-    APIWrapper.getUserPosts(
-      params.userId,
-      translateAuth0Id(auth0User?.sub),
-      offset,
-      limit
-    )
+    APIWrapper.getUserPosts(params.userId, auth0UserId, offset, limit)
       .then((timelineResp) => {
         if (isMounted) {
           if (timelineResp.error) {
@@ -171,7 +177,7 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
     return () => {
       isMounted = false;
     };
-  }, [offset, setHasMore, setIsLoadingTimeline, setResults, user]);
+  }, [offset, setHasMore, setIsLoadingTimeline, setResults, auth0UserId]);
 
   const onFollowClick = () => {
     setIsLoadingFollow(true);
@@ -219,7 +225,8 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
           {!isMobile && (
             <SideNav
               colour={userColour}
-              userId={translateAuth0Id(auth0User?.sub)}
+              userId={auth0UserId}
+              isGuest={isGuest}
             />
           )}
           <main className={styles.main}>
@@ -249,36 +256,38 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
                           className={styles.profileDate}
                         />
                       </div>
-                      <button
-                        className={styles.followButton}
-                        onClick={() => {
-                          if (!isCurrentUser) {
-                            onFollowClick();
-                          } else {
-                            setEditModalEnabled(true);
-                          }
-                        }}
-                        disabled={isLoadingFollow}
-                        style={{
-                          color: `color-mix(in srgb, ${userColour} 70%, white)`,
-                        }}
-                      >
-                        {isCurrentUser && (
-                          <EditOutlinedIcon
-                            className={styles.followButtonIcon}
-                          />
-                        )}
-                        {!isCurrentUser && isFollowing && (
-                          <PersonRemoveOutlinedIcon
-                            className={styles.followButtonIcon}
-                          />
-                        )}
-                        {!isCurrentUser && !isFollowing && (
-                          <PersonAddOutlinedIcon
-                            className={styles.followButtonIcon}
-                          />
-                        )}
-                      </button>
+                      {!isGuest && (
+                        <button
+                          className={styles.followButton}
+                          onClick={() => {
+                            if (!isCurrentUser) {
+                              onFollowClick();
+                            } else {
+                              setEditModalEnabled(true);
+                            }
+                          }}
+                          disabled={isLoadingFollow}
+                          style={{
+                            color: `color-mix(in srgb, ${userColour} 70%, white)`,
+                          }}
+                        >
+                          {isCurrentUser && (
+                            <EditOutlinedIcon
+                              className={styles.followButtonIcon}
+                            />
+                          )}
+                          {!isCurrentUser && isFollowing && (
+                            <PersonRemoveOutlinedIcon
+                              className={styles.followButtonIcon}
+                            />
+                          )}
+                          {!isCurrentUser && !isFollowing && (
+                            <PersonAddOutlinedIcon
+                              className={styles.followButtonIcon}
+                            />
+                          )}
+                        </button>
+                      )}
                     </div>
                   </div>
                   {isSmallLaptop && (
@@ -360,7 +369,7 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
                               userColour={userColour}
                               numLikes={result.numLikes}
                               hasUserLiked={result.isLiked}
-                              userId={translateAuth0Id(auth0User?.sub)}
+                              isGuest={isGuest}
                             />
                           ) : (
                             <TopFive
@@ -376,7 +385,7 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
                               userColour={userColour}
                               numLikes={result.numLikes}
                               hasUserLiked={result.isLiked}
-                              userId={translateAuth0Id(auth0User?.sub)}
+                              isGuest={isGuest}
                             />
                           )
                         )}
@@ -459,7 +468,8 @@ export default function Profile(props: { params: Promise<{ userId: string }> }) 
           {isMobile && (
             <BottomNav
               colour={userColour}
-              userId={translateAuth0Id(auth0User?.sub)}
+              userId={auth0UserId}
+              isGuest={isGuest}
             />
           )}
           {editModalEnabled && user !== null && (

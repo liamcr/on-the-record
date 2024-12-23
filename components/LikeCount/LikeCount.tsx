@@ -15,6 +15,7 @@ interface LikeCountProps {
   postId: number | string;
   postType: PostType;
   userColour: string;
+  isGuest: boolean;
 }
 
 const LikeCount: React.FC<LikeCountProps> = ({
@@ -23,6 +24,7 @@ const LikeCount: React.FC<LikeCountProps> = ({
   postId,
   postType,
   userColour,
+  isGuest,
 }) => {
   const [numLikes, setNumLikes] = useState(initialLikeCount);
   const [isLiked, setIsLiked] = useState(hasUserLiked);
@@ -80,7 +82,7 @@ const LikeCount: React.FC<LikeCountProps> = ({
       <button
         className={styles.cardActionButton}
         onClick={onLikeClick}
-        disabled={isLoading}
+        disabled={isLoading || isGuest}
       >
         {isLiked ? (
           <ThumbUpAltIcon
