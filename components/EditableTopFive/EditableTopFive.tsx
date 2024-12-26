@@ -49,7 +49,6 @@ const EditableTopFive: React.FC<EditableTopFiveProps> = ({
             variant="outlined"
             placeholder="...Title"
             id="list-title"
-            defaultValue="Hello world"
             breakpoint={isMobile ? "md" : "lg"}
           />
         </div>

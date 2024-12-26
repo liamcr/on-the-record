@@ -9,6 +9,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
 import SlidingButton from "../SlidingButton/SlidingButton";
 import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import { Entity, EntityType } from "@/common/types";
@@ -75,13 +76,18 @@ const BottomNav: React.FC<BottomNavProps> = ({ colour, userId, isGuest }) => {
           >
             <SearchOutlinedIcon className={styles.navIcon} />
           </div>
-          {!isGuest && (
-            <Link className={styles.sideNavButton} href="/api/auth/logout">
-              <div className={styles.navButton}>
+          <Link
+            className={styles.sideNavButton}
+            href={`/api/auth/${isGuest ? "login" : "logout"}`}
+          >
+            <div className={styles.navButton}>
+              {isGuest ? (
+                <LoginIcon className={styles.navIcon} />
+              ) : (
                 <LogoutIcon className={styles.navIcon} />
-              </div>
-            </Link>
-          )}
+              )}
+            </div>
+          </Link>
         </div>
       </div>
       {!isGuest && (

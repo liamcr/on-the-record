@@ -9,6 +9,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import Search from "../Search/Search";
 import { Entity, EntityType } from "@/common/types";
@@ -66,12 +67,16 @@ const SideNav: React.FC<SideNavProps> = ({ colour, userId, isGuest }) => {
             <SearchOutlinedIcon />
             <Body className={styles.sideNavButtonText} content="Search" />
           </div>
-          {!isGuest && (
-            <Link className={styles.sideNavButton} href="/api/auth/logout">
-              <LogoutIcon />
-              <Body className={styles.sideNavButtonText} content="Log Out" />
-            </Link>
-          )}
+          <Link
+            className={styles.sideNavButton}
+            href={`/api/auth/${isGuest ? "login" : "logout"}`}
+          >
+            {isGuest ? <LoginIcon /> : <LogoutIcon />}
+            <Body
+              className={styles.sideNavButtonText}
+              content={isGuest ? "Log In" : "Log Out"}
+            />
+          </Link>
           {!isGuest && (
             <div className={styles.actionButtons}>
               <Link
