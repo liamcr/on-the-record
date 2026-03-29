@@ -56,7 +56,7 @@ export default function Home() {
       });
       if (node) observer.current.observe(node);
     },
-    [observer, isLoadingTimeline, hasMore]
+    [observer, isLoadingTimeline, hasMore],
   );
 
   const onUserSelect = (user: Entity) => {
@@ -67,12 +67,8 @@ export default function Home() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (error) {
-      // User session most likely expired, redirect to landing page
-      router.push("/");
-      return;
-    }
     if (!user && !isLoading) {
+      // User is not logged in, assume they are a guest.
       setIsGuest(true);
       setIsLoadingUser(false);
       setUserColour(guestColour);
@@ -136,7 +132,7 @@ export default function Home() {
           setResults((prevResults) =>
             timelineResp.data === undefined
               ? prevResults
-              : [...prevResults, ...timelineResp.data]
+              : [...prevResults, ...timelineResp.data],
           );
 
           if (timelineResp.data && timelineResp.data.length < limit) {
@@ -257,7 +253,7 @@ export default function Home() {
                       hasUserLiked={result.isLiked}
                       isGuest={isGuest}
                     />
-                  )
+                  ),
                 )}
                 {hasMore && (
                   <div

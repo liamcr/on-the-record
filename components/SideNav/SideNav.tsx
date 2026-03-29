@@ -69,7 +69,7 @@ const SideNav: React.FC<SideNavProps> = ({ colour, userId, isGuest }) => {
           </div>
           <Link
             className={styles.sideNavButton}
-            href={`/api/auth/${isGuest ? "login" : "logout"}`}
+            href={`/auth/${isGuest ? "login?returnTo=/home" : "logout"}`}
           >
             {isGuest ? <LoginIcon /> : <LogoutIcon />}
             <Body

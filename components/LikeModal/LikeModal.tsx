@@ -38,7 +38,7 @@ const LikeModal: React.FC<LikeModalProps> = ({
 
       setIsLoading(false);
     });
-  }, [isLoading, setLikedUsers, setIsLoading, setIsError]);
+  }, [isLoading, setLikedUsers, setIsLoading, setIsError, postId, postType]);
 
   return (
     <div

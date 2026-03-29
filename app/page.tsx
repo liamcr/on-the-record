@@ -10,7 +10,7 @@ export default function Home() {
         <Logo />
         <div className={styles.buttons}>
           <a
-            href="/api/auth/login"
+            href="/auth/login?returnTo=/home"
             className={`${styles.loginButton} ${styles.button}`}
           >
             <Body className={styles.loginText} content="Login" />

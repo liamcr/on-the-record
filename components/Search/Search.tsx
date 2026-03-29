@@ -31,14 +31,14 @@ const Search: React.FC<SearchProps> = ({
 }) => {
   const [featuredUsers, setFeaturedUsers] = useState<UserCondensed[]>([]);
   const [showFeaturedUsers, setShowFeaturedUsers] = useState(
-    type === EntityType.User
+    type === EntityType.User,
   );
   const [noResults, setNoResults] = useState(false);
   const [results, setResults] = useState<Entity[]>([]);
   const [isError, setIsError] = useState(false);
 
   const onSearchChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (event.target.value === "") {
       setShowFeaturedUsers(type === EntityType.User);
@@ -64,7 +64,7 @@ const Search: React.FC<SearchProps> = ({
       axios({
         method: "GET",
         url: `/api/search?q=${encodeURIComponent(
-          event.target.value
+          event.target.value,
         )}&type=${entityTypeNames[type].toLowerCase()}`,
       })
         .then((resp) => {
@@ -102,7 +102,7 @@ const Search: React.FC<SearchProps> = ({
         }
       });
     }
-  }, [setFeaturedUsers]);
+  }, [setFeaturedUsers, type]);
 
   return (
     enabled && (

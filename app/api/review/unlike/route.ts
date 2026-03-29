@@ -1,16 +1,16 @@
-import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
+import { auth0 } from "@/lib/auth0";
 import axios, { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = withApiAuthRequired(async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
-    const { accessToken } = await getAccessToken();
+    const { token } = await auth0.getAccessToken();
     let reqBody = await req.json();
     await axios({
       method: "POST",
       url: `${process.env.NEXT_PUBLIC_API_URL || ""}/review/unlike`,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
       data: reqBody,
     });
@@ -28,7 +28,7 @@ export const POST = withApiAuthRequired(async (req: NextRequest) => {
         }),
         {
           status: 500,
-        }
+        },
       );
     }
 
@@ -38,7 +38,7 @@ export const POST = withApiAuthRequired(async (req: NextRequest) => {
       }),
       {
         status: axiosError.response.status,
-      }
+      },
     );
   }
-});
+};

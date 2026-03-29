@@ -1,16 +1,16 @@
-import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
+import { auth0 } from "@/lib/auth0";
 import axios, { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = withApiAuthRequired(async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
-    const { accessToken } = await getAccessToken();
+    const { token } = await auth0.getAccessToken();
     let reqBody = await req.json();
     await axios({
       method: "POST",
       url: `${process.env.NEXT_PUBLIC_API_URL || ""}/review`,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
       data: reqBody,
     });
@@ -21,6 +21,8 @@ export const POST = withApiAuthRequired(async (req: NextRequest) => {
   } catch (e) {
     const axiosError = e as AxiosError;
 
+    console.log(axiosError);
+
     if (!axiosError.response) {
       return new NextResponse(
         JSON.stringify({
@@ -28,7 +30,7 @@ export const POST = withApiAuthRequired(async (req: NextRequest) => {
         }),
         {
           status: 500,
-        }
+        },
       );
     }
 
@@ -38,19 +40,19 @@ export const POST = withApiAuthRequired(async (req: NextRequest) => {
       }),
       {
         status: axiosError.response.status,
-      }
+      },
     );
   }
-});
+};
 
-export const DELETE = withApiAuthRequired(async (req: NextRequest) => {
+export const DELETE = async (req: NextRequest) => {
   try {
-    const { accessToken } = await getAccessToken();
+    const { token } = await auth0.getAccessToken();
     await axios({
       method: "DELETE",
       url: `${process.env.NEXT_PUBLIC_API_URL}/review${req.nextUrl.search}`,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -67,7 +69,7 @@ export const DELETE = withApiAuthRequired(async (req: NextRequest) => {
         }),
         {
           status: 500,
-        }
+        },
       );
     }
 
@@ -77,7 +79,7 @@ export const DELETE = withApiAuthRequired(async (req: NextRequest) => {
       }),
       {
         status: axiosError.response.status,
-      }
+      },
     );
   }
-});
+};

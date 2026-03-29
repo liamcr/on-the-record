@@ -71,7 +71,7 @@ export default function Profile(props: {
       });
       if (node) observer.current.observe(node);
     },
-    [observer, isLoadingTimeline, hasMore]
+    [observer, isLoadingTimeline, hasMore],
   );
 
   const isCurrentUser = useMemo(() => {
@@ -80,15 +80,10 @@ export default function Profile(props: {
 
   useEffect(() => {
     if (isLoading) return;
-    if (error) {
-      // User session most likely expired, redirect to landing page
-      router.push("/");
-      return;
-    }
     const isCurrentUserGuest = !auth0User && !isLoading;
 
     const translatedUserID = translateAuth0Id(
-      isCurrentUserGuest ? guestSub : auth0User?.sub
+      isCurrentUserGuest ? guestSub : auth0User?.sub,
     );
     setAuth0UserId(translatedUserID);
 
@@ -108,7 +103,7 @@ export default function Profile(props: {
         setNumReviews(specifiedUser.data.reviews || 0);
         setNumLists(specifiedUser.data.lists || 0);
         setIsLoadingUser(false);
-      }
+      },
     );
 
     if (isCurrentUserGuest) {
@@ -143,7 +138,7 @@ export default function Profile(props: {
 
         setIsError(true);
       });
-  }, [isLoading, error, auth0User, router]);
+  }, [isLoading, error, auth0User, router, params.userId]);
 
   useEffect(() => {
     if (auth0UserId.length === 0) {
@@ -162,7 +157,7 @@ export default function Profile(props: {
           setResults((prevResults) =>
             timelineResp.data === undefined
               ? prevResults
-              : [...prevResults, ...timelineResp.data]
+              : [...prevResults, ...timelineResp.data],
           );
 
           if (timelineResp.data && timelineResp.data.length < limit) {
@@ -177,7 +172,14 @@ export default function Profile(props: {
     return () => {
       isMounted = false;
     };
-  }, [offset, setHasMore, setIsLoadingTimeline, setResults, auth0UserId]);
+  }, [
+    offset,
+    setHasMore,
+    setIsLoadingTimeline,
+    setResults,
+    auth0UserId,
+    params.userId,
+  ]);
 
   const onFollowClick = () => {
     setIsLoadingFollow(true);
@@ -251,7 +253,7 @@ export default function Profile(props: {
                         />
                         <Body
                           content={`Joined ${new Date(
-                            user.createdOn
+                            user.createdOn,
                           ).getFullYear()}`}
                           className={styles.profileDate}
                         />
@@ -387,7 +389,7 @@ export default function Profile(props: {
                               hasUserLiked={result.isLiked}
                               isGuest={isGuest}
                             />
-                          )
+                          ),
                         )}
                         {hasMore && (
                           <div
